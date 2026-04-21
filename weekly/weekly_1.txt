@@ -1,0 +1,28 @@
+Thomas — Dev & Chef de projet
+Accompli : Kick-off du groupe avec revue du cahier des charges, inventaire des compétences, choix technologique (JS vs PHP), création de la roadmap, mise en place du Discord et du repo GitHub (README, GitHub Project, issues labelisées et priorisées). Suivi et validation du travail de Thelma.
+
+En cours : Rédaction des user stories et préparation de leur intégration dans le GitHub Project avec critères d'acceptation.
+
+Bloqué : Rien.
+
+Objectifs Semaine : Finaliser ~15 user stories, les intégrer au GitHub Project avec critères d'acceptation, les prioriser, répartir les tâches de la semaine suivante et continuer le suivi des livrables.
+
+
+Thelma — Marketing
+Accompli : Charte graphique, maquette basse fidélité et maquette haute fidélité sur Figma.
+
+En cours : Envoi des maquettes, rédaction d'un parcours utilisateur à destination des devs.
+
+Bloqué : Rien.
+
+Objectifs Semaine : Finir maquette, commencer les user stories.
+
+
+Clémence — Développeuse
+Accompli : Rien cette semaine.
+
+En cours : Rien.
+
+Bloqué : Rien.
+
+Objectifs Semaine : Réfléchir à l'architecture et réaliser le use case.
