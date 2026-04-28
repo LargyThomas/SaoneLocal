@@ -152,13 +152,35 @@ SaôneLocal
 └─ Readme.md
 ```
 
-## Explication Architecture
+## 📑 Explication de l'architecture
 
-Parler des patterns utilisés Featured-Based et une version simplifié de Design System et convention de nommage : camelCase / kebab-case / UPPER_CASE / PascalCase (reprendre message discord)
+L'architecture frontend repose sur une combinaison du pattern **Feature-Based** et d'une version simplifiée de l'**Atomic Design**.
+
+### Atomic Design (simplifié)
+- Les composants UI sont fractionnés en composants **modulaires** et **réutilisables**
+- Regroupés dans un dossier 'ui/' et 'features/' à la place de l'architecture classique 'atoms' 'moleculs' 'organisms' 'templates'
+- L'arborescence complète aurait alourdi inutilement la structure du projet
+
+### Feature-Based
+- Constitue le cœur du **frontend** : chaque grande structure de SaôneLocal = une feature
+- Chaque feature est **indépendante** : une feature ne va pas être dépendante d'une autre
+- La distinction entre les dossiers 'ui/' et 'features/' repose sur la vocation des composants :
+  - 'ui/ → composants **réutilisables**
+  - 'features/' → composants **spécifiques** à un contexte fonctionnel
+- La même logique est appliquée au **backend** pour structurer les différentes parties de l'application
+
+### Convention de nommage
+
+Les conventions suivantes s'appliquent à **l'ensemble du projet** :
+
+- 'camelCase' → variables et fonctions
+- 'kebab-case' → noms de fichiers / slugs d'URL / attributs HTML
+- 'UPPER_CASE' → constantes
+- 'PascalCase' → classes
 
 ---
 
-## Contributeurs
+## 👨🏻‍💻 Contributeurs
 
 **Marketing**
 - [tbourdiau-hue](#https://github.com/tbourdiau-hue)
