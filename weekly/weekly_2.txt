@@ -1,0 +1,28 @@
+Voici le résumé du weekly :
+
+🧑‍💻 Thomas — Dev & Chef de projet
+Accompli : Finalisation des 15 user stories, mise en place d'une CI/CD de base, réorganisation du board (nouvelle colonne, labels, deadlines roadmap), répartition des tâches pour la semaine suivante. Échanges avec Clémence sur l'architecture (partage de docs, proposition de patterns Feature-Based / Atomic Design, contribution à la structure frontend). Relecture du Use Case de Clémence. Mise à jour du backlog avec décalage du Design System au 27/04 et réattribution des user stories restantes.
+
+En cours : Finalisation des ~10 dernières user stories, affinage de l'architecture frontend/backend avec Clémence.
+
+Bloqué : Rien.
+
+Objectifs Semaine : Reprise des maquettes au weekly du 28/04, fixer une deadline et fournir les docs pour l'apprentissage de la stack back à Clémence (30/04 → 11/05), terminer les user stories et les passer en Markdown, organiser des réunions (Data Modeling / Architecture / User Stories), mettre en place l'architecture côté backend, avancer sur le data modeling, mettre à jour le README avec la visualisation de l'architecture, continuer le suivi des livrables.
+
+🎨 Thelma — Marketing
+Accompli : Finalisation de la maquette haute qualité.
+
+En cours : Préparation et complétion des user stories.
+
+Bloqué : Rien.
+
+Objectifs Semaine : Finir son travail en tant que Market.
+
+👩‍💻 Clémence — Développeuse
+Accompli : Use case mis au propre, version 1 de l'architecture réalisée.
+
+En cours : Rien.
+
+Bloqué : Rien.
+
+Objectifs Semaine : Réaliser le MCD, le MLD et le MPD.
