@@ -99,8 +99,8 @@ SaôneLocal
 │     │  │  └─ recover-account.js
 │     │  │
 │     │  ├─ client/
-│     │  │  ├─ gestion-favorite_procducers.js
-│     │  │  ├─ gestion-favorite_procducts.js
+│     │  │  ├─ gestion-favorite-producers.js
+│     │  │  ├─ gestion-favorite-products.js
 │     │  │  ├─ gestion-cart.js
 │     │  │  ├─ gestion-profil.js
 │     │  │  └─ display-orders.js
@@ -138,7 +138,7 @@ SaôneLocal
 │
 ├─ docs/
 │  ├─ weekly/
-│  │  ├─ weekly 1.md
+│  │  ├─ weekly1.md
 │  │  ├─ weekly2.md
 │  │  └─ ...
 │  │
