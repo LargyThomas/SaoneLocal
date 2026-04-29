@@ -30,7 +30,7 @@ SaôneLocal
 │     │
 │     ├─ features/
 │     │  ├─ public/
-│     │  │  ├─ home-Page.jsx
+│     │  │  ├─ home-page.jsx
 │     │  │  ├─ catalog-page.jsx
 │     │  │  ├─ producer-page.jsx
 │     │  │  ├─ calendar-page.jsx
