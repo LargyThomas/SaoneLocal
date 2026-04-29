@@ -26,7 +26,7 @@ SaôneLocal
 │     │  ├─ footer.jsx
 │     │  ├─ modal.jsx
 │     │  ├─ badge.jsx
-│     │  └─ searchBar.jsx
+│     │  └─ search-bar.jsx
 │     │
 │     ├─ features/
 │     │  ├─ public/
@@ -51,7 +51,7 @@ SaôneLocal
 │     │  │
 │     │  ├─ producer/
 │     │  │  ├─ dashboard-page.jsx
-│     │  │  ├─ catalogManager-page.jsx
+│     │  │  ├─ catalog-manager-page.jsx
 │     │  │  └─ orders-manager-page.jsx
 │     │  │
 │     │  └─ admin/
@@ -65,13 +65,13 @@ SaôneLocal
 │     │
 │     ├─ api/
 │     │  ├─ api.js
-│     │  ├─ auth.api.js
-│     │  ├─ catalog.api.js
-│     │  ├─ orders.api.js
-│     │  ├─ producers.api.js
-│     │  ├─ basket.api.js
-│     │  ├─ favorites.api.js
-│     │  └─ users.api.js
+│     │  ├─ auth-api.js
+│     │  ├─ catalog-api.js
+│     │  ├─ orders-api.js
+│     │  ├─ producers-api.js
+│     │  ├─ basket-api.js
+│     │  ├─ favorites-api.js
+│     │  └─ users-api.js
 │     │
 │     ├─ utils/
 │     │  ├─ format.js
@@ -81,8 +81,8 @@ SaôneLocal
 │     ├─ app.jsx
 │     ├─ main.jsx
 │     ├─ routes.jsx
-│     ├─ tailwind.config.js
-│     ├─ vite.config.js
+│     ├─ tailwind-config.js
+│     ├─ vite-config.js
 │     └─ package.json
 │
 ├─ backend/
