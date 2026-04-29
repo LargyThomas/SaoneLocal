@@ -78,7 +78,7 @@ SaôneLocal
 │     │  ├─ validators.js
 │     │  └─ storage.js
 │     │
-│     ├─ App.jsx
+│     ├─ app.jsx
 │     ├─ main.jsx
 │     ├─ routes.jsx
 │     ├─ tailwind.config.js
