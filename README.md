@@ -120,7 +120,7 @@ SaôneLocal
 │     │  ├─ protection-injection.js
 │     │  └─ payment.js
 │     │
-│     ├─ data_base/
+│     ├─ data-base/
 │     │  ├─ db.sql
 │     │  ├─ seeder.js
 │     │  └─ gestion-db.js
