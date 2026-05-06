@@ -1,10 +1,10 @@
 # 📍 SaôneLocal
 
-SaôneLocal est une association fictive regroupant une cinquantaine de producteurs locaux du bassin chalonnais : vignerons, maraîchers, apiculteurs, fromagers. Après des années sur une plateforme nationale qui leur prélevait 25% de commission, ils ont voté en assemblée générale : ils veulent leur propre outil. Simple, local, et 100% mobile.
+SaôneLocal est une association regroupant une cinquantaine de producteurs locaux du bassin chalonnais : vignerons, maraîchers, apiculteurs, fromagers. Après des années sur une plateforme nationale qui leur prélevait 25% de commission, ils ont voté en assemblée générale : ils veulent leur propre outil. Simple, local, et 100% mobile.
 
 ---
 
-## 📖 Mission
+## 🎯 Mission
 
 Concevoir et développer la marketplace des producteurs locaux du bassin chalonnais de zéro. De la réflexion UX jusqu'au déploiement sur un vrai serveur.
 
@@ -108,7 +108,7 @@ SaoneLocal
 ├─ docs/
 │  ├─ weekly/				                // suivi de l’avancement du projet
 │  ├─ data-model/			              // modélisation de la base de données
-│  └─ ...				                    // documentation complémentaire market
+│  └─ ...				                    // documentation complémentaire Market
 │
 └─ Readme.md				                // documentation principale du projet
 ```
@@ -118,28 +118,84 @@ SaoneLocal
 L'architecture frontend repose sur une combinaison du pattern **Feature-Based** et d'une version simplifiée de l'**Atomic Design**.
 
 ### Atomic Design (simplifié)
+
 - Les composants UI sont fractionnés en composants **modulaires** et **réutilisables**
-- Regroupés dans un dossier 'ui/' et 'features/' à la place de l'architecture classique 'atoms' 'moleculs' 'organisms' 'templates'
+- Regroupés dans un dossier `ui/` et `features/` à la place de l'architecture classique `atoms` `moleculs` `organisms` `templates`
 - L'arborescence complète aurait alourdi inutilement la structure du projet
 
 ### Feature-Based
+
 - Constitue le cœur du **frontend** : chaque grande structure de SaôneLocal = une feature
 - Chaque feature est **indépendante** : une feature ne va pas être dépendante d'une autre
-- La distinction entre les dossiers 'ui/' et 'features/' repose sur la vocation des composants :
-  - 'ui/ → composants **réutilisables**
-  - 'features/' → composants **spécifiques** à un contexte fonctionnel
+- La distinction entre les dossiers `ui/` et `features/` repose sur la vocation des composants :
+  - `ui/` → composants **réutilisables**
+  - `features/` → composants **spécifiques** à un contexte fonctionnel
 - La même logique est appliquée au **backend** pour structurer les différentes parties de l'application
+
+### Sécurité & gestion des accès (Backend)
+
+La sécurité est traitée comme un **domaine à part entière**, isolé dans `src/security/`, et non dispersée dans les features. Elle s'articule autour de deux axes :
+
+**Authentification & tokens**
+- `crypto.js` : hash des mots de passe
+- `jwt.js` : création & vérification des tokens
+
+**Middlewares**
+- `auth.middleware.js` : vérifie l'authentification (JWT)
+- `roles.middleware.js` : contrôle des permissions (RBAC)
+- `injection.middleware.js` : protection XSS / injections
+- `error-message.middleware.js` : messages d'erreur
+
+### Séparation des priorités (Backend)
+
+Le backend distingue trois niveaux dans l'organisation du code :
+
+| Couche | Rôle | Emplacement |
+|---|---|---|
+| **Métier** | Logique applicative par domaine | `src/features/` |
+| **Sécurité** | Authentification, autorisations, protection | `src/security/` |
+| **Infrastructure** | Connexion BDD, schéma, seed | `src/database/` |
+
+Au sein de chaque feature, le code est lui-même structuré en **4 couches distinctes** :
+
+| Fichier | Rôle |
+|---|---|
+| `*.router.js` | Définit les routes et branche les middlewares |
+| `*.controller.js` | Reçoit la requête, appelle le service, renvoie la réponse |
+| `*.service.js` | Contient la logique métier et les interactions avec la BDD |
+| `*.validation.js` | Valide et sanitize les données entrantes avant traitement |
+
+> Le flux est toujours unidirectionnel : **Router → Validation → Controller → Service**. Chaque couche a une responsabilité unique.
+
+### Hooks & Utils
+
+**Hooks** (`src/hooks/`) : logique réutilisable avec état, découplée des composants :
+- `use-fetch.js` : appels HTTP
+- `use-auth.js` : état d'authentification
+- `use-pagination.js` : logique de pagination
+
+**Utils** (`src/utils/`) : fonctions pures sans état, réutilisables partout :
+- `format.js` : formatage (dates, prix...)
+- `validators.js` : validation des inputs
+- `storage.js` : abstraction du `localStorage`
+- `pagination.js` *(backend)* : calcul des offsets
 
 ### Convention de nommage
 
 Les conventions suivantes s'appliquent à **l'ensemble du projet** :
 
-- 'camelCase' → variables et fonctions
-- 'kebab-case' → noms de fichiers / slugs d'URL / attributs HTML
-- 'UPPER_CASE' → constantes
-- 'PascalCase' → classes
+- `camelCase` → variables et fonctions
+- `kebab-case` → noms de fichiers / slugs d'URL / attributs HTML
+- `UPPER_CASE` → constantes
+- `PascalCase` → classes
 
----
+## 🛠️ Stack technique
+
+> Section en cours de rédaction
+
+## 🏁 Guide d'installation & d'utilisation
+
+> Section en cours de rédaction
 
 ## 👨🏻‍💻 Contributeurs
 
