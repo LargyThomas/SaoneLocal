@@ -13,11 +13,11 @@ Concevoir et développer la marketplace des producteurs locaux du bassin chalonn
 ## 📁 Structure du projet
 
 ```
-SaôneLocal
+SaoneLocal
 │
 ├─ frontend/
 │  └─ src/
-│     ├─ ui/
+│     ├─ ui/				                // composants UI génériques réutilisables (design system)
 │     │  ├─ button.jsx
 │     │  ├─ input.jsx
 │     │  ├─ product-card.jsx
@@ -28,128 +28,89 @@ SaôneLocal
 │     │  ├─ badge.jsx
 │     │  └─ search-bar.jsx
 │     │
-│     ├─ features/
-│     │  ├─ public/
-│     │  │  ├─ home-page.jsx
-│     │  │  ├─ catalog-page.jsx
-│     │  │  ├─ producer-page.jsx
-│     │  │  ├─ calendar-page.jsx
-│     │  │  └─ about-page.jsx 
-│     │  │
-│     │  ├─ auth/
-│     │  │  ├─ login-page.jsx
-│     │  │  ├─ forgot-password-page.jsx
-│     │  │  └─ register-page.jsx
-│     │  │
-│     │  ├─ client/
-│     │  │  ├─ cart-page.jsx
-│     │  │  ├─ favorites-page.jsx
-│     │  │  ├─ order-page.jsx
-│     │  │  ├─ history-page.jsx
-│     │  │  ├─ checkout-page.jsx
-│     │  │  └─ profile-page.jsx
-│     │  │
-│     │  ├─ producer/
-│     │  │  ├─ dashboard-page.jsx
-│     │  │  ├─ catalog-manager-page.jsx
-│     │  │  └─ orders-manager-page.jsx
-│     │  │
-│     │  └─ admin/
-│     │      ├─ admin-page.jsx
-│     │      └─ users-page.jsx
+│     ├─ features/			            // organisation par fonctionnalité métier
+│     │  ├─ public/			            // pages accessibles sans connexion
+│     │  ├─ auth/				            // authentification (login, register, reset)
+│     │  ├─ client/			            // espace utilisateur (achat, profil, commandes)
+│     │  ├─ producer/			          // espace producteur (gestion produits & commandes)
+│     │  └─ admin/			            // administration globale
 │     │
-│     ├─ hooks/
+│     ├─ hooks/				              // logique réutilisable
 │     │  ├─ use-fetch.js
 │     │  ├─ use-auth.js
 │     │  └─ use-pagination.js
 │     │
-│     ├─ api/
-│     │  ├─ api.js
-│     │  ├─ auth-api.js
-│     │  ├─ catalog-api.js
-│     │  ├─ orders-api.js
-│     │  ├─ producers-api.js
-│     │  ├─ basket-api.js
-│     │  ├─ favorites-api.js
-│     │  └─ users-api.js
+│     ├─ api/				                // couche d’abstraction des appels HTTP vers le backend
+│     │  ├─ api.js			            // config global
+│     │  ├─ auth.api.js
+│     │  ├─ catalog.api.js
+│     │  ├─ orders.api.js
+│     │  ├─ producers.api.js
+│     │  ├─ basket.api.js
+│     │  ├─ favorites.api.js
+│     │  └─ users.api.js
 │     │
-│     ├─ utils/
+│     ├─ utils/				              // fonctions utilitaires transverses
 │     │  ├─ format.js
 │     │  ├─ validators.js
 │     │  └─ storage.js
 │     │
-│     ├─ app.jsx
-│     ├─ main.jsx
-│     ├─ routes.jsx
-│     ├─ tailwind-config.js
-│     ├─ vite-config.js
-│     └─ package.json
+│     ├─ app.jsx				            // composant racine
+│     ├─ main.jsx			              // point d’entrée React (montage de l’app)
+│     ├─ routes.jsx			            // définition des routes (routing)
+│     ├─ tailwind.config.js
+│     ├─ vite.config.js
+│     └─ .env.example
 │
-├─ backend/
+├─backend/
 │  └─ src/
-│     ├─ features/
-│     │  ├─ public/
-│     │  │  ├─ display-catalogue.js
-│     │  │  ├─ display-producer.js
-│     │  │  └─ display-calendar.js
-│     │  │
-│     │  ├─ auth/
-│     │  │  ├─ log-in.js
-│     │  │  ├─ register.js
-│     │  │  └─ recover-account.js
-│     │  │
-│     │  ├─ client/
-│     │  │  ├─ gestion-favorite-producers.js
-│     │  │  ├─ gestion-favorite-products.js
-│     │  │  ├─ gestion-cart.js
-│     │  │  ├─ gestion-profil.js
-│     │  │  └─ display-orders.js
-│     │  │
-│     │  ├─ producer/
-│     │  │  ├─ gestion-catalog.js
-│     │  │  ├─ gestion-order.js
-│     │  │  ├─ gestion-profil.js
-│     │  │  └─ display-stats.js
-│     │  │
-│     │  └─ admin/
-│     │     ├─ gestion-calendar.js
-│     │     └─ gestion-producer.js
+│     ├─ features/			            // architecture modulaire par domaine métier
+│     │  ├─ catalog/			          // gestion des produits
+│     │  ├─ orders/			            // gestion des commandes
+│     │  ├─ basket/			            // panier utilisateur
+│     │  ├─ favorites/			        // gestion des favoris
+│     │  ├─ calendar/			          // événements
+│     │  ├─ public/			            // accessibles sans auth
+│     │  ├─ auth/				            // authentification
+│     │  ├─ client/			            // logique spécifique côté client
+│     │  ├─ producers/			        // gestion des producteurs
+│     │  └─ admin/			            // administration
 │     │
-│     ├─ security/
-│     │  ├─ crypting.js
-│     │  ├─ protection-injection.js
-│     │  └─ payment.js
+│     ├─ security/			            // gestion sécurité
+│     │  ├─ crypto.js			          // hash des mots de passe
+│     │  ├─ jwt.js				          // création & vérification des tokens
+│     │  └─ middleware/
+│     │      ├─ auth.middleware.js	// vérifie l’authentification (JWT)
+│     │      ├─ roles.middleware.js	// contrôle des permissions (RBAC)
+│     │      ├─ error-message.middleware.js	// messages d’erreur
+│     │      └─ injection.middleware.js	// protection XSS / injections
 │     │
-│     ├─ data-base/
-│     │  ├─ db.sql
-│     │  ├─ seeder.js
-│     │  └─ gestion-db.js
+│     ├─ database/			            // gestion base de données
+│     │  ├─ schema.sql
+│     │  ├─ seed.js
+│     │  └─ database.js
 │     │
-│     └─ utils/
-│        └─ ...
+│     ├─ utils/				              // helpers backend réutilisables
+│     │  └─ pagination.js
+│     │
+│     ├─ app.js         			      // configuration Express
+│     ├─ server.js     			        // lancement du serveur Node.js
+│     └─ .env.example
 │
 ├─ .github/
 │  └─ workflow/
-│     └─ ci.yml
+│     └─ ci.yml				              // pipeline CI/CD
 │
 ├─ docker/
-│  ├─ Dockerfile
-│  └─ docker-compose.yml
+│  ├─ Dockerfile			              // définition de l’image de l’app
+│  └─ docker-compose.yml		        // orchestration des services
 │
 ├─ docs/
-│  ├─ weekly/
-│  │  ├─ weekly1.md
-│  │  ├─ weekly2.md
-│  │  └─ ...
-│  │
-│  ├─ data-model/
-│  │  ├─ MCD.png
-│  │  ├─ MLD.png
-│  │  └─ MPD.png
-│  │
-│  └─ ...
+│  ├─ weekly/				                // suivi de l’avancement du projet
+│  ├─ data-model/			              // modélisation de la base de données
+│  └─ ...				                    // documentation complémentaire market
 │
-└─ Readme.md
+└─ Readme.md				                // documentation principale du projet
 ```
 
 ## 📑 Explication de l'architecture
