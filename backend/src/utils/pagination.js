@@ -1,0 +1,1 @@
+// Pagination helper placeholder\nfunction paginate(items, page = 1, pageSize = 10) {\n  const start = (page - 1) * pageSize;\n  return items.slice(start, start + pageSize);\n}\n\nmodule.exports = { paginate };\n

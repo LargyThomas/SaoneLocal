@@ -1,0 +1,1 @@
+// Error message middleware placeholder\nmodule.exports = function errorMessageMiddleware(err, req, res, next) {\n  res.status(err.status || 500).json({ message: err.message || 'Internal server error' });\n};\n
