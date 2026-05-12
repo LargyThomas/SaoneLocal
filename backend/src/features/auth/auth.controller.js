@@ -1,1 +1,6 @@
-// auth.controller.js\n// TODO: implement auth controller logic\n\nmodule.exports = {};\n
+exports.register = (req, res) => {
+    res.status(200).send("User registered successfully");
+}
+exports.login = (req, res) => {
+    res.status(200).send("User logged in successfully");
+}
