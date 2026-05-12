@@ -10,6 +10,15 @@ Concevoir et développer la marketplace des producteurs locaux du bassin chalonn
 
 ---
 
+## 🎨 Maquettes & Design
+
+- **Figma (UI / UX)** : [Voir les maquettes](https://www.figma.com/design/YWrSEreuXZ1XBNhgbk8dyK/Final-Saonelocal?node-id=0-1&p=f&t=zTXzQXHXLhKipTTg-0)
+- **Design System** : [Voir le Design System](https://github.com/LargyThomas/SaoneLocal/blob/main/docs/charte-graphique/design-system-sa%C3%B4nelocal.pdf)
+
+> Les maquettes ont été réalisées en mobile-first sur une base 375px.
+
+---
+
 ## 📁 Structure du projet
 
 ```
