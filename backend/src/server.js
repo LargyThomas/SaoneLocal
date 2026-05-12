@@ -1,1 +1,13 @@
-// Server launcher\nconst app = require('./app');\nconst port = process.env.PORT || 3000;\napp.listen(port, () => {\n  console.log(\Server listening on port \);\n});
+// Server launcher
+
+const dotenv = require('dotenv');
+
+dotenv.config();
+
+const app = require('./app.js');
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
+}); 
