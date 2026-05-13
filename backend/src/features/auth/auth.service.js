@@ -1,1 +1,1 @@
-// auth.service.js\n// TODO: implement auth service logic\n\nmodule.exports = {};\n
+// Contain business logic and interaction with the database for auth

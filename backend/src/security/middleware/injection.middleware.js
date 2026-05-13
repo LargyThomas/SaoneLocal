@@ -1,0 +1,1 @@
+// Protection against SQL injections and XSS
