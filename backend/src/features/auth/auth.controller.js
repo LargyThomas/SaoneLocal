@@ -1,5 +1,4 @@
 // Receive requests from the routes, call service functions, and send responses back
-const express = require('express');
 
 /**
  * Registers a new user

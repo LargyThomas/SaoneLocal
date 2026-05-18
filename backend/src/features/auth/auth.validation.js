@@ -1,5 +1,5 @@
 // Validate and sanitize user input before it reaches the controller for auth
-export const validateRegister = (req, res, next) => {
+exports.validateRegister = (req, res, next) => {
     // Implement validation logic for registration
     const { email, password } = req.body;
     
@@ -28,7 +28,7 @@ export const validateRegister = (req, res, next) => {
     next();
 }
 
-export const validateLogin = (req, res, next) => {
+exports.validateLogin = (req, res, next) => {
     // Implement validation logic for login
     const { email, password } = req.body;
 
@@ -39,5 +39,3 @@ export const validateLogin = (req, res, next) => {
 
     next();
 }
-
-// Call the validation middleware in /midelware
