@@ -1,1 +1,11 @@
-// JWT helper placeholder\n// TODO: add token creation and verification logic here\nconst jwt = require('jsonwebtoken');\nconst secret = process.env.JWT_SECRET || 'secret';\n\nfunction sign(payload, options) {\n  return jwt.sign(payload, secret, options);\n}\n\nfunction verify(token) {\n  return jwt.verify(token, secret);\n}\n\nmodule.exports = { sign, verify };\n
+const jwt = require('jsonwebtoken')
+
+const signToken = (payload) => {
+    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' })
+}
+
+const verifyToken = (token) => {
+    return jwt.verify(token, process.env.JWT_SECRET)
+}
+
+module.exports = { signToken, verifyToken }
