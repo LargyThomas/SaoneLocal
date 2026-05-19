@@ -1,0 +1,14 @@
+const {Client} = require('pg')
+require('dotenv').config()
+
+const connexion = new Client({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    port: process.env.DB_PORT,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
+})
+
+module.exports = {connexion}
+
+connexion.connect().then(() => console.log("connected"))
