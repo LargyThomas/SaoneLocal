@@ -7,7 +7,7 @@ const { register, login } = authController;
 
 // Implement auth routes logic
 
-router.post('/register', register)
-router.post('/login', login)
+router.post('/api/auth/register', register)
+router.post('/api/auth/login', login)
 
 module.exports = router

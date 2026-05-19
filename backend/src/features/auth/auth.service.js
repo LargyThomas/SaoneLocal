@@ -6,12 +6,12 @@
 
 // NOW() is a SQL function that returns date and time of the current moment.
 
-const pool = require('../../database/database.js')
+const { connexion } = require('../../database/database.js')
 const { hashPassword, comparePassword } = require('../../security/crypto.js')
 const { signToken } = require('../../security/jwt.js')
 
 const register = async ({ email, password, role = 'client', gender, lastName, firstName }) => {
-    const existing = await pool.query(
+    const existing = await connexion.query(
         'SELECT userEmail FROM users WHERE userEmail = $1',
         [email]
     )
@@ -21,7 +21,7 @@ const register = async ({ email, password, role = 'client', gender, lastName, fi
 
     const hashed = await hashPassword(password)
 
-    const result = await pool.query(
+    const result = await connexion.query(
         `INSERT INTO users 
             (userEmail, userPassword, userRole, userGender, userLastName, userFirstName, userCreationDate, userLastConnexion)
          VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
@@ -33,7 +33,7 @@ const register = async ({ email, password, role = 'client', gender, lastName, fi
 }
 
 const login = async ({ email, password }) => {
-    const result = await pool.query(
+    const result = await connexion.query(
         'SELECT * FROM users WHERE userEmail = $1',
         [email]
     )
@@ -49,7 +49,7 @@ const login = async ({ email, password }) => {
         throw new Error('INFORMATIONS_INCORRECTES')
     }
 
-    await pool.query(
+    await connexion.query(
         'UPDATE users SET userLastConnexion = NOW() WHERE userEmail = $1',
         [email]
     )
