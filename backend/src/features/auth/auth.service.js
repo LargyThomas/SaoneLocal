@@ -6,27 +6,30 @@
 
 // NOW() is a SQL function that returns date and time of the current moment.
 
+const ROLES = { client: 0, admin: 1, commercant: 2 };
+
 const { connexion } = require('../../database/database.js')
 const { hashPassword, comparePassword } = require('../../security/crypto.js')
 const { signToken } = require('../../security/jwt.js')
 
 const register = async ({ email, password, role = 'client', gender, lastName, firstName }) => {
+    const roleInt = ROLES[role] ?? 0;
     const existing = await connexion.query(
-        'SELECT userEmail FROM users WHERE userEmail = $1',
+        'SELECT usersEmail FROM users WHERE usersEmail = $1',
         [email]
     )
     if (existing.rows.length > 0) {
         throw new Error('EMAIL_EXISTE_DEJA')
     }
-
+    
     const hashed = await hashPassword(password)
 
     const result = await connexion.query(
         `INSERT INTO users 
-            (userEmail, userPassword, userRole, userGender, userLastName, userFirstName, userCreationDate, userLastConnexion)
+            (usersEmail, usersPassword, usersRole, usersGender, usersLastName, usersFirstName, usersCreationDate, usersLastConnexion)
          VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
-         RETURNING userEmail, userRole, userCreationDate`,
-        [email, hashed, role, gender, lastName, firstName]
+         RETURNING usersEmail, usersRole, usersCreationDate`,
+        [email, hashed, roleInt, gender, lastName, firstName]
     )
 
     return result.rows[0]
@@ -34,7 +37,7 @@ const register = async ({ email, password, role = 'client', gender, lastName, fi
 
 const login = async ({ email, password }) => {
     const result = await connexion.query(
-        'SELECT * FROM users WHERE userEmail = $1',
+        'SELECT * FROM users WHERE usersEmail = $1',
         [email]
     )
 
@@ -44,24 +47,24 @@ const login = async ({ email, password }) => {
 
     const user = result.rows[0]
 
-    const isValid = await comparePassword(password, user.userpassword)
+    const isValid = await comparePassword(password, user.usersPassword)
     if (!isValid) {
         throw new Error('INFORMATIONS_INCORRECTES')
     }
 
     await connexion.query(
-        'UPDATE users SET userLastConnexion = NOW() WHERE userEmail = $1',
+        'UPDATE users SET usersLastConnexion = NOW() WHERE usersEmail = $1',
         [email]
     )
 
-    const token = signToken({ email: user.useremail, role: user.userrole })
+    const token = signToken({ email: user.usersEmail, role: user.usersRole })
 
     return {
         token,
         user: {
-            email: user.useremail,
-            role: user.userrole,
-            createdAt: user.usercreationdate,
+            email: user.usersEmail,
+            role: user.usersRole,
+            createdAt: user.usersCreationDate,
         }
     }
 }

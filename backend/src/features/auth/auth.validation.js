@@ -1,18 +1,18 @@
 // Validate and sanitize user input before it reaches the controller for auth
 exports.validateRegister = (req, res, next) => {
     // Implement validation logic for registration
-    const { email, password } = req.body;
+    const { email, password, gender, lastName, firstName } = req.body;
     
     const emailRegex = /^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*)@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
 
     // Verification if email and password are present in the request body
-    if (!email || !password) {
-        return res.status(400).json({ message: "L'email et le mot de passe sont requis" });
+    if (!email || !password || !gender || !lastName || !firstName) {
+        return res.status(400).json({ message: "Tous les champs sont requis." });
     }
 
     // Verification if email is valid
     if (!emailRegex.test(email)) {
-        return res.status(400).json({ message: "Format d'email invalide" });
+        return res.status(400).json({ message: "Format d'email invalide." });
     }
 
     // Password rules : at leats 8 characters, one uppercase letter and one lowercase letter, one number and on special character
@@ -22,7 +22,7 @@ exports.validateRegister = (req, res, next) => {
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
     if (password.length < 8 || !hasUpperCase || !hasLowerCase || !hasNumber || !hasSpecialChar) {
-        return res.status(400).json({ message: "Le mot de passe doit contenir au moins 8 caractères et inclure au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial" });
+        return res.status(400).json({ message: "Le mot de passe doit contenir au moins 8 caractères et inclure au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial." });
     }
 
     next();
@@ -34,7 +34,7 @@ exports.validateLogin = (req, res, next) => {
 
     // Verification if email and password are present in the request body
     if (!email || !password) {
-        return res.status(400).json({ message: "L'email et le mot de passe sont requis" });
+        return res.status(400).json({ message: "L'email et le mot de passe sont requis." });
     }
 
     next();
