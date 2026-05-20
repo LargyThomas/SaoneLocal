@@ -1,7 +1,7 @@
 // require
 
 const {connexion} = require('./database.js')
-const {admin, user1, producer1, user2, producer2, event1, event2, event3} = require('./const-seed.js')
+const {admin, user1, producer1, user2, producer2, event1, event2, event3, product1, product2, product3, product4, category1, category2, category3, subcategory1, subcategory2, subcategory3, subcategory4, subcategory5, subcategory6} = require('./const-seed.js')
 
 // function gestion
 
@@ -40,6 +40,15 @@ function dispatch(keyWord, values) {
             break
         case "events":
             findEvents(values)
+            break
+        case "product":
+            findProduct(values)
+            break
+        case "category":
+            findCategory(values)
+            break
+        case "subcategory":
+            findSubcategory(values)
             break
     }
     connexion.end
@@ -87,6 +96,36 @@ function findEvents(values) {
     })
 }
 
+function findProduct(values) {
+    connexion.query('Select * from product where productid = $1', [values["productId"]], (err,res)=>{
+        if (gestionFind(err, res) == 0) {
+            connexion.end
+            insertProduct(values)
+        }
+        connexion.end
+    })
+}
+
+function findCategory(values) {
+    connexion.query('Select * from category where categoryid = $1', [values["categoryId"]], (err,res)=>{
+        if (gestionFind(err, res) == 0) {
+            connexion.end
+            insertCategory(values)
+        }
+        connexion.end
+    })
+}
+
+function findSubcategory(values) {
+    connexion.query('Select * from subcategory where subcategoryid = $1', [values["subcategoryId"]], (err,res)=>{
+        if (gestionFind(err, res) == 0) {
+            connexion.end
+            insertSubcategory(values)
+        }
+        connexion.end
+    })
+}
+
 // function insert
 
 function insertUsers(values) {
@@ -117,6 +156,27 @@ function insertEvents(values) {
     })
 }
 
+function insertProduct(values) { 
+    connexion.query('Insert into product values ($1, $2, $3, $4, $5, $6, $7)', [values["productId"], values["producerId"], values["categoryId"], values["subcategoryId"], values["productName"], values["productPrice"], values["productDesc"]], (err,res)=>{
+        connexion.end
+        return gestionErr(err)
+    })
+}
+
+function insertCategory(values) { 
+    connexion.query('Insert into category values ($1, $2)', [values["categoryId"], values["categoryName"]], (err,res)=>{
+        connexion.end
+        return gestionErr(err)
+    })
+}
+
+function insertSubcategory(values) { 
+    connexion.query('Insert into subcategory values ($1, $2)', [values["subcategoryId"], values["subcategoryName"]], (err,res)=>{
+        connexion.end
+        return gestionErr(err)
+    })
+}
+
 // call of the functions
 
 dispatch("users", admin)
@@ -132,3 +192,19 @@ dispatch("user-producer", [user2["usersEmail"], producer2["producerId"]])
 dispatch("events", event1)
 dispatch("events", event2)
 dispatch("events", event3)
+
+dispatch("product", product1)
+dispatch("product", product2)
+dispatch("product", product3)
+dispatch("product", product4)
+
+dispatch("category", category1)
+dispatch("category", category2)
+dispatch("category", category3)
+
+dispatch("subcategory", subcategory1)
+dispatch("subcategory", subcategory2)
+dispatch("subcategory", subcategory3)
+dispatch("subcategory", subcategory4)
+dispatch("subcategory", subcategory5)
+dispatch("subcategory", subcategory6)
