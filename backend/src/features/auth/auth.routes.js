@@ -4,10 +4,11 @@ const express = require('express');
 const router = express.Router();
 const authController = require('./auth.controller');
 const { register, login } = authController;
+const { validateRegister, validateLogin } = require('./auth.validation');
 
 // Implement auth routes logic
 
-router.post('/api/auth/register', register)
-router.post('/api/auth/login', login)
+router.post('/register', validateRegister, register)
+router.post('/login', validateLogin, login)
 
 module.exports = router
