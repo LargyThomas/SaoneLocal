@@ -1,14 +1,19 @@
 // Controls permissions based on user roles (RBAC)
 
+const ROLES = { client: 0, admin: 1, commercant: 2 }
+
 const rolesMiddleware = (requireRoles) => {
-    return(req, res, next) => {
-        if (!req.user){
-            return res.status(401).json({ message: "Rôle manquant." });
+    return (req, res, next) => {
+        if (!req.user) {
+            return res.status(401).json({ message: "Rôle manquant." })
         }
-        if (!requireRoles.includes(req.user.role)) {
-            return res.status(403).json({ message: "Accés refusé. Rôle insuffisant." });
+        const userRoleString = Object.keys(ROLES).find(
+            key => ROLES[key] === req.user.role
+        )
+        if (!requireRoles.includes(userRoleString)) {
+            return res.status(403).json({ message: "Accès refusé. Rôle insuffisant." })
         }
-        next();
+        next()
     }
 }
 
