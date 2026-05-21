@@ -2,28 +2,39 @@
 
 const express = require('express');
 const dotenv = require('dotenv');
+
+// Routes
 const authRoutes = require('./features/auth/auth.routes.js');
-const verifierToken = require('./security/middleware/auth.middleware');
-const autoriserRole = require('./security/middleware/roles.middleware');
+
+// Middlewares
+const injectionMiddleware = require('./security/middleware/injection.middleware.js');
+const errorMiddleware = require('./security/middleware/error-message.middleware.js');
+const authMiddleware = require('./security/middleware/auth.middleware.js');
+const rolesMiddleware = require('./security/middleware/roles.middleware.js');
 
 dotenv.config();
 
 const app = express();
 
-// Middleware to parse JSON data
+// Parse JSON
 app.use(express.json());
 
-// Routes
+// Protection injections XSS
+app.use(injectionMiddleware);
+
+// Auth routes
 app.use('/api/auth', authRoutes);
 
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-    res.status(200).send("Ok");
+// Test routes
+app.get('/api/test/protected', authMiddleware, (req, res) => {
+    res.status(200).json({ message: 'Accès autorisé', user: req.user });
 });
 
-// Example of a protected route with role-based access control
-app.get('/admin', verifierToken, autoriserRole(['admin']), (req, res) => {
-    res.json({ message: "Bienvenue dans la section admin" });
+app.get('/api/test/admin-only', authMiddleware, rolesMiddleware(['admin']), (req, res) => {
+    res.status(200).json({ message: 'Accès admin autorisé' });
 });
+
+// Error handler
+app.use(errorMiddleware);
 
 module.exports = app;
