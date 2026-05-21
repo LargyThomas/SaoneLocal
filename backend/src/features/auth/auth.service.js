@@ -47,7 +47,7 @@ const login = async ({ email, password }) => {
 
     const user = result.rows[0]
 
-    const isValid = await comparePassword(password, user.usersPassword)
+    const isValid = await comparePassword(password, user.userspassword)
     if (!isValid) {
         throw new Error('INFORMATIONS_INCORRECTES')
     }
@@ -57,14 +57,14 @@ const login = async ({ email, password }) => {
         [email]
     )
 
-    const token = signToken({ email: user.usersEmail, role: user.usersRole })
+    const token = signToken({ email: user.usersemail, role: user.usersrole })
 
     return {
         token,
         user: {
-            email: user.usersEmail,
-            role: user.usersRole,
-            createdAt: user.usersCreationDate,
+            email: user.usersemail,
+            role: user.usersrole,
+            createdAt: user.userscreationdate,
         }
     }
 }
