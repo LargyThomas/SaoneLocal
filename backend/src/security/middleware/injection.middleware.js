@@ -1,11 +1,11 @@
 // Protection against SQL injections and XSS
 
+// Middleware sanitize user input to prevent SQL injection and XSS attacks
 const injectionMiddleware = (req, res, next) => {
     const xssRegex = /<[^>]*>/g
 
     const sanitize = (value) => {
         if (typeof value === 'string') {
-            // Block HTYML tags to prevent XSS
             if (xssRegex.test(value)) {
                 return null
             }

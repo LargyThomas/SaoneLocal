@@ -1,5 +1,6 @@
 // Global error handler
 
+// Middleware to catch and handle errors in the application, its placed at the end of the middleware stack in app.js
 const errorMiddleware = (err, req, res, next) => {
     console.error(`[ERROR] ${err.message}`)
 

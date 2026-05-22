@@ -1,7 +1,8 @@
 // Controls permissions based on user roles (RBAC)
 
-const ROLES = { client: 0, admin: 1, commercant: 2 }
+const ROLES = { client: 0, admin: 1, producteur: 2 }
 
+// Middleware to check if the user has the required role to acces any routes
 const rolesMiddleware = (requireRoles) => {
     return (req, res, next) => {
         if (!req.user) {
