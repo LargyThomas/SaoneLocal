@@ -2,6 +2,7 @@
 
 const authService = require('./auth.service');
 
+// Handler registering a new user
 exports.register = async (req, res) => {
     try {
         const user = await authService.register(req.body);
@@ -15,6 +16,7 @@ exports.register = async (req, res) => {
     }
 }
 
+// Handler for logging in a user
 exports.login = async (req, res) => {
     try {
         const result = await authService.login(req.body);

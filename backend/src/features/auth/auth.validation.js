@@ -1,21 +1,19 @@
 // Validate and sanitize user input before it reaches the controller for auth
+
+// Validate a registration by checking if all required fields are present, the email is a valid format,and the password is strong
 exports.validateRegister = (req, res, next) => {
-    // Implement validation logic for registration
     const { email, password, gender, lastName, firstName } = req.body;
     
     const emailRegex = /^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*)@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
 
-    // Verification if email and password are present in the request body
     if (!email || !password || !gender || !lastName || !firstName) {
         return res.status(400).json({ message: "Tous les champs sont requis." });
     }
 
-    // Verification if email is valid
     if (!emailRegex.test(email)) {
         return res.status(400).json({ message: "Format d'email invalide." });
     }
 
-    // Password rules : at leats 8 characters, one uppercase letter and one lowercase letter, one number and on special character
     const hasUpperCase = /[A-Z]/.test(password);
     const hasLowerCase = /[a-z]/.test(password);
     const hasNumber = /[0-9]/.test(password);
@@ -28,11 +26,10 @@ exports.validateRegister = (req, res, next) => {
     next();
 }
 
+// Validate a login by checking the email and password fields are present and not empty
 exports.validateLogin = (req, res, next) => {
-    // Implement validation logic for login
     const { email, password } = req.body;
 
-    // Verification if email and password are present in the request body
     if (!email || !password) {
         return res.status(400).json({ message: "L'email et le mot de passe sont requis." });
     }

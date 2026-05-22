@@ -6,12 +6,13 @@
 
 // NOW() is a SQL function that returns date and time of the current moment.
 
-const ROLES = { client: 0, admin: 1, commercant: 2 };
+const ROLES = { client: 0, admin: 1, producteur: 2 };
 
 const { connexion } = require('../../database/database.js')
 const { hashPassword, comparePassword } = require('../../security/crypto.js')
 const { signToken } = require('../../security/jwt.js')
 
+// Register a new user in the database
 const register = async ({ email, password, role = 'client', gender, lastName, firstName }) => {
     const roleInt = ROLES[role] ?? 0;
     const existing = await connexion.query(
@@ -35,6 +36,7 @@ const register = async ({ email, password, role = 'client', gender, lastName, fi
     return result.rows[0]
 }
 
+// Login an user by checking their credentials and returning a JWT token if valid
 const login = async ({ email, password }) => {
     const result = await connexion.query(
         'SELECT * FROM users WHERE usersEmail = $1',
