@@ -2,7 +2,6 @@
 
 const {connexion} = require('./database.js')
 const {admin, association, usersAssociation, user1, producer1, user2, producer2, event1, event2, event3, product1, product2, product3, product4, category1, category2, category3, subcategory1, subcategory2, subcategory3, subcategory4, subcategory5, subcategory6} = require('./const-seed.js')
-const {hashPassword} = require('../security/crypto.js')
 
 
 // function gestion
@@ -157,9 +156,7 @@ function findUsersAssociation(usersId, associationId) {
 // function insert
 
 async function insertUsers(values) {
-    let hashedPassword = await hashPassword(values["usersPassword"])
-    let hashedEmail = await hashPassword(values["usersEmail"])
-    connexion.query('Insert into users values ($1, $2, $3, $4, $5, date($6), date($7), $8, $9, $10)', [hashedEmail, hashedPassword, values["usersGender"], values["usersLastName"], values["usersFirstName"], values["usersCreationDate"], values["usersLastConnexion"], values["usersRole"], values["usersStatus"], values["usersProfilePicture"]], (err,res)=>{
+    connexion.query('Insert into users values ($1, $2, $3, $4, $5, date($6), date($7), $8, $9, $10)', [values["usersEmail"], values["usersPassword"], values["usersGender"], values["usersLastName"], values["usersFirstName"], values["usersCreationDate"], values["usersLastConnexion"], values["usersRole"], values["usersStatus"], values["usersProfilePicture"]], (err,res)=>{
         connexion.end
         return gestionErr(err)
     })
