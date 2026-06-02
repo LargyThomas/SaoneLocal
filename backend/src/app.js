@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 
 // Routes
 const authRoutes = require('./features/auth/auth.routes.js');
+const producerRoutes = require('./features/producers/producers.routes.js')
 
 // Middlewares
 const injectionMiddleware = require('./security/middleware/injection.middleware.js');
@@ -24,6 +25,10 @@ app.use(injectionMiddleware);
 
 // Auth routes
 app.use('/api/auth', authRoutes);
+
+// Producer routes
+
+app.use('/api/producer', producerRoutes);
 
 // Test routes
 app.get('/api/test/protected', authMiddleware, (req, res) => {
