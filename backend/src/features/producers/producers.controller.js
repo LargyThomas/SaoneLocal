@@ -1,7 +1,14 @@
-// producers.controller.js\n// TODO: implement producers controller logic\n\nmodule.exports = {};\n
-
+// require
 const producerService = require('./producers.service');
 
+// function
+
+/**
+* @description controller of the route /api/producer/
+* @param {hash} req, the request
+* @param {hash} res, the response of the request
+* @return {status} and {json} a message for the status and the information collected from the database if there is no error 
+*/
 AllProducers = async (req, res)=> {
     try {
         const result = await producerService.findAllProducer(req, res);
@@ -12,6 +19,12 @@ AllProducers = async (req, res)=> {
     }
 }
 
+/**
+* @description controller of the route /api/producer/:id
+* @param {hash} req, the request
+* @param {hash} res, the response of the request
+* @return {status} and {json} a message for the status and the information collected from the database if there is no error 
+*/
 ProducerId = async (req, res)=> {
     try {
         const result = await producerService.findProducerId(req, res);
@@ -28,6 +41,12 @@ ProducerId = async (req, res)=> {
     }
 }
 
+/**
+* @description controller of the route /api/producer/:id/product
+* @param {hash} req, the request
+* @param {hash} res, the response of the request
+* @return {status} and {json} a message for the status and the information collected from the database if there is no error 
+*/
 ProducerIdProducts = async (req, res)=> {
     try {
         const result = await producerService.findAllProductProducerId(req, res);
@@ -44,4 +63,5 @@ ProducerIdProducts = async (req, res)=> {
     }
 }
 
+// export
 module.exports = {AllProducers, ProducerId, ProducerIdProducts}

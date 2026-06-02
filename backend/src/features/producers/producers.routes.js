@@ -1,5 +1,4 @@
-// producers.routes.js\n// TODO: implement producers routes logic\n\nmodule.exports = {};\n
-
+// require
 const express = require('express');
 
 const router = express.Router();
@@ -9,9 +8,14 @@ const {validationId} = require('./producers.validation.js')
 
 // Implement producer routes logic
 
-
+// return all the producers
 router.get('/', AllProducers)
-router.get('/:id', validationId, ProducerId) // verif si id < 64 caract et est une chaine de caract
-router.get('/:id/product', validationId, ProducerIdProducts) // verif si id < 64 caract et est une chaine de caract
 
+// return all the informations of the producer id
+router.get('/:id', validationId, ProducerId)
+
+// return all the products of the producer id
+router.get('/:id/product', validationId, ProducerIdProducts)
+
+// export
 module.exports = router
