@@ -13,7 +13,7 @@ const { hashPassword, comparePassword } = require('../../security/crypto.js')
 const { signToken } = require('../../security/jwt.js')
 
 // Register a new user in the database
-const register = async ({ email, password, role = 'client', gender, lastName, firstName }) => {
+const register = async ({ email, password, role = 'client', gender, lastName, firstName, status = 'active' }) => {
     const roleInt = ROLES[role] ?? 0;
     const existing = await connexion.query(
         'SELECT usersEmail FROM users WHERE usersEmail = $1',
@@ -27,10 +27,10 @@ const register = async ({ email, password, role = 'client', gender, lastName, fi
 
     const result = await connexion.query(
         `INSERT INTO users 
-            (usersEmail, usersPassword, usersRole, usersGender, usersLastName, usersFirstName, usersCreationDate, usersLastConnexion)
-         VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
+            (usersEmail, usersPassword, usersRole, usersGender, usersLastName, usersFirstName, usersCreationDate, usersLastConnexion, usersStatus)
+         VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW(), $7)
          RETURNING usersEmail, usersRole, usersCreationDate`,
-        [email, hashed, roleInt, gender, lastName, firstName]
+        [email, hashed, roleInt, gender, lastName, firstName, status]
     )
 
     return result.rows[0]
