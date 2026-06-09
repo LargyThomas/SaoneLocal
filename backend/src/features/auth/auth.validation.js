@@ -28,10 +28,15 @@ exports.validateRegister = (req, res, next) => {
 
 // Validate a login by checking the email and password fields are present and not empty
 exports.validateLogin = (req, res, next) => {
-    const { email, password } = req.body;
+    const { email, password, adminCheckbox } = req.body;
 
     if (!email || !password) {
         return res.status(400).json({ message: "L'email et le mot de passe sont requis." });
+    }
+
+    // If the admin checkbox is not checked, reject the login attempt
+    if (adminCheckbox !== true) {
+        return res.status(400).json({ message: "Vous devez être un administrateur pour vous connecter." });
     }
 
     next();
