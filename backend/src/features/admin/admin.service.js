@@ -1,1 +1,2 @@
-// admin.service.js\n// TODO: implement admin service logic\n\nmodule.exports = {};\n
+// Buisness logic for admin routes
+// Handle producers creation and delation, only by admin.
