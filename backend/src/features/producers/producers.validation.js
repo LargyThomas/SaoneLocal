@@ -12,4 +12,5 @@ const validationId = (req, res, next) => {
     next();
 }
 
+// export
 module.exports = {validationId}
