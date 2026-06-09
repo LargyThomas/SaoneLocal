@@ -164,7 +164,7 @@ IF NOT EXISTS
 CREATE TABLE 
 IF NOT EXISTS
     go_to_events(
-        usersId VARCHAR(50) NOT NULL,
+        producerId INTEGER NOT NULL,
         eventsId INTEGER NOT NULL 
     );
 
