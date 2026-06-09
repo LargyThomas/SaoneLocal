@@ -9,6 +9,7 @@ const producerRoutes = require('./features/producers/producers.routes.js');
 const favoritesRoutes = require('./features/favorites/favorites.routes.js');
 const catalogRoutes = require('./features/catalog/catalog.routes.js');
 const basketRoutes = require('./features/basket/basket.routes.js');
+const orderRoutes = require('./features/orders/orders.routes.js')
 
 // Middlewares
 const injectionMiddleware = require('./security/middleware/injection.middleware.js');
@@ -32,11 +33,15 @@ app.use('/api/auth', authRoutes);
 // Producer routes
 app.use('/api/producer', producerRoutes);
 
+// Order routes
+app.use('/api/orders', orderRoutes);
+
 // Favorites routes
 app.use('/api/favorites', favoritesRoutes);
 
 // Catalog routes
 app.use('/api/catalog', catalogRoutes);
+
 // Basket routes
 app.use('/api/basket', basketRoutes);
 
@@ -45,8 +50,8 @@ app.get('/api/test/order', authMiddleware, (req, res) => {
     res.status(200).json({ message: 'Accès autorisé', user: req.user });
 });
 
-app.get('/api/test/order', authMiddleware, rolesMiddleware(['producer']), (req, res) => {
-    res.status(200).json({ message: 'Accès producer autorisé' });
+app.get('/api/test/admin-only', authMiddleware, rolesMiddleware(['admin']), (req, res) => {
+    res.status(200).json({ message: 'Accès admin autorisé' });
 });
 
 // Error handler
