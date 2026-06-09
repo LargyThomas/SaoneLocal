@@ -69,7 +69,18 @@ findProductProducerIdPage = async (req, res, number) => {
 }
 
 /**
-* @description find all the products of the producers and id and verify if the id is valid
+* @description find all the events of the producer id and id and verify if the id is valid
+* @param {hash} req, the request
+* @param {hash} res, the response of the request
+* @return {array of hash} or {Error} the information collected from the database or an error if the id is not valid
+*/
+findProductEventIdPage = async (req, res) => {
+    result = await connexion.query("SELECT events.eventsLocation, events.eventsDate, events.eventsName FROM events JOIN go_to_events ON events.eventsId = go_to_events.eventsId WHERE go_to_events.producerId = $1", [req.params.id])
+    return result.rows
+}
+
+/**
+* @description find all the products of the producers id and verify if the id is valid
 * @param {hash} req, the request
 * @param {hash} res, the response of the request
 * @return {array of hash} or {Error} the information collected from the database or an error if the id is not valid
@@ -90,4 +101,4 @@ findAllProductProducerId = async (req, res) => {
 }
 
 // export
-module.exports = {findAllProducer, findProducerId, findProductProducerIdPage, findAllProductProducerId}
+module.exports = {findAllProducer, findProducerId, findProductProducerIdPage, findProductEventIdPage, findAllProductProducerId}
