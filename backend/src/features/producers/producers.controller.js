@@ -28,7 +28,8 @@ AllProducers = async (req, res)=> {
 ProducerId = async (req, res)=> {
     try {
         const result = await producerService.findProducerId(req, res);
-        res.status(201).json({ message: "Information correctement récupéré", result: result });
+        const product = await producerService.findProductProducerIdPage(req, res, 9);
+        res.status(201).json({ message: "Information correctement récupéré", resultProducer: result, resultProduct: product});
     } catch (error) {
         if (error.message === 'THIS_ID_DOES_NOT_EXIST') {
             return res.status(404).json({ message: "L'Id demandé n'existe pas" });
