@@ -65,5 +65,28 @@ ProducerIdProducts = async (req, res)=> {
     }
 }
 
+ProducerProfil = async (req,res)=>{
+    try {
+        const user = await producerService.findProfilUser(req, res);
+        const product = await producerService.findProfilProduct(req, res);
+        const order = await producerService.findProfilOrder(req, res);
+        const statistique = await producerService.findProfilStatistique(req, res);
+        res.status(201).json({ message: "Information correctement récupéré", "resultuser":user, "resultproduct": product, "resultorder": order, "resultstatistique": statistique});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Erreur serveur. Veuillez réessayer plus tard." });
+    }
+}
+
+UpdateProducerProfil = async (req, res)=>{
+    try {
+        await producerService.UpdateProducerInformation(req, res);
+        res.status(201).json({ message: "Information correctement modifié"});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Erreur serveur. Veuillez réessayer plus tard." });
+    }
+}
+
 // export
-module.exports = {AllProducers, ProducerId, ProducerIdProducts}
+module.exports = {AllProducers, ProducerId, ProducerIdProducts, ProducerProfil, UpdateProducerProfil}
