@@ -17,8 +17,8 @@ router.get('/', validateGetCatalog, getProducts)
 router.get('/:id', getProductById)
 
 // Producer protected routes
-router.post('/', authMiddleware, rolesMiddleware(['commercant']), validateCreateProduct, createProduct)
-router.patch('/:id', authMiddleware, rolesMiddleware(['commercant']), validateUpdateProduct, updateProduct)
-router.delete('/:id', authMiddleware, rolesMiddleware(['commercant']), deleteProduct)
+router.post('/', authMiddleware, rolesMiddleware(['producteur']), validateCreateProduct, createProduct)
+router.patch('/:id', authMiddleware, rolesMiddleware(['producteur']), validateUpdateProduct, updateProduct)
+router.delete('/:id', authMiddleware, rolesMiddleware(['producteur']), deleteProduct)
 
 module.exports = router
