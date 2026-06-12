@@ -14,7 +14,7 @@ const router = express.Router();
 router.post('/', authMiddleware, rolesMiddleware(['client']), newOrder)
 
 // route for the producer to update the status of the order id
-router.patch('/:id/status', authMiddleware, rolesMiddleware(['producer']), validationId, validationStatus, updateStatus)
+router.patch('/:id/status', authMiddleware, rolesMiddleware(['producteur']), validationId, validationStatus, updateStatus)
 
 // for the producer: array of the orders done to the producer
 // for the user: array of the orders done by the users
