@@ -16,7 +16,7 @@ router.get('/', AllProducers)
 // return the private profil of the connected producer
 router.get('/profil', authMiddleware, rolesMiddleware(['producteur']), ProducerProfil)
 
-// update private profil
+// update private profil of the connected producer
 router.patch('/profil', authMiddleware, rolesMiddleware(['producteur']), validationInformationToUpdate, UpdateProducerProfil)
 
 // return all the informations of the producer id

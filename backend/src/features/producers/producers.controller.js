@@ -4,7 +4,7 @@ const producerService = require('./producers.service');
 // function
 
 /**
-* @description controller of the route /api/producer/
+* @description controller of the route get /api/producer/
 * @param {hash} req, the request
 * @param {hash} res, the response of the request
 * @return {status} and {json} a message for the status and the information collected from the database if there is no error 
@@ -20,7 +20,7 @@ AllProducers = async (req, res)=> {
 }
 
 /**
-* @description controller of the route /api/producer/:id
+* @description controller of the route get /api/producer/:id
 * @param {hash} req, the request
 * @param {hash} res, the response of the request
 * @return {status} and {json} a message for the status and the information collected from the database if there is no error 
@@ -44,7 +44,7 @@ ProducerId = async (req, res)=> {
 }
 
 /**
-* @description controller of the route /api/producer/:id/product
+* @description controller of the route get /api/producer/:id/product
 * @param {hash} req, the request
 * @param {hash} res, the response of the request
 * @return {status} and {json} a message for the status and the information collected from the database if there is no error 
@@ -65,6 +65,12 @@ ProducerIdProducts = async (req, res)=> {
     }
 }
 
+/**
+* @description controller of the route get /api/producer/profil
+* @param {hash} req, the request
+* @param {hash} res, the response of the request
+* @return {status} and {json} a message for the status and the information collected from the database if there is no error 
+*/
 ProducerProfil = async (req,res)=>{
     try {
         const user = await producerService.findProfilUser(req, res);
@@ -78,6 +84,12 @@ ProducerProfil = async (req,res)=>{
     }
 }
 
+/**
+* @description controller of the route patch /api/producer/profil
+* @param {hash} req, the request
+* @param {hash} res, the response of the request
+* @return {status} and {json} a message for the status 
+*/
 UpdateProducerProfil = async (req, res)=>{
     try {
         await producerService.UpdateProducerInformation(req, res);

@@ -1,5 +1,9 @@
+// const
+
 const hashUpdate = {"usersPassword": 64, "usersGender": 1, "usersLastname": 50, "usersFirstname": 50,"usersProfilPicture": 500,"producerDesc": 1500,"producerLocalisation": 100,"producerSiretNum": 14}
 const hashGender = {"M": "ok", "F": "ok", "A": "ok"}
+
+//function
 
 /**
 * @description Check if the id given is a number
@@ -83,7 +87,7 @@ const validationInformationToUpdate = (req, res, next) => {
             return res.status(400).json({ message: "Information invalide" });
         }
         if (error.message == 'MISSING_INFORMATION') {
-            return res.status(400).json({ message: "Les valeur key et value doivent être renseigné" });
+            return res.status(400).json({ message: "Les valeurs key et value doivent être renseigné" });
         }
         if (error.message == 'NO_PERMISSION') {
             return res.status(423).json({ message: "Vous n'avez pas la permission de modifier ce champs" });

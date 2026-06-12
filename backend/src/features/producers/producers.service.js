@@ -132,7 +132,7 @@ findAllProductProducerId = async (req, res) => {
 }
 
 /**
-* @description find all the producers
+* @description find all the informations of the producer connected
 * @param {hash} req, the request
 * @param {hash} res, the response of the request
 * @return {array of hash} the information collected from the database
@@ -143,7 +143,7 @@ findProfilUser = async (req, res) => {
 }
 
 /**
-* @description find all the producers
+* @description find all the products the producer connected
 * @param {hash} req, the request
 * @param {hash} res, the response of the request
 * @return {array of hash} the information collected from the database
@@ -155,7 +155,7 @@ findProfilProduct = async (req, res) => {
 }
 
 /**
-* @description find all the producers
+* @description find all the new orders of the connected producer
 * @param {hash} req, the request
 * @param {hash} res, the response of the request
 * @return {array of hash} the information collected from the database
@@ -177,7 +177,7 @@ findProfilOrder = async (req, res) => {
 }
 
 /**
-* @description find all the producers
+* @description find the statistiques of the connected producer
 * @param {hash} req, the request
 * @param {hash} res, the response of the request
 * @return {array of hash} the information collected from the database
