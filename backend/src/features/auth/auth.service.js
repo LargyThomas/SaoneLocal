@@ -52,6 +52,9 @@ const login = async ({ email, password, adminCheckbox }) => {
     }
 
     const user = result.rows[0]
+    if (user.usersstatus !== 'active') {
+        throw new Error('COMPTE_INACTIF')
+    }
 
     const isValid = await comparePassword(password, user.userspassword)
     if (!isValid) {

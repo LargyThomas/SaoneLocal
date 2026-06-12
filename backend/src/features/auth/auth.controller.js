@@ -22,6 +22,9 @@ exports.login = async (req, res) => {
         const result = await authService.login(req.body);
         res.status(202).json({ message: "Connexion réussie.", token: result.token, user: result.user });
     } catch (error) {
+        if (error.message === 'COMPTE_INACTIF') {
+            return res.status(403).json({ message: "Ce compte n'est pas actif." });
+        }
         if (error.message === 'INFORMATIONS_INCORRECTES') {
             return res.status(401).json({ message: "Informations de connexion incorrectes." });
         }
