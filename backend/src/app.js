@@ -10,6 +10,7 @@ const favoritesRoutes = require('./features/favorites/favorites.routes.js');
 const catalogRoutes = require('./features/catalog/catalog.routes.js');
 const basketRoutes = require('./features/basket/basket.routes.js');
 const orderRoutes = require('./features/orders/orders.routes.js')
+const adminRoutes = require('./features/admin/admin.routes.js')
 
 // Middlewares
 const injectionMiddleware = require('./security/middleware/injection.middleware.js');
@@ -29,6 +30,9 @@ app.use(injectionMiddleware);
 
 // Auth routes
 app.use('/api/auth', authRoutes);
+
+// Admin routes
+app.use('/api/admin', adminRoutes)
 
 // Producer routes
 app.use('/api/producer', producerRoutes);
