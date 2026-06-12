@@ -25,6 +25,9 @@ exports.login = async (req, res) => {
         if (error.message === 'INFORMATIONS_INCORRECTES') {
             return res.status(401).json({ message: "Informations de connexion incorrectes." });
         }
+        if (error.message === 'ADMIN_CHECKBOX_REQUIRED') {
+            return res.status(400).json({ message: "Vous devez confirmer la connexion administrateur." });
+        }
         console.error(error);
         res.status(500).json({ message: "Erreur serveur. Veuillez réessayer plus tard." });
     }

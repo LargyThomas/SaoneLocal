@@ -12,6 +12,10 @@ const { connexion } = require('../../database/database.js')
 const { hashPassword, comparePassword } = require('../../security/crypto.js')
 const { signToken } = require('../../security/jwt.js')
 
+const isCheckboxChecked = (value) => {
+    return value === true || value === 'true' || value === 'on' || value === 1 || value === '1'
+}
+
 // Register a new user in the database
 const register = async ({ email, password, role = 'client', gender, lastName, firstName, status = 'active' }) => {
     const roleInt = ROLES[role] ?? 1;
@@ -37,7 +41,7 @@ const register = async ({ email, password, role = 'client', gender, lastName, fi
 }
 
 // Login an user by checking their credentials and returning a JWT token if valid
-const login = async ({ email, password }) => {
+const login = async ({ email, password, adminCheckbox }) => {
     const result = await connexion.query(
         'SELECT * FROM users WHERE usersEmail = $1',
         [email]
@@ -52,6 +56,10 @@ const login = async ({ email, password }) => {
     const isValid = await comparePassword(password, user.userspassword)
     if (!isValid) {
         throw new Error('INFORMATIONS_INCORRECTES')
+    }
+
+    if (user.usersrole === ROLES.admin && !isCheckboxChecked(adminCheckbox)) {
+        throw new Error('ADMIN_CHECKBOX_REQUIRED')
     }
 
     await connexion.query(
