@@ -158,7 +158,8 @@ IF NOT EXISTS
         eventsLocation VARCHAR(100) NOT NULL,
         eventsDate DATE NOT NULL,
         eventsName VARCHAR(100) NOT NULL,
-        eventsDesc VARCHAR(1500) NOT NULL
+        eventsDesc VARCHAR(1500) NOT NULL,
+        eventsStatus VARCHAR(10) NOT NULL
     );
 
 CREATE TABLE 
