@@ -1,1 +1,18 @@
-// client.routes.js\n// TODO: implement client routes logic\n\nmodule.exports = {};\n
+// require
+const express = require('express');
+const authMiddleware = require('../../security/middleware/auth.middleware.js');
+const rolesMiddleware = require('../../security/middleware/roles.middleware.js');
+
+const router = express.Router();
+
+const {clientProfil, updateClientProfil} = require('./client.controller.js')
+const {validationInformationToUpdate} = require('./client.validation.js')
+
+// return the private profil of the connected client
+router.get('/profil', authMiddleware, rolesMiddleware(['client']), clientProfil)
+
+// update private profil of the connected client
+router.patch('/profil', authMiddleware, rolesMiddleware(['client']), validationInformationToUpdate, updateClientProfil)
+
+// export
+module.exports = router
