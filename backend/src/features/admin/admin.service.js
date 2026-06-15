@@ -45,6 +45,28 @@ const deleteProducer = async (producerId) => {
     }
 }
 
+const enableProducer = async (producerId) => {
+    const producer = await connexion.query('SELECT p.producerId, p.producerSiretNum, up.usersId FROM producer p LEFT JOIN user_producer up ON up.producerId = p.producerId WHERE p.producerId = $1', [producerId])
+
+    if (producer.rows.length === 0) {
+        throw new Error('PRODUCTEUR_NON_TROUVE')
+    }
+
+    await connexion.query('UPDATE producer SET producerStatus = $1 WHERE producerId = $2', ['active', producerId])
+
+    if (producer.rows[0].usersid) {
+        await connexion.query('UPDATE users SET usersStatus = $1 WHERE usersEmail = $2', ['active', producer.rows[0].usersid])
+    }
+
+    return {
+        producerId: producer.rows[0].producerid,
+        producerSiretNum: producer.rows[0].producersiretnum,
+        producerStatus: 'active',
+        usersEmail: producer.rows[0].usersid,
+        usersStatus: producer.rows[0].usersid ? 'active' : null
+    }
+}
+
 const getProducers = async () => {
     const producers = await connexion.query('SELECT p.*, up.usersId, u.usersFirstname, u.usersLastname, u.usersCreationDate, u.usersStatus FROM producer p LEFT JOIN user_producer up ON up.producerId = p.producerId LEFT JOIN users u ON u.usersEmail = up.usersId ORDER BY p.producerId DESC')
     return producers.rows
@@ -107,6 +129,148 @@ const updateUser = async (email, { usersRole, usersStatus }) => {
     return user.rows[0]
 }
 
+const getOrders = async () => {
+    const orders = await connexion.query('SELECT o.ordersId, o.usersId, o.ordersTotalCost, o.ordersDate, o.ordersStatus, u.usersFirstname, u.usersLastname FROM orders o LEFT JOIN users u ON u.usersEmail = o.usersId ORDER BY o.ordersDate DESC, o.ordersId DESC')
+    return orders.rows
+}
+
+const getOrderById = async (orderId) => {
+    const order = await connexion.query('SELECT o.ordersId, o.usersId, o.ordersTotalCost, o.ordersDate, o.ordersStatus, u.usersFirstname, u.usersLastname FROM orders o LEFT JOIN users u ON u.usersEmail = o.usersId WHERE o.ordersId = $1', [orderId])
+
+    if (order.rows.length === 0) {
+        throw new Error('COMMANDE_NON_TROUVEE')
+    }
+
+    const items = await connexion.query('SELECT oi.ordersItemsId, oi.productId, oi.ordersItemsQuantity, oi.ordersItemsTotalCost, p.productName, p.productPrice, p.productStatus, pr.producerId, pr.producerSiretNum FROM orders_items oi LEFT JOIN product p ON p.productId = oi.productId LEFT JOIN producer pr ON pr.producerId = p.producerId WHERE oi.ordersId = $1 ORDER BY oi.ordersItemsId ASC', [orderId])
+
+    return { ...order.rows[0], items: items.rows }
+}
+
+const updateOrderStatus = async (orderId, ordersStatus) => {
+    const order = await connexion.query('UPDATE orders SET ordersStatus = $1 WHERE ordersId = $2 RETURNING ordersId, usersId, ordersTotalCost, ordersDate, ordersStatus', [ordersStatus, orderId])
+
+    if (order.rows.length === 0) {
+        throw new Error('COMMANDE_NON_TROUVEE')
+    }
+
+    return order.rows[0]
+}
+
+const cancelOrder = async (orderId) => {
+    return updateOrderStatus(orderId, 'a')
+}
+
+const getProducts = async () => {
+    const products = await connexion.query('SELECT p.productId, p.producerId, p.categoryId, p.subcategoryId, p.productName, p.productPrice, p.productDesc, p.productStatus, p.productPicture, pr.producerSiretNum, c.categoryName, sc.subcategoryName FROM product p LEFT JOIN producer pr ON pr.producerId = p.producerId LEFT JOIN category c ON c.categoryId = p.categoryId LEFT JOIN subcategory sc ON sc.subcategoryId = p.subcategoryId ORDER BY p.productId DESC')
+    return products.rows
+}
+
+const getProductById = async (productId) => {
+    const product = await connexion.query('SELECT p.productId, p.producerId, p.categoryId, p.subcategoryId, p.productName, p.productPrice, p.productDesc, p.productStatus, p.productPicture, pr.producerSiretNum, c.categoryName, sc.subcategoryName FROM product p LEFT JOIN producer pr ON pr.producerId = p.producerId LEFT JOIN category c ON c.categoryId = p.categoryId LEFT JOIN subcategory sc ON sc.subcategoryId = p.subcategoryId WHERE p.productId = $1', [productId])
+
+    if (product.rows.length === 0) {
+        throw new Error('PRODUIT_NON_TROUVE')
+    }
+
+    return product.rows[0]
+}
+
+const updateProductStatus = async (productId, productStatus) => {
+    const product = await connexion.query('UPDATE product SET productStatus = $1 WHERE productId = $2 RETURNING productId, producerId, categoryId, subcategoryId, productName, productPrice, productDesc, productStatus, productPicture', [productStatus, productId])
+
+    if (product.rows.length === 0) {
+        throw new Error('PRODUIT_NON_TROUVE')
+    }
+
+    return product.rows[0]
+}
+
+const disableProduct = async (productId) => {
+    return updateProductStatus(productId, 'inactive')
+}
+
+const enableProduct = async (productId) => {
+    return updateProductStatus(productId, 'active')
+}
+
+const deleteProduct = async (productId) => {
+    const product = await connexion.query('DELETE FROM product WHERE productId = $1 RETURNING productId, productName, productStatus', [productId])
+
+    if (product.rows.length === 0) {
+        throw new Error('PRODUIT_NON_TROUVE')
+    }
+
+    return product.rows[0]
+}
+
+const getEvents = async () => {
+    const events = await connexion.query('SELECT eventsId, eventsLocation, eventsDate, eventsName, eventsDesc FROM events ORDER BY eventsDate DESC, eventsId DESC')
+    return events.rows
+}
+
+const getEventById = async (eventId) => {
+    const event = await connexion.query('SELECT eventsId, eventsLocation, eventsDate, eventsName, eventsDesc FROM events WHERE eventsId = $1', [eventId])
+
+    if (event.rows.length === 0) {
+        throw new Error('EVENEMENT_NON_TROUVE')
+    }
+
+    return event.rows[0]
+}
+
+const createEvent = async ({ eventsLocation, eventsDate, eventsName, eventsDesc }) => {
+    const event = await connexion.query('INSERT INTO events (eventsLocation, eventsDate, eventsName, eventsDesc) VALUES ($1, $2, $3, $4) RETURNING eventsId, eventsLocation, eventsDate, eventsName, eventsDesc', [eventsLocation, eventsDate, eventsName, eventsDesc])
+    return event.rows[0]
+}
+
+const updateEvent = async (eventId, { eventsLocation, eventsDate, eventsName, eventsDesc }) => {
+    const event = await connexion.query('UPDATE events SET eventsLocation = $1, eventsDate = $2, eventsName = $3, eventsDesc = $4 WHERE eventsId = $5 RETURNING eventsId, eventsLocation, eventsDate, eventsName, eventsDesc', [eventsLocation, eventsDate, eventsName, eventsDesc, eventId])
+
+    if (event.rows.length === 0) {
+        throw new Error('EVENEMENT_NON_TROUVE')
+    }
+
+    return event.rows[0]
+}
+
+const updateEventStatus = async (eventId, eventsStatus) => {
+    const event = await connexion.query('SELECT eventsId FROM events WHERE eventsId = $1', [eventId])
+
+    if (event.rows.length === 0) {
+        throw new Error('EVENEMENT_NON_TROUVE')
+    }
+
+    try {
+        const updatedEvent = await connexion.query('UPDATE events SET eventsStatus = $1 WHERE eventsId = $2 RETURNING eventsId, eventsLocation, eventsDate, eventsName, eventsDesc, eventsStatus', [eventsStatus, eventId])
+        return updatedEvent.rows[0]
+    } catch (error) {
+        if (error.code === '42703') {
+            throw new Error('EVENT_STATUS_COLUMN_MISSING')
+        }
+        throw error
+    }
+}
+
+const disableEvent = async (eventId) => {
+    return updateEventStatus(eventId, 'inactive')
+}
+
+const enableEvent = async (eventId) => {
+    return updateEventStatus(eventId, 'active')
+}
+
+const deleteEvent = async (eventId) => {
+    await connexion.query('DELETE FROM go_to_events WHERE eventsId = $1', [eventId])
+
+    const event = await connexion.query('DELETE FROM events WHERE eventsId = $1 RETURNING eventsId, eventsLocation, eventsDate, eventsName, eventsDesc', [eventId])
+
+    if (event.rows.length === 0) {
+        throw new Error('EVENEMENT_NON_TROUVE')
+    }
+
+    return event.rows[0]
+}
+
 const getLogs = async () => {
     const usersCreated = await connexion.query('SELECT usersFirstname, usersLastname, usersEmail, usersCreationDate FROM users ORDER BY usersCreationDate DESC LIMIT 5')
     const usersConnected = await connexion.query('SELECT usersFirstname, usersLastname, usersEmail, usersLastConnexion FROM users ORDER BY usersLastConnexion DESC LIMIT 5')
@@ -156,4 +320,4 @@ const getLogs = async () => {
     return logs.slice(0, 20)
 }
 
-module.exports = { getDashboard, getProducers, createProducer, deleteProducer, getUsers, getUserByEmail, updateUser, getLogs }
+module.exports = { getDashboard, getProducers, createProducer, deleteProducer, enableProducer, getUsers, getUserByEmail, updateUser, getOrders, getOrderById, updateOrderStatus, cancelOrder, getProducts, getProductById, disableProduct, enableProduct, deleteProduct, getEvents, getEventById, createEvent, updateEvent, disableEvent, enableEvent, deleteEvent, getLogs }
