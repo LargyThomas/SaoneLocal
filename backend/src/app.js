@@ -49,15 +49,6 @@ app.use('/api/catalog', catalogRoutes);
 // Basket routes
 app.use('/api/basket', basketRoutes);
 
-// Test routes
-app.get('/api/test/order', authMiddleware, (req, res) => {
-    res.status(200).json({ message: 'Accès autorisé', user: req.user });
-});
-
-app.get('/api/test/admin-only', authMiddleware, rolesMiddleware(['admin']), (req, res) => {
-    res.status(200).json({ message: 'Accès admin autorisé' });
-});
-
 // Error handler
 app.use(errorMiddleware);
 

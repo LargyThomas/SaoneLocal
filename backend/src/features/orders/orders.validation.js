@@ -27,7 +27,7 @@ const validationId = (req, res, next) => {
 */
 const validationStatus = (req, res, next) => {
     if (hashStatus[req.body["ordersStatus"]] == null) {
-        return res.status(400).json({ message: "Le format du status n'est pas correct" });
+        return res.status(400).json({ message: "Le format du statut n'est pas correct" });
     }
     next();
 }

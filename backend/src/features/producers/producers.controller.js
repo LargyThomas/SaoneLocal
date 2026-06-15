@@ -12,7 +12,7 @@ const producerService = require('./producers.service');
 AllProducers = async (req, res)=> {
     try {
         const result = await producerService.findAllProducer(req, res);
-        res.status(201).json({ message: "Information correctement récupéré", result: result });
+        res.status(201).json({ message: "Informations correctement récupérées.", result: result });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Erreur serveur. Veuillez réessayer plus tard." });
@@ -30,13 +30,13 @@ ProducerId = async (req, res)=> {
         const result = await producerService.findProducerId(req, res);
         const product = await producerService.findProductProducerIdPage(req, res, 9);
         const event = await producerService.findProductEventIdPage(req, res);
-        res.status(201).json({ message: "Information correctement récupéré", resultProducer: result, resultProduct: product, resultEvent: event});
+        res.status(201).json({ message: "Informations correctement récupérées.", resultProducer: result, resultProduct: product, resultEvent: event});
     } catch (error) {
         if (error.message === 'THIS_ID_DOES_NOT_EXIST') {
             return res.status(404).json({ message: "L'Id demandé n'existe pas" });
         }
         if (error.message === 'PRODUCER_NOT_ACTIVE') {
-            return res.status(423).json({ message: "Informations inaccesibles" });
+            return res.status(423).json({ message: "Informations inaccessibles." });
         }
         console.error(error);
         res.status(500).json({ message: "Erreur serveur. Veuillez réessayer plus tard." });
@@ -52,13 +52,13 @@ ProducerId = async (req, res)=> {
 ProducerIdProducts = async (req, res)=> {
     try {
         const result = await producerService.findAllProductProducerId(req, res);
-        res.status(201).json({ message: "Information correctement récupéré", result:result });
+        res.status(201).json({ message: "Informations correctement récupérées.", result:result });
     } catch (error) {
         if (error.message === 'THIS_ID_DOES_NOT_EXIST') {
             return res.status(404).json({ message: "L'Id demandé n'existe pas" });
         }
         if (error.message === 'PRODUCER_NOT_ACTIVE') {
-            return res.status(423).json({ message: "Informations inaccesibles" });
+            return res.status(423).json({ message: "Informations inaccessibles." });
         }
         console.error(error);
         res.status(500).json({ message: "Erreur serveur. Veuillez réessayer plus tard." });
@@ -77,7 +77,7 @@ ProducerProfil = async (req,res)=>{
         const product = await producerService.findProfilProduct(req, res);
         const order = await producerService.findProfilOrder(req, res);
         const statistique = await producerService.findProfilStatistique(req, res);
-        res.status(201).json({ message: "Information correctement récupéré", "resultuser":user, "resultproduct": product, "resultorder": order, "resultstatistique": statistique});
+        res.status(201).json({ message: "Informations correctement récupérées.", "resultuser":user, "resultproduct": product, "resultorder": order, "resultstatistique": statistique});
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Erreur serveur. Veuillez réessayer plus tard." });
@@ -93,7 +93,7 @@ ProducerProfil = async (req,res)=>{
 UpdateProducerProfil = async (req, res)=>{
     try {
         await producerService.UpdateProducerInformation(req, res);
-        res.status(201).json({ message: "Information correctement modifié"});
+        res.status(201).json({ message: "Information correctement modifiée."});
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Erreur serveur. Veuillez réessayer plus tard." });

@@ -219,7 +219,7 @@ const getEventById = async (eventId) => {
 }
 
 const createEvent = async ({ eventsLocation, eventsDate, eventsName, eventsDesc }) => {
-    const event = await connexion.query('INSERT INTO events (eventsLocation, eventsDate, eventsName, eventsDesc) VALUES ($1, $2, $3, $4) RETURNING eventsId, eventsLocation, eventsDate, eventsName, eventsDesc', [eventsLocation, eventsDate, eventsName, eventsDesc])
+    const event = await connexion.query('INSERT INTO events (eventsLocation, eventsDate, eventsName, eventsDesc, eventsStatus) VALUES ($1, $2, $3, $4, $5) RETURNING eventsId, eventsLocation, eventsDate, eventsName, eventsDesc, eventsStatus', [eventsLocation, eventsDate, eventsName, eventsDesc, 'active'])
     return event.rows[0]
 }
 

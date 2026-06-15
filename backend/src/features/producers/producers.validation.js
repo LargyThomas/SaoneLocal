@@ -87,13 +87,13 @@ const validationInformationToUpdate = (req, res, next) => {
             return res.status(400).json({ message: "Information invalide" });
         }
         if (error.message == 'MISSING_INFORMATION') {
-            return res.status(400).json({ message: "Les valeurs key et value doivent être renseigné" });
+            return res.status(400).json({ message: "Les valeurs key et value doivent être renseignées" });
         }
         if (error.message == 'NO_PERMISSION') {
-            return res.status(423).json({ message: "Vous n'avez pas la permission de modifier ce champs" });
+            return res.status(423).json({ message: "Vous n'avez pas la permission de modifier ce champ" });
         }
         if (error.message == 'TO_MANY_CHARACTER') {
-            return res.status(400).json({ message: "Le champs contient un trop grand nombre de caractères" });
+            return res.status(400).json({ message: "Le champ contient un trop grand nombre de caractères" });
         }
         if (error.message == 'INVALIDE_PASSWORD') {
             return res.status(400).json({ message: "Le mot de passe doit contenir au moins 8 caractères et inclure au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial." });
