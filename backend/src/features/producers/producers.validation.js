@@ -52,7 +52,7 @@ const verifyValue = (req, res) => {
     }
 
     if (req.body.key == "usersGender" && hashGender[req.body.value] == null) {
-        throw new Error('INVALIDE_GENDER')
+        throw new Error('INVALIDE_INFORMATION')
     }
 
     if (req.body.key == "usersPassword") {
