@@ -4,17 +4,21 @@
 
 const { connexion } = require('../../database/database.js')
 
-const getProducts = async ({ page = 1, category, producer }) => {
+const getProducts = async ({ page = 1, category, producer, q, search }) => {
     const limit = 10
     const offset = (parseInt(page) - 1) * limit
+    const searchTerm = q || search
 
     let query = `
         SELECT 
             p.productId,
+            p.productPicture,
             p.productName,
             p.productPrice,
             p.productDesc,
+            c.categoryId,
             c.categoryName,
+            sc.subcategoryId,
             sc.subcategoryName,
             pr.producerId,
             pr.producerDesc
@@ -29,14 +33,26 @@ const getProducts = async ({ page = 1, category, producer }) => {
     let paramIndex = 1
 
     if (category) {
-        query += ` AND c.categoryName ILIKE $${paramIndex}`
-        params.push(`%${category}%`)
+        query += ` AND p.categoryId = $${paramIndex}`
+        params.push(parseInt(category))
         paramIndex++
     }
 
     if (producer) {
         query += ` AND pr.producerId = $${paramIndex}`
         params.push(parseInt(producer))
+        paramIndex++
+    }
+
+    if (searchTerm) {
+        query += ` AND (
+            p.productName ILIKE $${paramIndex}
+            OR p.productDesc ILIKE $${paramIndex}
+            OR c.categoryName ILIKE $${paramIndex}
+            OR sc.subcategoryName ILIKE $${paramIndex}
+            OR pr.producerDesc ILIKE $${paramIndex}
+        )`
+        params.push(`%${searchTerm.trim()}%`)
         paramIndex++
     }
 
@@ -66,10 +82,13 @@ const getProductById = async (id) => {
     const result = await connexion.query(`
         SELECT 
             p.productId,
+            p.productPicture,
             p.productName,
             p.productPrice,
             p.productDesc,
+            c.categoryId,
             c.categoryName,
+            sc.subcategoryId,
             sc.subcategoryName,
             pr.producerId,
             pr.producerDesc

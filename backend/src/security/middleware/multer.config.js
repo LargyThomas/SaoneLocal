@@ -1,8 +1,6 @@
 // Handles file upload validation for image assets
 
 const multer = require('multer')
-const { v4: uuidv4 } = require('uuid')
-const path = require('path')
 
 // Use memory storage for file uploads
 const storage = multer.memoryStorage()
@@ -13,7 +11,7 @@ const fileFilter = (req, file, cb) => {
     if (allowedFiles.includes(file.mimetype)) {
         cb(null, true)
     } else {
-        cb(new Error('Only .jpg, .png, .webp files are allowed.'), false)
+        cb(new Error('FORMAT_IMAGE_INVALIDE'), false)
     }
 }
 

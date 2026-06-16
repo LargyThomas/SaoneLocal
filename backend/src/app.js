@@ -13,6 +13,7 @@ const calendarRoutes = require('./features/calendar/calendar.routes.js');
 const basketRoutes = require('./features/basket/basket.routes.js');
 const orderRoutes = require('./features/orders/orders.routes.js')
 const adminRoutes = require('./features/admin/admin.routes.js')
+const uploadRoutes = require('./features/upload/upload.routes.js')
 
 // Middlewares
 const injectionMiddleware = require('./security/middleware/injection.middleware.js');
@@ -56,6 +57,9 @@ app.use('/api/calendar', calendarRoutes);
 
 // Basket routes
 app.use('/api/basket', basketRoutes);
+
+// Upload routes
+app.use('/api/upload', uploadRoutes);
 
 // Error handler
 app.use(errorMiddleware);
