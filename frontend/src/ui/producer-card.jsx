@@ -1,17 +1,44 @@
-function ProducerCard({ name = "Nom du producteur", location = "Localisation du producteur", image = "", href = "#" }) {
+import Badge from "./badge.jsx";
+import Button from "./button.jsx";
+import Card from "./card.jsx";
+
+export default function ProducerCard({
+  producer,
+  name = producer?.producerNameMock || producer?.producername || "Producteur local",
+  job = producer?.producerDesc || producer?.producerdesc || "Métier local",
+  location = producer?.producerLocalisation || producer?.producerlocalisation || "Localisation à venir",
+  image = producer?.producerPictureMock || producer?.producerpicture || "",
+  href = producer?.producerId ? `/producteurs/${producer.producerId}` : producer?.producerid ? `/producteurs/${producer.producerid}` : "/producteurs/demo",
+  status = producer?.producerStatus || producer?.producerstatus || "local",
+}) {
+  const statusLabel = status === "active" ? "Actif" : status;
+  const statusVariant = status === "active" ? "success" : "muted";
+
   return (
-    <article className="w-full max-w-xs overflow-hidden rounded-xl bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-      <img src={image} alt={`Photo de ${name}`} className="h-44 w-full object-cover"/>
-
-      <div className="p-4">
-        <h2 className="text-lg font-bold text-gray-900">{name}</h2>
-
-        <p className="mt-1 text-sm text-gray-600">{location}</p>
-
-        <a href={href} className="mt-4 inline-flex w-full items-center justify-center rounded-md bg-green-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-green-600">Voir la fiche producteur</a>
+    <Card className="group flex h-full flex-col bg-[#fffdf7] p-3 shadow-[0_10px_26px_rgba(36,17,5,0.05)] transition duration-200 hover:-translate-y-1 hover:border-green/20 hover:shadow-[0_16px_34px_rgba(36,17,5,0.08)]">
+      <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-photo bg-vanilla-custard">
+        {image ? (
+          <img alt={name} className="h-full w-full rounded-photo object-cover transition duration-300 group-hover:scale-[1.03]" src={image} />
+        ) : (
+          <span className="text-2xl font-extrabold text-forest-green">SL</span>
+        )}
       </div>
-    </article>
-  )
-}
 
-export default ProducerCard
+      <div className="flex flex-1 flex-col gap-4 p-3 pt-4">
+        <div className="space-y-2">
+          <Badge variant={statusVariant}>
+            <span className="h-1.5 w-1.5 rounded-full bg-current opacity-80" />
+            {statusLabel}
+          </Badge>
+          <h3 className="text-lg font-extrabold leading-tight text-coffee-beans">{name}</h3>
+          <p className="text-sm font-bold text-forest-green">{job}</p>
+          <p className="text-sm font-semibold text-brown-bark">{location}</p>
+        </div>
+
+        <Button as="a" className="mt-auto w-full" href={href} size="sm">
+          Fiche producteur
+        </Button>
+      </div>
+    </Card>
+  );
+}
