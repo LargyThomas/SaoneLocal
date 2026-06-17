@@ -38,6 +38,31 @@ function NavLink({ href, children, onClick }) {
   );
 }
 
+function MenuToggleIcon({ isOpen }) {
+  return (
+    <span
+      aria-hidden="true"
+      className="relative flex h-5 w-5 items-center justify-center"
+    >
+      <span
+        className={`absolute h-0.5 w-5 rounded-full bg-coffee-beans transition duration-200 ${
+          isOpen ? "rotate-45" : "-translate-y-1.5"
+        }`}
+      />
+      <span
+        className={`absolute h-0.5 w-5 rounded-full bg-coffee-beans transition duration-200 ${
+          isOpen ? "opacity-0" : "opacity-100"
+        }`}
+      />
+      <span
+        className={`absolute h-0.5 w-5 rounded-full bg-coffee-beans transition duration-200 ${
+          isOpen ? "-rotate-45" : "translate-y-1.5"
+        }`}
+      />
+    </span>
+  );
+}
+
 export default function NavbarPublic() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const closeMenu = () => setIsMenuOpen(false);
@@ -75,12 +100,13 @@ export default function NavbarPublic() {
         <Button
           aria-controls="mobile-navigation"
           aria-expanded={isMenuOpen}
+          aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
           className="lg:hidden"
           onClick={() => setIsMenuOpen((current) => !current)}
           size="sm"
           variant="secondary"
         >
-          {isMenuOpen ? "Fermer" : "Menu"}
+          <MenuToggleIcon isOpen={isMenuOpen} />
         </Button>
       </div>
 
