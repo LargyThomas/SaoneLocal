@@ -1,65 +1,114 @@
-import { useEffect } from "react"
-import { FaTrash, FaTimes } from "react-icons/fa"
+import { useEffect } from "react";
 
-function ModalSection({ open, onClose, children }) {
+const sizeClasses = {
+  sm: "max-w-sm",
+  md: "max-w-lg",
+  lg: "max-w-2xl",
+};
+
+export function Modal({
+  open,
+  onClose,
+  title,
+  description,
+  children,
+  footer,
+  size = "md",
+  closeLabel = "Fermer la fenêtre",
+}) {
   useEffect(() => {
+    if (!open) {
+      return undefined;
+    }
+
     const handleEscape = (event) => {
       if (event.key === "Escape") {
-        onClose()
+        onClose?.();
       }
-    }
+    };
 
-    if (open) {
-      document.addEventListener("keydown", handleEscape)
-    }
+    document.addEventListener("keydown", handleEscape);
+    document.body.style.overflow = "hidden";
 
     return () => {
-      document.removeEventListener("keydown", handleEscape)
-    }
-  }, [open, onClose])
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "";
+    };
+  }, [open, onClose]);
 
-  if (!open) return null
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4" onClick={onClose}>
-      <div role="dialog" aria-modal="true" className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-xl" onClick={(event) => event.stopPropagation()}>
-        <button type="button" onClick={onClose} aria-label="Fermer la fenêtre" className="absolute right-3 top-3 rounded-lg p-2 text-gray-400 transition hover:bg-gray-100 hover:text-gray-700"><FaTimes /></button>
-        {children}
-      </div>
-    </div>
-  )
-}
-
-function Modal() {
-  const handleDelete = () => {
-    console.log("Élément supprimé")
+  if (!open) {
+    return null;
   }
 
   return (
-    <main className="p-6">
-      <button type="button" onClick={() => window.dispatchEvent(new Event("open-delete-modal"))} className="inline-flex items-center gap-2 rounded-md bg-red-500 px-4 py-2 font-medium text-white transition hover:bg-red-600"><FaTrash />Supprimer</button>
-    </main>
-  )
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 px-4 py-6"
+      onClick={onClose}
+    >
+      <section
+        aria-modal="true"
+        className={`relative w-full ${sizeClasses[size] || sizeClasses.md} rounded-card bg-soft-linen p-5 text-coffee-beans shadow-2xl`}
+        onClick={(event) => event.stopPropagation()}
+        role="dialog"
+      >
+        <button
+          aria-label={closeLabel}
+          className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-button text-coffee-beans hover:bg-vanilla-custard"
+          onClick={onClose}
+          type="button"
+        >
+          X
+        </button>
+
+        <div className="pr-10">
+          {title ? <h2 className="font-display text-xl text-coffee-beans">{title}</h2> : null}
+          {description ? <p className="mt-2 text-base leading-7 text-coffee-beans/75">{description}</p> : null}
+        </div>
+
+        {children ? <div className="mt-5">{children}</div> : null}
+        {footer ? <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">{footer}</div> : null}
+      </section>
+    </div>
+  );
 }
 
-function DeleteModal({ open, onClose, onConfirm }) {
+export function DeleteModal({
+  open,
+  onClose,
+  onConfirm,
+  title = "Confirmer la suppression",
+  description = "Cette action est définitive. Elle ne pourra pas être annulée.",
+  confirmLabel = "Supprimer",
+  cancelLabel = "Annuler",
+}) {
   return (
-    <ModalSection open={open} onClose={onClose}>
-      <div className="text-center">
-        <FaTrash size={56} className="mx-auto text-red-500" />
-
-        <div className="mx-auto my-5 max-w-xs">
-          <h3 className="text-lg font-bold text-gray-900">Confirmer la suppression</h3>
-          <p className="mt-2 text-sm text-gray-500">Voulez-vous vraiment supprimer cet élément ? Cette action est irréversible.</p>
-        </div>
-
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <button type="button" onClick={onConfirm} className="w-full rounded-md bg-red-500 px-4 py-2 font-medium text-white transition hover:bg-red-600">Supprimer</button>
-          <button type="button" onClick={onClose} className="w-full rounded-md bg-gray-100 px-4 py-2 font-medium text-gray-700 transition hover:bg-gray-200">Annuler</button>
-        </div>
-      </div>
-    </ModalSection>
-  )
+    <Modal
+      description={description}
+      footer={
+        <>
+          <button
+            className="min-h-11 rounded-button border border-coffee-beans bg-white px-4 text-base font-bold text-coffee-beans hover:bg-vanilla-custard"
+            onClick={onClose}
+            type="button"
+          >
+            {cancelLabel}
+          </button>
+          <button
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-button bg-inferno px-4 text-base font-bold text-white hover:bg-[#7d0800]"
+            onClick={onConfirm}
+            type="button"
+          >
+            {confirmLabel}
+          </button>
+        </>
+      }
+      onClose={onClose}
+      open={open}
+      size="sm"
+      title={title}
+    />
+  );
 }
 
-export { ModalSection, DeleteModal }
+export const ModalSection = Modal;
+export default Modal;

@@ -40,8 +40,8 @@ export const routes = [
   },
   {
     path: "/a-propos",
-    label: "A propos",
-    component: () => <PlaceholderPage title="A propos" />,
+    label: "À propos",
+    component: () => <PlaceholderPage title="À propos" />,
     showInNav: true,
   },
   {
