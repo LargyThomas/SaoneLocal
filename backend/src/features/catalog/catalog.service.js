@@ -1,10 +1,10 @@
 // Business logic for catalog management
-// Handles product listing with dynamic filters (category, producer) and server-side pagination
+// Handles product listing with dynamic filters (category, subcategory, producer) and server-side pagination
 // Handles single product retrieval by ID with full producer and category details
 
 const { connexion } = require('../../database/database.js')
 
-const getProducts = async ({ page = 1, category, producer, q, search }) => {
+const getProducts = async ({ page = 1, category, subcategory, producer, q, search }) => {
     const limit = 10
     const offset = (parseInt(page) - 1) * limit
     const searchTerm = q || search
@@ -35,6 +35,12 @@ const getProducts = async ({ page = 1, category, producer, q, search }) => {
     if (category) {
         query += ` AND p.categoryId = $${paramIndex}`
         params.push(parseInt(category))
+        paramIndex++
+    }
+
+    if (subcategory) {
+        query += ` AND p.subcategoryId = $${paramIndex}`
+        params.push(parseInt(subcategory))
         paramIndex++
     }
 

@@ -1,8 +1,8 @@
 // Validates query parameters for catalog routes
-// Checks page number, category, producer filters and text search before reaching the controller
+// Checks page number, category, subcategory, producer filters and text search before reaching the controller
 
 const validateGetCatalog = (req, res, next) => {
-    const { page, category, producer, q, search } = req.query
+    const { page, category, subcategory, producer, q, search } = req.query
 
     if (page && (isNaN(page) || parseInt(page) < 1)) {
         return res.status(400).json({ message: 'Le numero de page doit etre un entier positif.' })
@@ -10,6 +10,10 @@ const validateGetCatalog = (req, res, next) => {
 
     if (category && (isNaN(category) || parseInt(category) < 1)) {
         return res.status(400).json({ message: 'L\'identifiant de la categorie doit etre un nombre positif.' })
+    }
+
+    if (subcategory && (isNaN(subcategory) || parseInt(subcategory) < 1)) {
+        return res.status(400).json({ message: 'L\'identifiant de la sous-categorie doit etre un nombre positif.' })
     }
 
     if (producer && (isNaN(producer) || parseInt(producer) < 1)) {
