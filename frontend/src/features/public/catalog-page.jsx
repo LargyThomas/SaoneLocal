@@ -1,12 +1,26 @@
 import { useEffect, useState } from "react";
 import { fetchCatalog } from "../../api/catalog-api.js";
+import Badge from "../../ui/badge.jsx";
+import Button from "../../ui/button.jsx";
+import Card from "../../ui/card.jsx";
 import { SearchBar } from "../../ui/search-bar.jsx";
 
 const categories = [
-  { id: "", label: "Toutes les categories" },
+  { id: "", label: "Tout" },
   { id: "1", label: "Vin" },
   { id: "2", label: "Pain" },
   { id: "3", label: "Viande" },
+];
+
+const subcategories = [
+  { id: "", categoryId: "", label: "Toutes" },
+  { id: "1", categoryId: "1", label: "Rouge" },
+  { id: "2", categoryId: "1", label: "Blanc" },
+  { id: "3", categoryId: "1", label: "Pétillant" },
+  { id: "4", categoryId: "2", label: "Pain" },
+  { id: "5", categoryId: "2", label: "Viennoiserie" },
+  { id: "6", categoryId: "3", label: "Bœuf" },
+  { id: "7", categoryId: "3", label: "Volaille" },
 ];
 
 function formatPrice(value) {
@@ -17,15 +31,59 @@ function formatPrice(value) {
   }
 
   return new Intl.NumberFormat("fr-FR", {
-    style: "currency",
     currency: "EUR",
+    style: "currency",
   }).format(price);
+}
+
+function CatalogProductCard({ product }) {
+  const productName = product.productname || "Produit local";
+  const productHref = product.productid ? `/produits/${product.productid}` : "/produits/demo";
+  const formattedPrice = formatPrice(product.productprice);
+  const producerLabel = product.producername || product.producerdesc || `Producteur ${product.producerid || "local"}`;
+
+  return (
+    <Card className="flex h-full flex-col overflow-hidden transition hover:-translate-y-0.5 hover:shadow-md">
+      <div className="flex aspect-[4/3] items-center justify-center overflow-hidden bg-vanilla-custard text-base font-bold text-brown-bark">
+        {product.productpicture ? (
+          <img alt={productName} className="h-full w-full object-cover" src={product.productpicture} />
+        ) : (
+          <span>Image à venir</span>
+        )}
+      </div>
+
+      <div className="flex flex-1 flex-col gap-4 p-4">
+        <div className="space-y-3">
+          <Badge>{product.categoryname || "Produit local"}</Badge>
+          <h2 className="font-display text-xl leading-tight text-coffee-beans">{productName}</h2>
+          {product.productdesc ? (
+            <p className="line-clamp-3 text-base leading-7 text-coffee-beans/75">{product.productdesc}</p>
+          ) : null}
+        </div>
+
+        <div className="mt-auto space-y-4 border-t border-coffee-beans/10 pt-4">
+          <div className="flex items-end justify-between gap-3">
+            <div>
+              {formattedPrice ? <p className="text-xl font-extrabold text-black-forest">{formattedPrice}</p> : null}
+              <p className="text-sm font-bold text-brown-bark">{producerLabel}</p>
+            </div>
+          </div>
+
+          <div className="grid gap-2">
+            <Button as="a" className="w-full" href={productHref} variant="secondary">
+              Fiche produit
+            </Button>
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
 }
 
 export function CatalogPage() {
   const [products, setProducts] = useState([]);
   const [pagination, setPagination] = useState({ total: 0, page: 1, totalPages: 1, limit: 10 });
-  const [filters, setFilters] = useState({ q: "", category: "", producer: "", page: 1 });
+  const [filters, setFilters] = useState({ q: "", category: "", subcategory: "", page: 1 });
   const [draftSearch, setDraftSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -67,6 +125,7 @@ export function CatalogPage() {
     setFilters((current) => ({
       ...current,
       [key]: value,
+      ...(key === "category" ? { subcategory: "" } : {}),
       page: 1,
     }));
   };
@@ -83,17 +142,29 @@ export function CatalogPage() {
     }));
   };
 
+  const clearFilters = () => {
+    setDraftSearch("");
+    setFilters({ q: "", category: "", subcategory: "", page: 1 });
+  };
+
   const currentPage = pagination.page || filters.page;
   const totalPages = Math.max(pagination.totalPages || 1, 1);
+  const availableSubcategories = subcategories.filter(
+    (subcategory) => !subcategory.categoryId || !filters.category || subcategory.categoryId === filters.category
+  );
+  const hasActiveFilters = Boolean(filters.q || filters.category || filters.subcategory);
 
   return (
-    <main className="mx-auto w-full max-w-6xl flex-1 px-4 pb-12 pt-4">
-      <section className="mb-6">
-        <p className="text-xs font-extrabold uppercase text-[#287347]">Catalogue</p>
-        <h1 className="mt-2 text-3xl font-extrabold text-[#16251b] sm:text-4xl">Produits locaux</h1>
+    <div className="mx-auto w-full max-w-6xl px-4 pb-12 pt-6">
+      <section className="mb-6 rounded-card bg-white p-5 shadow-sm sm:p-7">
+        <Badge>Catalogue</Badge>
+        <h1 className="mt-4 font-display text-3xl leading-tight text-coffee-beans sm:text-4xl">Produits locaux</h1>
+        <p className="mt-4 max-w-2xl text-lg leading-8 text-coffee-beans/75">
+          Recherchez, filtrez et trouvez les produits du territoire disponibles dans SaôneLocal.
+        </p>
       </section>
 
-      <section className="mb-6 space-y-3" aria-label="Recherche et filtres">
+      <section className="mb-6 space-y-5 rounded-card bg-white p-4 shadow-sm sm:p-5" aria-label="Recherche et filtres">
         <SearchBar
           disabled={isLoading}
           onChange={setDraftSearch}
@@ -101,105 +172,151 @@ export function CatalogPage() {
           value={draftSearch}
         />
 
-        <div className="grid gap-3 sm:grid-cols-2">
-          <label className="flex flex-col gap-1 text-sm font-semibold text-slate-700">
-            Categorie
-            <select
-              className="min-h-11 rounded-md border border-slate-300 bg-white px-3 text-base font-normal text-slate-900 outline-none focus:border-[#287347] focus:ring-2 focus:ring-[#287347]/20"
-              onChange={(event) => updateFilter("category", event.target.value)}
-              value={filters.category}
-            >
-              {categories.map((category) => (
-                <option key={category.id || "all"} value={category.id}>
-                  {category.label}
-                </option>
-              ))}
-            </select>
-          </label>
+        <div className="grid gap-5 lg:grid-cols-2">
+          <fieldset>
+            <legend className="mb-3 text-base font-extrabold text-coffee-beans">Catégories</legend>
+            <div className="flex flex-wrap gap-2">
+              {categories.map((category) => {
+                const isActive = filters.category === category.id;
 
-          <label className="flex flex-col gap-1 text-sm font-semibold text-slate-700">
-            Producteur
-            <input
-              className="min-h-11 rounded-md border border-slate-300 bg-white px-3 text-base font-normal text-slate-900 outline-none focus:border-[#287347] focus:ring-2 focus:ring-[#287347]/20"
-              onChange={(event) => updateFilter("producer", event.target.value)}
-              placeholder="Id producteur"
-              min="1"
-              type="number"
-              value={filters.producer}
-            />
-          </label>
+                return (
+                  <button
+                    aria-pressed={isActive}
+                    className={`min-h-11 rounded-card border px-4 text-base font-bold transition focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-golden-glow focus-visible:outline-offset-2 ${
+                      isActive
+                        ? "border-coffee-beans bg-golden-glow text-coffee-beans"
+                        : "border-coffee-beans/15 bg-soft-linen text-coffee-beans hover:bg-vanilla-custard"
+                    }`}
+                    disabled={isLoading}
+                    key={category.id || "all"}
+                    onClick={() => updateFilter("category", category.id)}
+                    type="button"
+                  >
+                    {category.label}
+                  </button>
+                );
+              })}
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend className="mb-3 text-base font-extrabold text-coffee-beans">Sous-catégories</legend>
+            <div className="flex flex-wrap gap-2">
+              {availableSubcategories.map((subcategory) => {
+                const isActive = filters.subcategory === subcategory.id;
+
+                return (
+                  <button
+                    aria-pressed={isActive}
+                    className={`min-h-11 rounded-card border px-4 text-base font-bold transition focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-golden-glow focus-visible:outline-offset-2 ${
+                      isActive
+                        ? "border-coffee-beans bg-golden-glow text-coffee-beans"
+                        : "border-coffee-beans/15 bg-soft-linen text-coffee-beans hover:bg-vanilla-custard"
+                    }`}
+                    disabled={isLoading}
+                    key={subcategory.id || "all-subcategories"}
+                    onClick={() => updateFilter("subcategory", subcategory.id)}
+                    type="button"
+                  >
+                    {subcategory.label}
+                  </button>
+                );
+              })}
+            </div>
+          </fieldset>
         </div>
+
+        {hasActiveFilters ? (
+          <div className="flex flex-col gap-3 rounded-card bg-soft-linen p-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-wrap gap-2 text-sm font-bold text-coffee-beans">
+              {filters.q ? <span className="rounded-card bg-golden-glow px-3 py-1">Recherche : {filters.q}</span> : null}
+              {filters.category ? (
+                <span className="rounded-card bg-golden-glow px-3 py-1">
+                  Catégorie : {categories.find((category) => category.id === filters.category)?.label}
+                </span>
+              ) : null}
+              {filters.subcategory ? (
+                <span className="rounded-card bg-golden-glow px-3 py-1">
+                  Sous-catégorie : {subcategories.find((subcategory) => subcategory.id === filters.subcategory)?.label}
+                </span>
+              ) : null}
+            </div>
+            <Button className="w-full sm:w-auto" disabled={isLoading} onClick={clearFilters} variant="ghost">
+              Réinitialiser
+            </Button>
+          </div>
+        ) : null}
       </section>
 
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3 text-sm text-slate-600">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3 text-base font-semibold text-coffee-beans">
         <p>{pagination.total} produit{pagination.total > 1 ? "s" : ""}</p>
-        {filters.q ? <p>Recherche : {filters.q}</p> : null}
+        <p className="text-sm text-coffee-beans/70">Page {currentPage} sur {totalPages}</p>
       </div>
 
       {error ? (
-        <p className="rounded-md border border-red-200 bg-red-50 px-3 py-3 text-sm font-semibold text-red-700">{error}</p>
+        <div className="rounded-card border border-inferno bg-white px-4 py-5 text-base text-inferno">
+          <p className="font-display text-xl">Impossible de charger le catalogue</p>
+          <p className="mt-2 font-bold">{error}</p>
+        </div>
       ) : null}
 
       {isLoading ? (
-        <p className="py-8 text-center text-sm font-semibold text-slate-600">Chargement du catalogue...</p>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div className="rounded-card bg-white p-3 shadow-sm" key={index}>
+              <div className="aspect-[4/3] animate-pulse rounded-card bg-vanilla-custard" />
+              <div className="mt-4 h-4 w-24 animate-pulse rounded-card bg-golden-glow/70" />
+              <div className="mt-4 h-6 w-3/4 animate-pulse rounded-card bg-coffee-beans/10" />
+              <div className="mt-3 h-4 w-full animate-pulse rounded-card bg-coffee-beans/10" />
+              <div className="mt-5 h-11 w-full animate-pulse rounded-button bg-muted-olive/30" />
+            </div>
+          ))}
+        </div>
       ) : null}
 
       {!isLoading && !error && products.length === 0 ? (
-        <p className="rounded-md border border-slate-200 bg-white px-3 py-6 text-center text-sm font-semibold text-slate-600">
-          Aucun produit ne correspond aux filtres.
-        </p>
+        <div className="rounded-card border border-coffee-beans/10 bg-white px-4 py-8 text-center text-coffee-beans">
+          <p className="font-display text-2xl">Aucun résultat</p>
+          <p className="mx-auto mt-3 max-w-md text-base leading-7 text-coffee-beans/75">
+            Aucun produit ne correspond aux filtres. Essayez une autre recherche ou réinitialisez les filtres.
+          </p>
+          {hasActiveFilters ? (
+            <Button className="mt-5 w-full sm:w-auto" onClick={clearFilters} variant="secondary">
+              Réinitialiser les filtres
+            </Button>
+          ) : null}
+        </div>
       ) : null}
 
       {!isLoading && products.length > 0 ? (
-        <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" aria-label="Liste des produits">
+        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-label="Liste des produits">
           {products.map((product) => (
-            <article className="rounded-md border border-slate-200 bg-white p-4 shadow-sm" key={product.productid}>
-              <div className="mb-4 flex aspect-[4/3] items-center justify-center rounded-md bg-[#eef3ed] text-sm font-semibold text-slate-500">
-                {product.productpicture ? (
-                  <img
-                    alt=""
-                    className="h-full w-full rounded-md object-cover"
-                    src={product.productpicture}
-                  />
-                ) : (
-                  <span>Image a venir</span>
-                )}
-              </div>
-              <div className="space-y-2">
-                <p className="text-xs font-bold uppercase text-[#287347]">{product.categoryname || "Produit local"}</p>
-                <h2 className="text-lg font-extrabold text-[#16251b]">{product.productname}</h2>
-                <p className="text-sm leading-6 text-slate-600">{product.productdesc}</p>
-                <div className="flex items-center justify-between gap-3 pt-2">
-                  <span className="text-base font-extrabold text-slate-900">{formatPrice(product.productprice)}</span>
-                  <span className="text-xs font-semibold text-slate-500">Producteur {product.producerid}</span>
-                </div>
-              </div>
-            </article>
+            <CatalogProductCard key={product.productid} product={product} />
           ))}
         </section>
       ) : null}
 
-      <nav className="mt-6 flex items-center justify-between gap-3" aria-label="Pagination catalogue">
-        <button
-          className="min-h-11 rounded-md border border-slate-300 bg-white px-4 text-sm font-bold text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
+      <nav className="mt-6 grid gap-3 sm:grid-cols-[1fr_auto_1fr] sm:items-center" aria-label="Pagination catalogue">
+        <Button
+          className="w-full sm:justify-self-start"
           disabled={isLoading || currentPage <= 1}
           onClick={() => goToPage(currentPage - 1)}
-          type="button"
+          variant="ghost"
         >
-          Precedent
-        </button>
-        <span className="text-sm font-semibold text-slate-600">
+          Précédent
+        </Button>
+        <span className="order-first rounded-card bg-vanilla-custard px-3 py-2 text-center text-sm font-extrabold text-coffee-beans sm:order-none">
           Page {currentPage} / {totalPages}
         </span>
-        <button
-          className="min-h-11 rounded-md border border-slate-300 bg-white px-4 text-sm font-bold text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
+        <Button
+          className="w-full sm:justify-self-end"
           disabled={isLoading || currentPage >= totalPages}
           onClick={() => goToPage(currentPage + 1)}
-          type="button"
+          variant="ghost"
         >
           Suivant
-        </button>
+        </Button>
       </nav>
-    </main>
+    </div>
   );
 }
