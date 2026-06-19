@@ -2,6 +2,9 @@ import { HomePage } from "./features/public/home-page.jsx";
 import { CatalogPage } from "./features/public/catalog-page.jsx";
 import { NotFoundPage } from "./features/public/not-found-page.jsx";
 import { PlaceholderPage } from "./features/public/placeholder-page.jsx";
+import { ProducerPage } from "./features/public/producer-page.jsx";
+import { CalendarPage } from "./features/public/calendar-page.jsx";
+import { AboutPage } from "./features/public/about-page.jsx"
 
 export const routes = [
   {
@@ -24,7 +27,7 @@ export const routes = [
   {
     path: "/producteurs",
     label: "Producteurs",
-    component: () => <PlaceholderPage title="Producteurs" />,
+    component: ProducerPage,
     showInNav: true,
   },
   {
@@ -35,13 +38,13 @@ export const routes = [
   {
     path: "/calendrier",
     label: "Calendrier",
-    component: () => <PlaceholderPage title="Calendrier" />,
+    component: CalendarPage,
     showInNav: true,
   },
   {
     path: "/a-propos",
     label: "À propos",
-    component: () => <PlaceholderPage title="À propos" />,
+    component: AboutPage,
     showInNav: true,
   },
   {

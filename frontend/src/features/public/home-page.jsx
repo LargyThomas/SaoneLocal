@@ -49,7 +49,6 @@ const producers = [
     producerLocalisation: "Val de Saône",
     producerStatus: "active",
     producerNameMock: "Ferme des coteaux",
-    producerPictureMock: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=900&q=80",
   },
   {
     producerId: 2,
@@ -109,15 +108,14 @@ export function HomePage() {
     <div className="bg-soft-linen pb-12">
       <Container className="pt-4">
         <section className="relative grid gap-6 overflow-hidden rounded-card border border-coffee-beans/10 bg-[#fffdf7] p-5 shadow-[0_18px_48px_rgba(36,17,5,0.07)] md:grid-cols-[1.05fr_0.95fr] md:items-center md:p-8">
-          <div className="pointer-events-none absolute right-8 top-8 hidden h-24 w-24 rounded-full border border-golden-glow/60 md:block" />
           <div className="pointer-events-none absolute bottom-8 left-8 hidden h-px w-24 bg-gradient-to-r from-golden-glow to-transparent md:block" />
           <div>
             <Badge className="px-3.5 py-1.5">
               <span className="h-2 w-2 rounded-full bg-green" />
               Marché local en ligne
             </Badge>
-            <h1 className="mt-5 text-4xl font-extrabold leading-tight text-coffee-beans sm:text-5xl">
-              Le goût du local, direct depuis la Saône.
+            <h1 className="mt-5 text-4xl font-display leading-tight text-coffee-beans sm:text-5xl">
+              Le goût du local, direct depuis la Saône-et-Loire.
             </h1>
             <p className="mt-5 max-w-xl text-lg leading-8 text-coffee-beans/70">
               SaôneLocal réunit produits frais, producteurs du territoire et rendez-vous de proximité dans une
@@ -137,7 +135,7 @@ export function HomePage() {
             <img
               alt="Étal de marché avec produits frais"
               className="h-72 w-full rounded-photo object-cover sm:h-96"
-              src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=1200&q=80"
+              src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?ahttps://plus.unsplash.com/premium_photo-1663040313671-b697d88b239d?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3Duto=format&fit=crop&w=1200&q=80"
             />
             <div className="absolute bottom-6 left-6 right-6 rounded-card border border-white/60 bg-[#fffdf7]/95 px-4 py-3 shadow-[0_10px_24px_rgba(36,17,5,0.12)] sm:right-auto">
               <p className="text-xs font-extrabold uppercase text-coffee-beans/60">Saison</p>
@@ -188,7 +186,7 @@ export function HomePage() {
           <div>
             <h2 className="text-2xl font-extrabold leading-tight">Je découvre les saveurs locales</h2>
             <p className="mt-2 max-w-2xl text-base leading-7 text-coffee-beans/75">
-              Explorez le catalogue ou retrouvez les prochains événements du territoire.
+              Explorez les produits de nos producteurs répertoriés dans notre catalogue.
             </p>
           </div>
           <Button as="a" className="w-full sm:w-auto" href="/catalogue" size="lg">

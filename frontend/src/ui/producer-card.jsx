@@ -18,9 +18,17 @@ export default function ProducerCard({
     <Card className="group flex h-full flex-col bg-[#fffdf7] p-3 shadow-[0_10px_26px_rgba(36,17,5,0.05)] transition duration-200 hover:-translate-y-1 hover:border-green/20 hover:shadow-[0_16px_34px_rgba(36,17,5,0.08)]">
       <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-photo bg-vanilla-custard">
         {image ? (
-          <img alt={name} className="h-full w-full rounded-photo object-cover transition duration-300 group-hover:scale-[1.03]" src={image} />
+          <img
+            src={image}
+            alt=""
+            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+          />
         ) : (
-          <span className="text-2xl font-extrabold text-forest-green">SL</span>
+          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from--glow via-golden-glow/75 to-soft-linen">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/85 text-2xl shadow-md">
+              👨‍🌾
+            </div>
+          </div>
         )}
       </div>
 
