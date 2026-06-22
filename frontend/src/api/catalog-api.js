@@ -19,15 +19,18 @@ export async function fetchCatalog({ page = 1, category = "", subcategory = "", 
 
   const response = await fetch(`${API_BASE_URL}/api/catalog?${params.toString()}`);
 
-  const contentType = response.headers.get("content-type") || "";
-
   if (!response.ok) {
-    const errorBody = contentType.includes("application/json") ? await response.json().catch(() => ({})) : {};
-    throw new Error(errorBody.message || errorBody.error || "Impossible de charger le catalogue.");
+    throw new Error("Impossible de charger le catalogue.");
   }
 
-  if (!contentType.includes("application/json")) {
-    throw new Error("Le catalogue ne répond pas en JSON. Vérifie que le backend API est lancé ou que VITE_API_URL pointe vers le backend.");
+  return response.json();
+}
+
+export async function fetchProduct(productId) {
+  const response = await fetch(`${API_BASE_URL}/api/catalog/${productId}`);
+
+  if (!response.ok) {
+    throw new Error("Impossible de charger le produit.");
   }
 
   return response.json();

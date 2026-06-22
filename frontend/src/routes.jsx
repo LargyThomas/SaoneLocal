@@ -3,8 +3,12 @@ import { CatalogPage } from "./features/public/catalog-page.jsx";
 import { NotFoundPage } from "./features/public/not-found-page.jsx";
 import { PlaceholderPage } from "./features/public/placeholder-page.jsx";
 import { ProducerPage } from "./features/public/producer-page.jsx";
+import { ProducerProfilePage } from "./features/client/profile-page.jsx";
 import { CalendarPage } from "./features/public/calendar-page.jsx";
-import { AboutPage } from "./features/public/about-page.jsx"
+import { AboutPage } from "./features/public/about-page.jsx";
+import { ProductPage } from "./features/public/product-page.jsx";
+import { LoginPage } from "./features/auth/login-page.jsx";
+import { RegisterPage } from "./features/auth/register-page.jsx";
 
 export const routes = [
   {
@@ -20,9 +24,9 @@ export const routes = [
     showInNav: true,
   },
   {
-    path: "/produits/demo",
+    path: "/produits/:id",
     label: "Fiche produit",
-    component: () => <PlaceholderPage title="Fiche produit" />,
+    component: ProductPage,
   },
   {
     path: "/producteurs",
@@ -31,9 +35,9 @@ export const routes = [
     showInNav: true,
   },
   {
-    path: "/producteurs/demo",
+    path: "/producteurs/:id",
     label: "Fiche producteur",
-    component: () => <PlaceholderPage title="Fiche producteur" />,
+    component: ProducerProfilePage,
   },
   {
     path: "/calendrier",
@@ -50,13 +54,13 @@ export const routes = [
   {
     path: "/connexion",
     label: "Connexion",
-    component: () => <PlaceholderPage title="Connexion" />,
+    component: LoginPage,
     showInNav: true,
   },
   {
     path: "/inscription",
     label: "Inscription",
-    component: () => <PlaceholderPage title="Inscription" />,
+    component: RegisterPage,
   },
   {
     path: "/panier",

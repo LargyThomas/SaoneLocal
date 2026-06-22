@@ -74,9 +74,9 @@ export default function NavbarPublic() {
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-card bg-vanilla-custard text-sm font-extrabold text-forest-green">
             SL
           </span>
-          <a className="text-xl font-extrabold text-coffee-beans" href="/">
-              Saône<span className="text-forest-green">Local</span>
-          </a>
+          <span className="truncate text-xl font-extrabold text-coffee-beans">
+            Saône<span className="text-forest-green">Local</span>
+          </span>
         </a>
 
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Navigation principale">

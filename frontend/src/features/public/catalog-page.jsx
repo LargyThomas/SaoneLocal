@@ -2,17 +2,17 @@ import { useEffect, useState } from "react";
 import { fetchCatalog } from "../../api/catalog-api.js";
 import Badge from "../../ui/badge.jsx";
 import Button from "../../ui/button.jsx";
-import Card from "../../ui/card.jsx";
+import ProductCard from "../../ui/product-card.jsx";
 import { SearchBar } from "../../ui/search-bar.jsx";
 
-const categories = [
+const catégories = [
   { id: "", label: "Tout" },
   { id: "1", label: "Vin" },
   { id: "2", label: "Pain" },
   { id: "3", label: "Viande" },
 ];
 
-const subcategories = [
+const subcatégories = [
   { id: "", categoryId: "", label: "Toutes" },
   { id: "1", categoryId: "1", label: "Rouge" },
   { id: "2", categoryId: "1", label: "Blanc" },
@@ -22,63 +22,6 @@ const subcategories = [
   { id: "6", categoryId: "3", label: "Bœuf" },
   { id: "7", categoryId: "3", label: "Volaille" },
 ];
-
-function formatPrice(value) {
-  const price = Number(value);
-
-  if (Number.isNaN(price)) {
-    return "";
-  }
-
-  return new Intl.NumberFormat("fr-FR", {
-    currency: "EUR",
-    style: "currency",
-  }).format(price);
-}
-
-function CatalogProductCard({ product }) {
-  const productName = product.productname || "Produit local";
-  const productHref = product.productid ? `/produits/${product.productid}` : "/produits/demo";
-  const formattedPrice = formatPrice(product.productprice);
-  const producerLabel = product.producername || product.producerdesc || `Producteur ${product.producerid || "local"}`;
-
-  return (
-    <Card className="flex h-full flex-col overflow-hidden transition hover:-translate-y-0.5 hover:shadow-md">
-      <div className="flex aspect-[4/3] items-center justify-center overflow-hidden bg-vanilla-custard text-base font-bold text-brown-bark">
-        {product.productpicture ? (
-          <img alt={productName} className="h-full w-full object-cover" src={product.productpicture} />
-        ) : (
-          <span>Image à venir</span>
-        )}
-      </div>
-
-      <div className="flex flex-1 flex-col gap-4 p-4">
-        <div className="space-y-3">
-          <Badge>{product.categoryname || "Produit local"}</Badge>
-          <h2 className="font-display text-xl leading-tight text-coffee-beans">{productName}</h2>
-          {product.productdesc ? (
-            <p className="line-clamp-3 text-base leading-7 text-coffee-beans/75">{product.productdesc}</p>
-          ) : null}
-        </div>
-
-        <div className="mt-auto space-y-4 border-t border-coffee-beans/10 pt-4">
-          <div className="flex items-end justify-between gap-3">
-            <div>
-              {formattedPrice ? <p className="text-xl font-extrabold text-black-forest">{formattedPrice}</p> : null}
-              <p className="text-sm font-bold text-brown-bark">{producerLabel}</p>
-            </div>
-          </div>
-
-          <div className="grid gap-2">
-            <Button as="a" className="w-full" href={productHref} variant="secondary">
-              Fiche produit
-            </Button>
-          </div>
-        </div>
-      </div>
-    </Card>
-  );
-}
 
 export function CatalogPage() {
   const [products, setProducts] = useState([]);
@@ -149,13 +92,14 @@ export function CatalogPage() {
 
   const currentPage = pagination.page || filters.page;
   const totalPages = Math.max(pagination.totalPages || 1, 1);
-  const availableSubcategories = subcategories.filter(
+  const availableSubcatégories = subcatégories.filter(
     (subcategory) => !subcategory.categoryId || !filters.category || subcategory.categoryId === filters.category
   );
   const hasActiveFilters = Boolean(filters.q || filters.category || filters.subcategory);
+  const visibleProductTotal = pagination.total;
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 pb-12 pt-6">
+    <div className="mx-auto w-full max-w-6xl px-4 pb-12 pt-4">
       <section className="mb-6 rounded-card bg-white p-5 shadow-sm sm:p-7">
         <Badge>Catalogue</Badge>
         <h1 className="mt-4 font-display text-3xl leading-tight text-coffee-beans sm:text-4xl">Produits locaux</h1>
@@ -176,13 +120,13 @@ export function CatalogPage() {
           <fieldset>
             <legend className="mb-3 text-base font-extrabold text-coffee-beans">Catégories</legend>
             <div className="flex flex-wrap gap-2">
-              {categories.map((category) => {
+              {catégories.map((category) => {
                 const isActive = filters.category === category.id;
 
                 return (
                   <button
                     aria-pressed={isActive}
-                    className={`min-h-11 rounded-card border px-4 text-base font-bold transition focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-golden-glow focus-visible:outline-offset-2 ${
+                    className={`min-h-11 cursor-pointer rounded-card border px-4 text-base font-bold transition focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-golden-glow focus-visible:outline-offset-2 ${
                       isActive
                         ? "border-coffee-beans bg-golden-glow text-coffee-beans"
                         : "border-coffee-beans/15 bg-soft-linen text-coffee-beans hover:bg-vanilla-custard"
@@ -202,19 +146,19 @@ export function CatalogPage() {
           <fieldset>
             <legend className="mb-3 text-base font-extrabold text-coffee-beans">Sous-catégories</legend>
             <div className="flex flex-wrap gap-2">
-              {availableSubcategories.map((subcategory) => {
+              {availableSubcatégories.map((subcategory) => {
                 const isActive = filters.subcategory === subcategory.id;
 
                 return (
                   <button
                     aria-pressed={isActive}
-                    className={`min-h-11 rounded-card border px-4 text-base font-bold transition focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-golden-glow focus-visible:outline-offset-2 ${
+                    className={`min-h-11 cursor-pointer rounded-card border px-4 text-base font-bold transition focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-golden-glow focus-visible:outline-offset-2 ${
                       isActive
                         ? "border-coffee-beans bg-golden-glow text-coffee-beans"
                         : "border-coffee-beans/15 bg-soft-linen text-coffee-beans hover:bg-vanilla-custard"
                     }`}
                     disabled={isLoading}
-                    key={subcategory.id || "all-subcategories"}
+                    key={subcategory.id || "all-subcatégories"}
                     onClick={() => updateFilter("subcategory", subcategory.id)}
                     type="button"
                   >
@@ -232,12 +176,12 @@ export function CatalogPage() {
               {filters.q ? <span className="rounded-card bg-golden-glow px-3 py-1">Recherche : {filters.q}</span> : null}
               {filters.category ? (
                 <span className="rounded-card bg-golden-glow px-3 py-1">
-                  Catégorie : {categories.find((category) => category.id === filters.category)?.label}
+                  Catégorie : {catégories.find((category) => category.id === filters.category)?.label}
                 </span>
               ) : null}
               {filters.subcategory ? (
                 <span className="rounded-card bg-golden-glow px-3 py-1">
-                  Sous-catégorie : {subcategories.find((subcategory) => subcategory.id === filters.subcategory)?.label}
+                  Sous-catégorie : {subcatégories.find((subcategory) => subcategory.id === filters.subcategory)?.label}
                 </span>
               ) : null}
             </div>
@@ -249,7 +193,7 @@ export function CatalogPage() {
       </section>
 
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3 text-base font-semibold text-coffee-beans">
-        <p>{pagination.total} produit{pagination.total > 1 ? "s" : ""}</p>
+        <p>{visibleProductTotal} produit{visibleProductTotal > 1 ? "s" : ""}</p>
         <p className="text-sm text-coffee-beans/70">Page {currentPage} sur {totalPages}</p>
       </div>
 
@@ -274,7 +218,7 @@ export function CatalogPage() {
         </div>
       ) : null}
 
-      {!isLoading && !error && products.length === 0 ? (
+      {!isLoading && !error && products.length === 0 && hasActiveFilters ? (
         <div className="rounded-card border border-coffee-beans/10 bg-white px-4 py-8 text-center text-coffee-beans">
           <p className="font-display text-2xl">Aucun résultat</p>
           <p className="mx-auto mt-3 max-w-md text-base leading-7 text-coffee-beans/75">
@@ -288,10 +232,10 @@ export function CatalogPage() {
         </div>
       ) : null}
 
-      {!isLoading && products.length > 0 ? (
+      {!isLoading && !error && products.length > 0 ? (
         <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-label="Liste des produits">
           {products.map((product) => (
-            <CatalogProductCard key={product.productid} product={product} />
+            <ProductCard key={product.productid} product={product} />
           ))}
         </section>
       ) : null}

@@ -74,8 +74,8 @@ const producer_event = [
 
 function EventCard({ name, description, date, localisation, index, image }) {
   return (
-    <Card className="group flex h-full min-h-[620px] flex-col overflow-hidden border border-coffee-beans/10 bg-[#fffdf7] p-0 shadow-[0_10px_26px_rgba(36,17,5,0.06)] transition duration-300 hover:-translate-y-1 hover:border-mustard/50 hover:shadow-[0_18px_38px_rgba(36,17,5,0.1)]">
-      <div className="relative h-64 shrink-0 overflow-hidden">
+    <Card className="group flex h-full flex-col overflow-hidden border border-coffee-beans/10 bg-[#fffdf7] p-0 shadow-[0_10px_26px_rgba(36,17,5,0.06)] transition duration-300 hover:-translate-y-1 hover:border-mustard/50 hover:shadow-[0_18px_38px_rgba(36,17,5,0.1)] md:min-h-[620px]">
+      <div className="relative h-44 shrink-0 overflow-hidden sm:h-56 md:h-64">
         {image ? (
           <img
             src={image}
@@ -110,7 +110,7 @@ function EventCard({ name, description, date, localisation, index, image }) {
           </div>
         </div>
 
-        <h3 className="min-h-[78px] font-display text-2xl font-black leading-tight text-coffee-beans">
+        <h3 className="min-h-[78px] break-words font-display text-2xl font-black leading-tight text-coffee-beans">
           {name}
         </h3>
 
@@ -124,7 +124,7 @@ function EventCard({ name, description, date, localisation, index, image }) {
               Voir les détails
             </span>
 
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center cursor-pointer rounded-full bg-golden-glow text-xl font-black text-coffee-beans transition duration-200 group-hover:translate-x-1 group-hover:bg-mustard">
+            <span className="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full bg-golden-glow text-2xl font-black leading-none text-coffee-beans shadow-sm transition duration-200 group-hover:translate-x-1 group-hover:bg-mustard group-hover:shadow-md">
               →
             </span>
           </div>
@@ -138,27 +138,36 @@ function EventCard({ name, description, date, localisation, index, image }) {
 
 function ProducerEventCard({ name, picture, events }) {
   return (
-    <Card className="group bg-[#fffdf7] p-5 shadow-[0_10px_26px_rgba(36,17,5,0.05)] transition duration-200 hover:-translate-y-1 hover:border-green/20 hover:shadow-[0_16px_34px_rgba(36,17,5,0.08)]">
-      <div className="flex items-start gap-10">
-        <div className="h-[100px] w-[100px] shrink-0 overflow-hidden rounded-full">
+    <Card className="group overflow-hidden bg-[#fffdf7] p-4 shadow-[0_10px_26px_rgba(36,17,5,0.05)] transition duration-200 hover:-translate-y-1 hover:border-green/20 hover:shadow-[0_16px_34px_rgba(36,17,5,0.08)] sm:p-5">
+      <div className="grid gap-4 sm:grid-cols-[112px_1fr_auto] sm:items-center">
+        <div className="h-24 w-24 shrink-0 overflow-hidden rounded-photo bg-vanilla-custard sm:h-28 sm:w-28">
           <img
             src={picture}
             alt={`Photo de ${name}`}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
           />
         </div>
 
-        <div>
+        <div className="min-w-0">
+          <Badge variant="success">
+            Présent
+          </Badge>
           <h3 className="text-lg font-extrabold text-coffee-beans">
             {name}
           </h3>
 
-          <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-coffee-beans/75">
+          <ul className="mt-3 grid gap-2 text-sm font-semibold text-coffee-beans/75">
             {events.map((event) => (
-              <li key={event}>{event}</li>
+              <li className="rounded-card border border-coffee-beans/10 bg-soft-linen px-3 py-2" key={event}>
+                {event}
+              </li>
             ))}
           </ul>
         </div>
+
+        <Button as="a" className="w-full sm:w-auto" href="/producteurs" size="sm" variant="secondary">
+          Fiche producteur
+        </Button>
       </div>
     </Card>
   );
@@ -167,12 +176,12 @@ function ProducerEventCard({ name, picture, events }) {
 export function CalendarPage() {
     return (
         <div className="bg-soft-linen pb-12">
-            <Container className="pb-11">
+            <Container className="pb-11 pt-4">
                 <section className="mb-6 rounded-card bg-white p-5 shadow-sm sm:p-7">
-                    <Badge>Évènement</Badge>
-                    <h1 className="mt-4 font-display text-3xl leading-tight text-coffee-beans sm:text-4xl">Nos prochains évènements</h1>
+                    <Badge>Événement</Badge>
+                    <h1 className="mt-4 break-words font-display text-3xl leading-tight text-coffee-beans sm:text-4xl">Nos prochains événements</h1>
                     <p className="mt-4 max-w-2xl text-lg leading-8 text-coffee-beans/75">
-                        Ici vous retrouverez tous les évènements organisés, ainsi que ceux dans lesquels le producteur sera présent.
+                        Ici vous retrouverez tous les événements organisés, ainsi que ceux dans lesquels le producteur sera présent.
                     </p>
                 </section>
                 <div className="mt-4 h-px w-full bg-gradient-to-r from-coffee-beans/10 via-muted-olive/60 to-transparent" />
@@ -189,9 +198,9 @@ export function CalendarPage() {
             <Container className="pb-11">
                 <section className="mb-6 rounded-card bg-white p-5 shadow-sm sm:p-7">
                     <Badge>Producteurs</Badge>
-                    <h1 className="mt-4 font-display text-3xl leading-tight text-coffee-beans sm:text-4xl">Venez nous rencontrer !</h1>
+                    <h1 className="mt-4 break-words font-display text-3xl leading-tight text-coffee-beans sm:text-4xl">Venez nous rencontrer !</h1>
                     <p className="mt-4 max-w-2xl text-lg leading-8 text-coffee-beans/75">
-                        Découvrer les différents producteurs présents durant les évènements près de chez vous.
+                        Découvrez les différents producteurs présents durant les événements près de chez vous.
                     </p>
                 </section>
                 <div className="mt-4 h-px w-full bg-gradient-to-r from-coffee-beans/10 via-muted-olive/60 to-transparent" />

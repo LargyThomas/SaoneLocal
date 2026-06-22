@@ -51,6 +51,14 @@ textarea {
   font: inherit;
 }
 
+.scrollbar-none {
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,

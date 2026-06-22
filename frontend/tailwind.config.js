@@ -23,6 +23,7 @@ export default {
       },
       fontFamily: {
         display: ['"Sigmar One"', "cursive"],
+        body: ['"Oswald"', "ui-sans-serif", "system-ui", "sans-serif"],
         sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
       },
     },

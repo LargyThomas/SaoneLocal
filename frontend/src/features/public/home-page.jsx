@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { fetchCatalog } from "../../api/catalog-api.js";
+import { fetchProducers } from "../../api/producers-api.js";
 import Badge from "../../ui/badge.jsx";
 import Button from "../../ui/button.jsx";
 import Card from "../../ui/card.jsx";
@@ -6,10 +9,10 @@ import ProducerCard from "../../ui/producer-card.jsx";
 import ProductCard from "../../ui/product-card.jsx";
 import SectionTitle from "../../ui/section-title.jsx";
 
-const productsOfMoment = [
+const fallbackProducts = [
   {
     productId: 1,
-    productName: "Panier maraîcher",
+    productName: "Panier maraicher",
     productPrice: 18.9,
     productDesc: "Légumes frais de saison, préparés par une ferme locale.",
     productPicture: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=80",
@@ -42,10 +45,10 @@ const productsOfMoment = [
   },
 ];
 
-const producers = [
+const fallbackProducers = [
   {
     producerId: 1,
-    producerDesc: "Maraichage de saison",
+    producerDesc: "Maraîchage de saison",
     producerLocalisation: "Val de Saône",
     producerStatus: "active",
     producerNameMock: "Ferme des coteaux",
@@ -88,9 +91,9 @@ const advantages = [
 
 function AdvantageCard({ title, text, icon, index }) {
   return (
-    <Card className="group bg-[#fffdf7] p-5 shadow-[0_10px_26px_rgba(36,17,5,0.05)] transition duration-200 hover:-translate-y-1 hover:border-green/20 hover:shadow-[0_16px_34px_rgba(36,17,5,0.08)]">
+    <Card className="group h-full bg-[#fffdf7] p-5 shadow-[0_10px_26px_rgba(36,17,5,0.05)] transition duration-200 hover:-translate-y-1 hover:border-green/20 hover:shadow-[0_16px_34px_rgba(36,17,5,0.08)]">
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-card bg-golden-glow text-sm font-extrabold text-coffee-beans shadow-sm transition duration-200 group-hover:bg-mustard">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-card bg-golden-glow text-sm font-extrabold text-coffee-beans shadow-sm transition duration-200 group-hover:bg-mustard">
           0{index + 1}
         </div>
         <span className="rounded-card border border-coffee-beans/10 bg-soft-linen px-3 py-1 text-xs font-extrabold uppercase text-coffee-beans/70">
@@ -104,6 +107,26 @@ function AdvantageCard({ title, text, icon, index }) {
 }
 
 export function HomePage() {
+  const [productsOfMoment, setProductsOfMoment] = useState(fallbackProducts);
+  const [producers, setProducers] = useState(fallbackProducers);
+
+  useEffect(() => {
+    async function loadHomeData() {
+      const catalogResult = await fetchCatalog({ page: 1 }).catch(() => null);
+      const producerResult = await fetchProducers().catch(() => null);
+
+      if (catalogResult?.products?.length > 0) {
+        setProductsOfMoment(catalogResult.products.slice(0, 3));
+      }
+
+      if (producerResult?.length > 0) {
+        setProducers(producerResult.slice(0, 3));
+      }
+    }
+
+    loadHomeData();
+  }, []);
+
   return (
     <div className="bg-soft-linen pb-12">
       <Container className="pt-4">
@@ -111,14 +134,13 @@ export function HomePage() {
           <div className="pointer-events-none absolute bottom-8 left-8 hidden h-px w-24 bg-gradient-to-r from-golden-glow to-transparent md:block" />
           <div>
             <Badge className="px-3.5 py-1.5">
-              <span className="h-2 w-2 rounded-full bg-green" />
               Marché local en ligne
             </Badge>
-            <h1 className="mt-5 text-4xl font-display leading-tight text-coffee-beans sm:text-5xl">
+            <h1 className="mt-5 break-words font-display text-4xl leading-tight text-coffee-beans sm:text-5xl">
               Le goût du local, direct depuis la Saône-et-Loire.
             </h1>
             <p className="mt-5 max-w-xl text-lg leading-8 text-coffee-beans/70">
-              SaôneLocal réunit produits frais, producteurs du territoire et rendez-vous de proximité dans une
+              SaôneLocal reunit produits frais, producteurs du territoire et rendez-vous de proximité dans une
               marketplace claire, humaine et facile à parcourir.
             </p>
             <div className="mt-6 grid gap-3 sm:flex">
@@ -129,13 +151,14 @@ export function HomePage() {
                 Nos producteurs
               </Button>
             </div>
+
           </div>
 
           <div className="relative overflow-hidden rounded-photo bg-vanilla-custard p-3 shadow-inner">
             <img
               alt="Étal de marché avec produits frais"
               className="h-72 w-full rounded-photo object-cover sm:h-96"
-              src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?ahttps://plus.unsplash.com/premium_photo-1663040313671-b697d88b239d?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3Duto=format&fit=crop&w=1200&q=80"
+              src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=1200&q=80"
             />
             <div className="absolute bottom-6 left-6 right-6 rounded-card border border-white/60 bg-[#fffdf7]/95 px-4 py-3 shadow-[0_10px_24px_rgba(36,17,5,0.12)] sm:right-auto">
               <p className="text-xs font-extrabold uppercase text-coffee-beans/60">Saison</p>
@@ -162,7 +185,7 @@ export function HomePage() {
         <div className="mt-4 h-px w-full bg-gradient-to-r from-coffee-beans/10 via-golden-glow/70 to-transparent" />
         <div className="mt-6 grid gap-4 md:grid-cols-3">
           {productsOfMoment.map((product) => (
-            <ProductCard key={product.productId} product={product} />
+            <ProductCard key={product.productid || product.productId} product={product} />
           ))}
         </div>
       </Container>
@@ -176,7 +199,7 @@ export function HomePage() {
         <div className="mt-4 h-px w-full bg-gradient-to-r from-coffee-beans/10 via-muted-olive/60 to-transparent" />
         <div className="mt-6 grid gap-4 md:grid-cols-3">
           {producers.map((producer) => (
-            <ProducerCard key={producer.producerId} producer={producer} />
+            <ProducerCard key={producer.producerid || producer.producerId} producer={producer} />
           ))}
         </div>
       </Container>
@@ -189,9 +212,14 @@ export function HomePage() {
               Explorez les produits de nos producteurs répertoriés dans notre catalogue.
             </p>
           </div>
-          <Button as="a" className="w-full sm:w-auto" href="/catalogue" size="lg">
-            Voir le catalogue
-          </Button>
+          <div className="grid gap-3 sm:flex">
+            <Button as="a" className="w-full sm:w-auto" href="/catalogue" size="lg">
+              Voir le catalogue
+            </Button>
+            <Button as="a" className="w-full sm:w-auto" href="/calendrier" size="lg" variant="secondary">
+              Voir les événements
+            </Button>
+          </div>
         </section>
       </Container>
     </div>

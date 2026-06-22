@@ -20,7 +20,7 @@ const values = [
     icon: "⚖️",
   },
   {
-    title: "Local Et engagé",
+    title: "Local et engagé",
     text: "Une consommation responsable, accessible et ancrée dans le territoire.",
     icon: "📍",
   },
@@ -49,13 +49,13 @@ function ValueCard({ title, text, icon }) {
 export function AboutPage() {
   return (
     <div className="bg-soft-linen pb-12">
-      <Container className="pt-6">
+      <Container className="pt-4">
         <section className="relative overflow-hidden rounded-card border border-coffee-beans/10 bg-[#fffdf7] p-5 shadow-[0_18px_48px_rgba(36,17,5,0.07)] md:p-8 lg:p-10">
           <div className="relative grid gap-8 md:grid-cols-[1.05fr_0.95fr] md:items-center">
             <div>
               <Badge>Notre histoire</Badge>
 
-              <h1 className="mt-5 max-w-xl font-display text-4xl leading-tight text-coffee-beans sm:text-5xl lg:text-6xl">
+              <h1 className="mt-5 max-w-xl break-words font-display text-4xl leading-tight text-coffee-beans sm:text-5xl lg:text-6xl">
                 L'histoire de SaôneLocal
               </h1>
 
@@ -74,15 +74,15 @@ export function AboutPage() {
               </p>
 
               <div className="mt-8 grid gap-3 sm:grid-cols-3">
-                <article className="rounded-card bg-gradient-to-br from--glow via-golden-glow/75 to-soft-linen p-4">
+                <article className="rounded-card bg-gradient-to-br from-golden-glow via-golden-glow/75 to-soft-linen p-4">
                   <p className="font-display text-xl text-coffee-beans">100% Mobile</p>
                   <p className="mt-1 text-sm font-semibold text-coffee-beans/65">Simple d'utilisation</p>
                 </article>
-                <article className="rounded-card bg-gradient-to-br from--glow via-golden-glow/75 to-soft-linen p-4">
+                <article className="rounded-card bg-gradient-to-br from-golden-glow via-golden-glow/75 to-soft-linen p-4">
                   <p className="font-display text-xl text-coffee-beans">50</p>
                   <p className="mt-1 text-sm font-semibold text-coffee-beans/65">Producteurs de tout le département</p>
                 </article>
-                <article className="rounded-card bg-gradient-to-br from--glow via-golden-glow/75 to-soft-linen p-4">
+                <article className="rounded-card bg-gradient-to-br from-golden-glow via-golden-glow/75 to-soft-linen p-4">
                   <p className="font-display text-xl text-coffee-beans">71</p>
                   <p className="mt-1 text-sm font-semibold text-coffee-beans/65">Département de la Saône-et-Loire</p>
                 </article>
@@ -129,23 +129,23 @@ export function AboutPage() {
             description="SaôneLocal défend une consommation bonne, accessible, locale et juste."
           />
           <div className="mt-4 h-px w-full bg-gradient-to-r from-coffee-beans/10 via-golden-glow/70 to-transparent" />
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
             {values.map((value) => (
               <ValueCard key={value.title} {...value} />
             ))}
           </div>
         </Container>
       </section>
-      <Container>
-        <section className="mt-10 grid gap-5 rounded-card border border-coffee-beans/10 bg-gradient-to-r from-golden-glow to-mustard p-6 text-coffee-beans shadow-[0_18px_42px_rgba(36,17,5,0.08)] sm:grid-cols-[1fr_auto] sm:items-center sm:p-8">
+      <Container className="mt-10">
+        <section className="grid gap-5 rounded-card border border-coffee-beans/10 bg-gradient-to-r from-golden-glow to-mustard p-6 text-coffee-beans shadow-[0_18px_42px_rgba(36,17,5,0.08)] sm:grid-cols-[1fr_auto] sm:items-center sm:p-8">
           <div>
-            <h2 className="text-2xl font-extrabold leading-tight">Nos prochains évènements</h2>
+            <h2 className="text-2xl font-extrabold leading-tight">Nos prochains événements</h2>
             <p className="mt-2 max-w-2xl text-base leading-7 text-coffee-beans/75">
-              Explorer tous les événements organisés dans le département.
+              Explorez tous les événements organisés dans le département.
             </p>
           </div>
           <Button as="a" className="w-full sm:w-auto" href="/calendrier" size="lg">
-            Voir les Évènements
+            Voir les événements
           </Button>
         </section>
       </Container>

@@ -4,11 +4,11 @@ import Card from "./card.jsx";
 
 export default function ProducerCard({
   producer,
-  name = producer?.producerNameMock || producer?.producername || "Producteur local",
+  name = producer?.producerNameMock || producer?.producername || `${producer?.usersfirstname || ""} ${producer?.userslastname || ""}`.trim() || "Producteur local",
   job = producer?.producerDesc || producer?.producerdesc || "Métier local",
   location = producer?.producerLocalisation || producer?.producerlocalisation || "Localisation à venir",
-  image = producer?.producerPictureMock || producer?.producerpicture || "",
-  href = producer?.producerId ? `/producteurs/${producer.producerId}` : producer?.producerid ? `/producteurs/${producer.producerid}` : "/producteurs/demo",
+  image = producer?.producerPictureMock || producer?.producerpicture || producer?.usersprofilpicture || "",
+  href = producer?.producerId ? `/producteurs/${producer.producerId}` : producer?.producerid ? `/producteurs/${producer.producerid}` : "#",
   status = producer?.producerStatus || producer?.producerstatus || "local",
 }) {
   const statusLabel = status === "active" ? "Actif" : status;
@@ -24,7 +24,7 @@ export default function ProducerCard({
             className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from--glow via-golden-glow/75 to-soft-linen">
+          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-golden-glow via-golden-glow/75 to-soft-linen">
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/85 text-2xl shadow-md">
               👨‍🌾
             </div>
@@ -35,10 +35,9 @@ export default function ProducerCard({
       <div className="flex flex-1 flex-col gap-4 p-3 pt-4">
         <div className="space-y-2">
           <Badge variant={statusVariant}>
-            <span className="h-1.5 w-1.5 rounded-full bg-current opacity-80" />
             {statusLabel}
           </Badge>
-          <h3 className="text-lg font-extrabold leading-tight text-coffee-beans">{name}</h3>
+          <h3 className="break-words text-lg font-extrabold leading-tight text-coffee-beans">{name}</h3>
           <p className="text-sm font-bold text-forest-green">{job}</p>
           <p className="text-sm font-semibold text-brown-bark">{location}</p>
         </div>
