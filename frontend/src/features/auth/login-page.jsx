@@ -1,10 +1,24 @@
 import { useState } from "react";
 import { loginUser } from "../../api/auth-api.js";
+import { addBasketItem } from "../../api/basket-api.js";
 import Badge from "../../ui/badge.jsx";
 import Button from "../../ui/button.jsx";
 import Card from "../../ui/card.jsx";
 import Container from "../../ui/container.jsx";
 import Input from "../../ui/input.jsx";
+import { clearGuestCart, getGuestCartItems } from "../../utils/guest-cart.js";
+
+function getRedirectPath(user) {
+  if (user?.role === 1) {
+    return "/profil";
+  }
+
+  if (user?.role === 2) {
+    return "/producteurs";
+  }
+
+  return "/";
+}
 
 export function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "", adminCheckbox: false });
@@ -29,7 +43,25 @@ export function LoginPage() {
       const result = await loginUser(form);
       localStorage.setItem("saonelocal-token", result.token);
       localStorage.setItem("saonelocal-user", JSON.stringify(result.user));
-      setMessage("Connexion réussie.");
+
+      const guestItems = getGuestCartItems();
+      let successMessage = "Connexion réussie.";
+
+      if (guestItems.length > 0) {
+        try {
+          for (const item of guestItems) {
+            await addBasketItem(item.productid, item.quantity || 1);
+          }
+
+          clearGuestCart();
+          successMessage = "Connexion réussie. Votre panier invité a été récupéré.";
+        } catch {
+          successMessage = "Connexion réussie. Votre panier invité n'a pas pu être synchronisé automatiquement.";
+        }
+      }
+
+      sessionStorage.setItem("saonelocal-login-message", successMessage);
+      window.location.assign(getRedirectPath(result.user));
     } catch (requestError) {
       setError(requestError.message);
     } finally {

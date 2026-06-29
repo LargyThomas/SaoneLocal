@@ -10,7 +10,7 @@ export default function ProductCard({
   price = product?.productPrice ?? product?.productprice,
   image = product?.productPicture || product?.productpicture || "",
   category = product?.categoryName || product?.categoryname || "Produit local",
-  producerLabel = product?.producerNameMock || product?.producername || (product?.producerId || product?.producerid ? `Producteur ${product.producerId || product.producerid}` : "Producteur local"),
+  producerLabel = product?.producername || product?.producerdesc || (product?.producerId || product?.producerid ? `Producteur ${product.producerId || product.producerid}` : "Producteur local"),
   href = product?.productId ? `/produits/${product.productId}` : product?.productid ? `/produits/${product.productid}` : "#",
   onAddToCart,
 }) {
@@ -20,7 +20,7 @@ export default function ProductCard({
     <Card className="group flex h-full flex-col overflow-hidden bg-[#fffdf7] shadow-[0_10px_26px_rgba(36,17,5,0.05)] transition duration-200 hover:-translate-y-1 hover:border-green/20 hover:shadow-[0_16px_34px_rgba(36,17,5,0.08)]">
       <div className="m-3 mb-0 flex h-44 items-center justify-center overflow-hidden rounded-photo bg-vanilla-custard text-sm font-bold text-brown-bark sm:aspect-[4/3] sm:h-auto">
         {image ? (
-          <img alt={name} className="h-full w-full rounded-photo object-cover transition duration-300 group-hover:scale-[1.03]" src={image} />
+          <img alt={name} className="h-full w-full rounded-photo object-cover transition duration-300 group-hover:scale-[1.03]" decoding="async" loading="lazy" src={image} />
         ) : (
           <span>Image à venir</span>
         )}
@@ -28,9 +28,7 @@ export default function ProductCard({
 
       <div className="flex flex-1 flex-col gap-4 p-5">
         <div className="space-y-2">
-          <Badge className="bg-golden-glow/90">
-            {category}
-          </Badge>
+          <Badge className="bg-golden-glow/90">{category}</Badge>
           <h3 className="break-words text-lg font-extrabold leading-tight text-coffee-beans">{name}</h3>
           {description ? <p className="line-clamp-2 text-sm leading-6 text-coffee-beans/65">{description}</p> : null}
         </div>

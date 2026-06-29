@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
+import { addBasketItem } from "../../api/basket-api.js";
 import { fetchCatalog, fetchProduct } from "../../api/catalog-api.js";
+import { addFavorite } from "../../api/favorites-api.js";
+import { getAuthToken } from "../../api/api.js";
 import Badge from "../../ui/badge.jsx";
 import Button from "../../ui/button.jsx";
 import Card from "../../ui/card.jsx";
 import Container from "../../ui/container.jsx";
 import ProductCard from "../../ui/product-card.jsx";
 import { formatPrice } from "../../utils/format.js";
+import { addGuestCartItem } from "../../utils/guest-cart.js";
 
 function getTaxExcludedPrice(value) {
   const price = Number(value);
@@ -51,6 +55,9 @@ export function ProductPage({ params = {} }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [cartMessage, setCartMessage] = useState("");
+  const [favoriteMessage, setFavoriteMessage] = useState("");
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [isAddingFavorite, setIsAddingFavorite] = useState(false);
   const productId = params.id;
 
   useEffect(() => {
@@ -83,28 +90,45 @@ export function ProductPage({ params = {} }) {
     loadProduct();
   }, [productId]);
 
-  const addToCart = () => {
+  const addToCart = async () => {
     if (!product?.productid) {
       return;
     }
 
-    const currentCart = JSON.parse(localStorage.getItem("saonelocal-cart") || "[]");
-    const existingItem = currentCart.find((item) => String(item.productid) === String(product.productid));
+    setIsAddingToCart(true);
+    setCartMessage("");
 
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      currentCart.push({
-        productid: product.productid,
-        productname: product.productname,
-        productpicture: product.productpicture,
-        productprice: product.productprice,
-        quantity: 1,
-      });
+    try {
+      if (getAuthToken()) {
+        await addBasketItem(product.productid, 1);
+        setCartMessage("Produit ajouté au panier.");
+      } else {
+        addGuestCartItem(product, 1);
+        setCartMessage("Produit ajouté au panier invité. Il sera récupéré après connexion.");
+      }
+    } catch (requestError) {
+      setCartMessage(requestError.message);
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
+
+  const handleAddFavorite = async () => {
+    if (!product?.productid) {
+      return;
     }
 
-    localStorage.setItem("saonelocal-cart", JSON.stringify(currentCart));
-    setCartMessage("Produit ajouté au panier.");
+    setIsAddingFavorite(true);
+    setFavoriteMessage("");
+
+    try {
+      await addFavorite(product.productid);
+      setFavoriteMessage("Produit ajouté aux favoris.");
+    } catch (requestError) {
+      setFavoriteMessage(requestError.message);
+    } finally {
+      setIsAddingFavorite(false);
+    }
   };
 
   const productName = product?.productname || "Produit local";
@@ -150,6 +174,8 @@ export function ProductPage({ params = {} }) {
                   <img
                     alt={productName}
                     className="max-h-[460px] w-full object-contain"
+                    decoding="async"
+                    fetchPriority="high"
                     src={product.productpicture}
                   />
                 ) : (
@@ -198,7 +224,9 @@ export function ProductPage({ params = {} }) {
 
                     <button
                       aria-label="Ajouter aux favoris"
-                      className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-card bg-golden-glow text-coffee-beans shadow-sm transition hover:bg-mustard"
+                      className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-card bg-golden-glow text-coffee-beans shadow-sm transition hover:bg-mustard disabled:cursor-not-allowed disabled:opacity-70"
+                      disabled={isAddingFavorite}
+                      onClick={handleAddFavorite}
                       type="button"
                     >
                       <HeartIcon />
@@ -206,9 +234,9 @@ export function ProductPage({ params = {} }) {
                   </div>
 
                   <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto]">
-                    <Button className="w-full" onClick={addToCart}>
+                    <Button className="w-full" disabled={isAddingToCart} onClick={addToCart}>
                       <CartIcon />
-                      Ajouter au panier
+                      {isAddingToCart ? "Ajout..." : "Ajouter au panier"}
                     </Button>
                     <Button as="a" className="w-full sm:w-auto" href="#infos" variant="secondary">
                       Plus d'information
@@ -218,6 +246,11 @@ export function ProductPage({ params = {} }) {
                   {cartMessage ? (
                     <p className="mt-3 rounded-card bg-green px-3 py-2 text-center text-sm font-bold text-white" role="status">
                       {cartMessage}
+                    </p>
+                  ) : null}
+                  {favoriteMessage ? (
+                    <p className="mt-3 rounded-card bg-golden-glow px-3 py-2 text-center text-sm font-bold text-coffee-beans" role="status">
+                      {favoriteMessage}
                     </p>
                   ) : null}
                 </Card>

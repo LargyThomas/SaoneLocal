@@ -20,6 +20,11 @@ export function RegisterPage() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const genderOptions = [
+    { label: "Homme", value: "M" },
+    { label: "Femme", value: "F" },
+    { label: "Autre", value: "A" },
+  ];
 
   const updateField = (field, value) => {
     setForm((current) => ({
@@ -115,15 +120,15 @@ export function RegisterPage() {
               <fieldset className="grid gap-2 text-base font-bold text-coffee-beans">
                 <legend>Genre</legend>
                 <div className="flex flex-wrap gap-4 text-sm">
-                  {["homme", "femme", "autre"].map((gender) => (
-                    <label className="flex items-center gap-2" key={gender}>
+                  {genderOptions.map((gender) => (
+                    <label className="flex items-center gap-2" key={gender.value}>
                       <input
-                        checked={form.gender === gender}
+                        checked={form.gender === gender.value}
                         className="h-4 w-4 accent-green"
-                        onChange={() => updateField("gender", gender)}
+                        onChange={() => updateField("gender", gender.value)}
                         type="radio"
                       />
-                      {gender}
+                      {gender.label}
                     </label>
                   ))}
                 </div>

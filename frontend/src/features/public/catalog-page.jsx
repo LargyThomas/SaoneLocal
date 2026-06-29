@@ -5,22 +5,24 @@ import Button from "../../ui/button.jsx";
 import ProductCard from "../../ui/product-card.jsx";
 import { SearchBar } from "../../ui/search-bar.jsx";
 
-const catégories = [
+const categories = [
   { id: "", label: "Tout" },
   { id: "1", label: "Vin" },
   { id: "2", label: "Pain" },
   { id: "3", label: "Viande" },
+  { id: "4", label: "Légumes" },
 ];
 
-const subcatégories = [
+const subcategories = [
   { id: "", categoryId: "", label: "Toutes" },
-  { id: "1", categoryId: "1", label: "Rouge" },
-  { id: "2", categoryId: "1", label: "Blanc" },
-  { id: "3", categoryId: "1", label: "Pétillant" },
-  { id: "4", categoryId: "2", label: "Pain" },
-  { id: "5", categoryId: "2", label: "Viennoiserie" },
-  { id: "6", categoryId: "3", label: "Bœuf" },
-  { id: "7", categoryId: "3", label: "Volaille" },
+  { id: "1", categoryId: "1", label: "Vin rouge" },
+  { id: "2", categoryId: "1", label: "Vin blanc" },
+  { id: "3", categoryId: "3", label: "Viande rouge" },
+  { id: "4", categoryId: "3", label: "Viande blanche" },
+  { id: "5", categoryId: "3", label: "Charcuterie" },
+  { id: "6", categoryId: "2", label: "Pain au levain" },
+  { id: "7", categoryId: "4", label: "Légumes de saison" },
+  { id: "8", categoryId: "2", label: "Viennoiserie" },
 ];
 
 export function CatalogPage() {
@@ -92,7 +94,7 @@ export function CatalogPage() {
 
   const currentPage = pagination.page || filters.page;
   const totalPages = Math.max(pagination.totalPages || 1, 1);
-  const availableSubcatégories = subcatégories.filter(
+  const availableSubcategories = subcategories.filter(
     (subcategory) => !subcategory.categoryId || !filters.category || subcategory.categoryId === filters.category
   );
   const hasActiveFilters = Boolean(filters.q || filters.category || filters.subcategory);
@@ -120,7 +122,7 @@ export function CatalogPage() {
           <fieldset>
             <legend className="mb-3 text-base font-extrabold text-coffee-beans">Catégories</legend>
             <div className="flex flex-wrap gap-2">
-              {catégories.map((category) => {
+              {categories.map((category) => {
                 const isActive = filters.category === category.id;
 
                 return (
@@ -146,7 +148,7 @@ export function CatalogPage() {
           <fieldset>
             <legend className="mb-3 text-base font-extrabold text-coffee-beans">Sous-catégories</legend>
             <div className="flex flex-wrap gap-2">
-              {availableSubcatégories.map((subcategory) => {
+              {availableSubcategories.map((subcategory) => {
                 const isActive = filters.subcategory === subcategory.id;
 
                 return (
@@ -158,7 +160,7 @@ export function CatalogPage() {
                         : "border-coffee-beans/15 bg-soft-linen text-coffee-beans hover:bg-vanilla-custard"
                     }`}
                     disabled={isLoading}
-                    key={subcategory.id || "all-subcatégories"}
+                    key={subcategory.id || "all-subcategories"}
                     onClick={() => updateFilter("subcategory", subcategory.id)}
                     type="button"
                   >
@@ -176,12 +178,12 @@ export function CatalogPage() {
               {filters.q ? <span className="rounded-card bg-golden-glow px-3 py-1">Recherche : {filters.q}</span> : null}
               {filters.category ? (
                 <span className="rounded-card bg-golden-glow px-3 py-1">
-                  Catégorie : {catégories.find((category) => category.id === filters.category)?.label}
+                  Catégorie : {categories.find((category) => category.id === filters.category)?.label}
                 </span>
               ) : null}
               {filters.subcategory ? (
                 <span className="rounded-card bg-golden-glow px-3 py-1">
-                  Sous-catégorie : {subcatégories.find((subcategory) => subcategory.id === filters.subcategory)?.label}
+                  Sous-catégorie : {subcategories.find((subcategory) => subcategory.id === filters.subcategory)?.label}
                 </span>
               ) : null}
             </div>

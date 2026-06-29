@@ -1,22 +1,34 @@
 import { useState } from "react";
+import { clearAuthStorage, getAuthToken, getStoredUser } from "../api/api.js";
 import Button from "./button.jsx";
 
-const navLinks = [
+const publicLinks = [
   { label: "Catalogue", href: "/catalogue" },
   { label: "Producteurs", href: "/producteurs" },
   { label: "Calendrier", href: "/calendrier" },
   { label: "À propos", href: "/a-propos" },
 ];
 
-function Icon({ type }) {
+const mobileClientLinks = [
+  { label: "Mon panier", href: "/panier" },
+  { label: "Mes favoris", href: "/favoris" },
+  { label: "Mes commandes", href: "/historique" },
+  { label: "Catalogue produits", href: "/catalogue" },
+  { label: "Fiches producteurs", href: "/producteurs" },
+  { label: "Calendrier", href: "/calendrier" },
+  { label: "À propos", href: "/a-propos" },
+];
+
+function Icon({ type, className = "h-5 w-5" }) {
   const paths = {
-    search: "m20 20-4.5-4.5m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z",
+    bell: "M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 0 0-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0a3 3 0 0 1-6 0",
     cart: "M4 5h2l2 10h9l2-7H7m3 12h.01M17 20h.01",
+    search: "m20 20-4.5-4.5m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z",
     user: "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0",
   };
 
   return (
-    <svg aria-hidden="true" className="h-5 w-5" fill="none" viewBox="0 0 24 24">
+    <svg aria-hidden="true" className={className} fill="none" viewBox="0 0 24 24">
       <path d={paths[type]} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
     </svg>
   );
@@ -38,12 +50,27 @@ function NavLink({ href, children, onClick }) {
   );
 }
 
+function MobileClientLink({ item, onClick, onLogout }) {
+  const className = "flex min-h-10 w-full items-center rounded-button px-3 py-2 text-left text-base font-extrabold text-coffee-beans transition hover:bg-vanilla-custard focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-golden-glow";
+
+  if (item.action === "logout") {
+    return (
+      <button className={className} onClick={onLogout} type="button">
+        {item.label}
+      </button>
+    );
+  }
+
+  return (
+    <a className={className} href={item.href} onClick={onClick}>
+      {item.label}
+    </a>
+  );
+}
+
 function MenuToggleIcon({ isOpen }) {
   return (
-    <span
-      aria-hidden="true"
-      className="relative flex h-5 w-5 items-center justify-center"
-    >
+    <span aria-hidden="true" className="relative flex h-5 w-5 items-center justify-center">
       <span
         className={`absolute h-0.5 w-5 rounded-full bg-coffee-beans transition duration-200 ${
           isOpen ? "rotate-45" : "-translate-y-1.5"
@@ -65,7 +92,14 @@ function MenuToggleIcon({ isOpen }) {
 
 export default function NavbarPublic() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const isAuthenticated = Boolean(getAuthToken());
+  const user = getStoredUser();
   const closeMenu = () => setIsMenuOpen(false);
+
+  const handleLogout = () => {
+    clearAuthStorage();
+    window.location.assign("/");
+  };
 
   return (
     <header className="sticky top-0 z-40 bg-soft-linen/95 px-3 py-3 backdrop-blur">
@@ -80,23 +114,36 @@ export default function NavbarPublic() {
         </a>
 
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Navigation principale">
-          {navLinks.map((link) => (
+          {publicLinks.map((link) => (
             <NavLink href={link.href} key={link.href}>
               {link.label}
             </NavLink>
           ))}
+          {isAuthenticated ? (
+            <NavLink href="/profil">{user?.role === 1 ? "Espace client" : "Mon compte"}</NavLink>
+          ) : null}
         </nav>
 
         <div className="hidden items-center gap-1 lg:flex">
           <Button aria-label="Rechercher" as="a" href="/catalogue" size="sm" variant="ghost">
             <Icon type="search" />
           </Button>
+          {isAuthenticated ? (
+            <Button aria-label="Notifications" as="a" href="/profil" size="sm" variant="ghost">
+              <Icon type="bell" />
+            </Button>
+          ) : null}
           <Button aria-label="Panier" as="a" href="/panier" size="sm" variant="ghost">
             <Icon type="cart" />
           </Button>
-          <Button aria-label="Connexion" as="a" href="/connexion" size="sm" variant="ghost">
+          <Button aria-label={isAuthenticated ? "Profil" : "Connexion"} as="a" href={isAuthenticated ? "/profil" : "/connexion"} size="sm" variant="ghost">
             <Icon type="user" />
           </Button>
+          {isAuthenticated ? (
+            <Button onClick={handleLogout} size="sm" variant="secondary">
+              Déconnexion
+            </Button>
+          ) : null}
         </div>
 
         <Button
@@ -115,28 +162,43 @@ export default function NavbarPublic() {
       {isMenuOpen ? (
         <nav
           aria-label="Navigation mobile"
-          className="mx-auto mt-2 grid max-w-6xl gap-2 rounded-card border border-coffee-beans/10 bg-white p-3 shadow-sm lg:hidden"
+          className={`mx-auto mt-2 max-w-6xl rounded-card border border-coffee-beans/20 shadow-sm lg:hidden ${
+            isAuthenticated ? "bg-white p-0" : "grid gap-2 bg-white p-3"
+          }`}
           id="mobile-navigation"
         >
-          {navLinks.map((link) => (
-            <NavLink href={link.href} key={link.href} onClick={closeMenu}>
-              {link.label}
-            </NavLink>
-          ))}
-          <div className="grid gap-2 pt-2 sm:grid-cols-3">
-            <Button as="a" href="/catalogue" onClick={closeMenu} variant="ghost">
-              <Icon type="search" />
-              Recherche
-            </Button>
-            <Button as="a" href="/panier" onClick={closeMenu} variant="ghost">
-              <Icon type="cart" />
-              Panier
-            </Button>
-            <Button as="a" href="/connexion" onClick={closeMenu} variant="secondary">
-              <Icon type="user" />
-              Connexion
-            </Button>
-          </div>
+          {isAuthenticated ? (
+            <>
+              <button
+                className="mb-3 min-h-10 w-full cursor-pointer rounded-button border border-coffee-beans/20 bg-golden-glow px-4 py-2 text-center text-base font-extrabold text-coffee-beans shadow-sm transition hover:bg-mustard focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-green"
+                onClick={handleLogout}
+                type="button"
+              >
+                Me déconnecter
+              </button>
+              <div className="grid gap-4 px-3 pb-4">
+                {mobileClientLinks.map((item) => (
+                  <MobileClientLink item={item} key={item.label} onClick={closeMenu} onLogout={handleLogout} />
+                ))}
+              </div>
+            </>
+          ) : (
+            <>
+              {publicLinks.map((link) => (
+                <NavLink href={link.href} key={link.href} onClick={closeMenu}>
+                  {link.label}
+                </NavLink>
+              ))}
+              <Button as="a" href="/panier" onClick={closeMenu} variant="ghost">
+                <Icon type="cart" />
+                Panier
+              </Button>
+              <Button as="a" href="/connexion" onClick={closeMenu} variant="secondary">
+                <Icon type="user" />
+                Connexion
+              </Button>
+            </>
+          )}
         </nav>
       ) : null}
     </header>
