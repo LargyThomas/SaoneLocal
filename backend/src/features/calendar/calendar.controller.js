@@ -1,5 +1,5 @@
 // require
-const {findEvents, findProducerGoEvent, insertGoToEvent, deleteGoToEvent} = require('./calendar.service')
+const { findEvent, findProducerGoEvent, insertGoToEvent, deleteGoToEvent } = require('./calendar.service')
 
 // function
 
@@ -7,16 +7,16 @@ const {findEvents, findProducerGoEvent, insertGoToEvent, deleteGoToEvent} = requ
 * @description controller of the route GET /api/calendar/ , show the different events and information
 * @param {hash} req, the request
 * @param {hash} res, the response of the request
-* @return {status} and {json} a message for the status if there is no error 
+* @return {status} and {json} a message for the status and the information collected from the database if there is no error 
 */
 const showCalendar = async (req, res) => {
     try {
-        const event = await findEvents(req, res);
+        const event = await findEvent(req, res);
         const producer = await findProducerGoEvent(req, res);
-        res.status(201).json({ message: "Information correctement récupéré", resultevent: event, resultproducer: producer});
+        res.status(201).json({ message: "Information correctement récupéré", resultEvent: event, resultProducer: producer});
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Erreur serveur. Veuillez réessayer plus tard." });
+        res.status(500).json({ error: "Erreur serveur. Veuillez réessayer plus tard." });
     }
 }
 
@@ -29,16 +29,16 @@ const showCalendar = async (req, res) => {
 const producerGoToEvent = async (req, res) => {
     try {
         await insertGoToEvent(req, res);
-        res.status(201).json({ message: "Information correctement ajouté"});
+        res.status(201).json({ message: "Information correctement ajouté" });
     } catch (error) {
         if (error.message === 'EVENT_DOES_NOT_EXIST') {
-            return res.status(404).json({ message: "l'évenement demandé n'existe pas"});
+            return res.status(404).json({ error: "l'évenement demandé n'existe pas" });
         }
         if (error.message === 'ALLREADY_GO_TO_EVENT') {
-            return res.status(400).json({ message: "Vous allez déjà à cette évènement"});
+            return res.status(400).json({ error: "Vous allez déjà à cette évènement" });
         }
         console.error(error);
-        res.status(500).json({ message: "Erreur serveur. Veuillez réessayer plus tard." });
+        res.status(500).json({ error: "Erreur serveur. Veuillez réessayer plus tard." });
     }
 }
 
@@ -51,15 +51,15 @@ const producerGoToEvent = async (req, res) => {
 const producerDoNotGoToEvent = async (req, res) => {
     try {
         await deleteGoToEvent(req, res);
-        res.status(201).json({ message: "Information correctement supprimé"});
+        res.status(201).json({ message: "Information correctement supprimé" });
     } catch (error) {
         if (error.message == 'DOES_NOT_GO_TO_EVENT') {
-            return res.status(400).json({ message: "Vous n'allez pas à cette evenement"});
+            return res.status(400).json({ error: "Vous n'allez pas à cette évènement" });
         }
         console.error(error);
-        res.status(500).json({ message: "Erreur serveur. Veuillez réessayer plus tard." });
+        res.status(500).json({ error: "Erreur serveur. Veuillez réessayer plus tard." });
     }
 }
 
 // export
-module.exports = {showCalendar, producerGoToEvent, producerDoNotGoToEvent}
+module.exports = { showCalendar, producerGoToEvent, producerDoNotGoToEvent }

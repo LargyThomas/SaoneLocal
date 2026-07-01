@@ -1,13 +1,13 @@
 // require
 const express = require('express');
-const { showCalendar, producerGoToEvent, producerDoNotGoToEvent } = require('./calendar.controller.js');
-const { validationEvent } = require('./calendar.validation.js');
-const authMiddleware = require('../../security/middleware/auth.middleware.js');
-const rolesMiddleware = require('../../security/middleware/roles.middleware.js');
-
 const router = express.Router();
 
-// Implement calender routes logic
+const authMiddleware = require('../../security/middleware/auth.middleware.js');
+const rolesMiddleware = require('../../security/middleware/roles.middleware.js');
+const { showCalendar, producerGoToEvent, producerDoNotGoToEvent } = require('./calendar.controller.js');
+const { validationEvent } = require('./calendar.validation.js');
+
+// Implementation of the routes logic for the calender
 
 // route to get the informations of the events in the calender
 router.get('/', showCalendar)

@@ -1,16 +1,19 @@
+// require
 const { PutObjectCommand } = require('@aws-sdk/client-s3')
 const { s3Client, BUCKET_NAME, AWS_REGION } = require('../../s3.config')
 const { connexion } = require('../../database/database')
 const { v4: uuidv4 } = require('uuid')
 const path = require('path')
 
+// function
+
 /**
- * Upload buffer file to S3
+ * @description Upload buffer file to S3
  * @param {Object} file - Multer file (contains buffer, originalname, mimetype)
  * @param {String} folder - Target folder : 'profiles', 'products', 'producers', 'site'
  * @param {String} subFolder - Optional subfolder : 'clients', 'admins', 'locations'
- */
-
+ * @returns {String} the picture link
+*/
 async function uploadToS3(file, folder, subFolder = '') {
     if (!BUCKET_NAME) {
         throw new Error('S3_BUCKET_MISSING')
@@ -43,6 +46,12 @@ async function uploadToS3(file, folder, subFolder = '') {
     }
 }
 
+/**
+ * @description Upload profile picture
+ * @param {String} userEmail - Target folder : 'profiles', 'products', 'producers', 'site'
+ * @param {Object} file - Multer file (contains buffer, originalname, mimetype)
+ * @return {array of hash} or {Error} the profil picture of the user collected from the database or an error if the userEmail is not valid
+*/
 async function uploadProfilePicture(userEmail, file) {
     const imageUrl = await uploadToS3(file, 'profiles', 'users')
     const result = await connexion.query(

@@ -1,42 +1,63 @@
-const favoritesService = require('./favorites.service');
+// require
+const { getFavoriteByUser, createFavorite, removeFavorite } = require('./favorites.service');
 
-// GET /api/favorites
-exports.getFavorites = async (req, res) => {
+// function
+
+/**
+* @description controller of the route GET /api/favorites/ , get all the favorite of the connected user
+* @param {hash} req, the request
+* @param {hash} res, the response of the request
+* @return {status} and {json} a message for the status and the information collected from the database if there is no error 
+*/
+const getFavorite = async (req, res) => {
     try {
         const userEmail = req.user.email;
-        const favorites = await favoritesService.getFavoritesByUser(userEmail);
-        res.status(200).json({ favorites });
+        const favorite = await getFavoriteByUser(userEmail);
+        res.status(200).json({ message: "Informations correctement récupérées.", result: favorite });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Erreur serveur.' });
+        res.status(500).json({ error: 'Erreur serveur.' });
     }
 }
 
-// POST /api/favorites
-exports.addFavorite = async (req, res) => {
+/**
+* @description controller of the route POST /api/favorites/ , add a favorite of the connected user
+* @param {hash} req, the request
+* @param {hash} res, the response of the request
+* @return {status} and {json} a message for the status 
+*/
+const addFavorite = async (req, res) => {
     try {
         const userEmail = req.user.email;
         const { productId } = req.body;
-        await favoritesService.addFavorite(userEmail, productId);
+        await createFavorite(userEmail, productId);
         res.status(201).json({ message: 'Favori ajouté.' });
     } catch (error) {
         if (error.message === 'ALREADY_FAVORITE') {
-            return res.status(409).json({ message: 'Produit déjà en favoris.' });
+            return res.status(409).json({ error: 'Produit déjà en favoris.' });
         }
         console.error(error);
-        res.status(500).json({ message: 'Erreur serveur.' });
+        res.status(500).json({ error: 'Erreur serveur.' });
     }
 }
 
-// DELETE /api/favorites/:id
-exports.deleteFavorite = async (req, res) => {
+/**
+* @description controller of the route DELETE /api/favorites/:id/ , delete a favorite of the connected user
+* @param {hash} req, the request
+* @param {hash} res, the response of the request
+* @return {status} and {json} a message for the status 
+*/
+const deleteFavorite = async (req, res) => {
     try {
         const userEmail = req.user.email;
         const productId = parseInt(req.params.id, 10);
-        await favoritesService.removeFavorite(userEmail, productId);
+        await removeFavorite(userEmail, productId);
         res.status(200).json({ message: 'Favori retiré.' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Erreur serveur.' });
+        res.status(500).json({ error: 'Erreur serveur.' });
     }
 }
+
+// export
+module.exports = { getFavorite, addFavorite, deleteFavorite }

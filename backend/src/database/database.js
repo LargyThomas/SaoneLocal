@@ -1,6 +1,8 @@
+// require
 const {Client} = require('pg')
 require('dotenv').config()
 
+// function
 const connexion = new Client({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -9,6 +11,7 @@ const connexion = new Client({
     database: process.env.DB_NAME
 })
 
-module.exports = {connexion}
-
 connexion.connect().then(() => console.log("connected"))
+
+// export
+module.exports = {connexion}

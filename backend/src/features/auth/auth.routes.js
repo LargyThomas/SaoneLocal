@@ -1,15 +1,17 @@
-// Define routes for auth and branches the middlewares
-
+// require
 const express = require('express');
-
 const router = express.Router();
-const authController = require('./auth.controller');
-const { register, login } = authController;
+
+const { register, login } = require('./auth.controller');
 const { validateRegister, validateLogin } = require('./auth.validation');
 
-// Implement auth routes logic
+// implementation of the routes logic for the authentification
 
+// register to a new account
 router.post('/register', validateRegister, register)
+
+// login to an existing account
 router.post('/login', validateLogin, login)
 
+// export
 module.exports = router

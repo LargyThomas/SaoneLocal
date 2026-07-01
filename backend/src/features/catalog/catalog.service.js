@@ -1,27 +1,18 @@
-// Business logic for catalog management
-// Handles product listing with dynamic filters (category, subcategory, producer) and server-side pagination
-// Handles single product retrieval by ID with full producer and category details
-
+// require
 const { connexion } = require('../../database/database.js')
 
-const getProducts = async ({ page = 1, category, subcategory, producer, q, search }) => {
+/**
+* @description get the information of all the products
+* @param {hash} (page, category)  
+* @return {array of hash} the information collected from the database
+*/
+const getProducts = async ({ page = 1, category, subcategory, producer }) => {
     const limit = 10
     const offset = (parseInt(page) - 1) * limit
     const searchTerm = q || search
 
     let query = `
-        SELECT 
-            p.productId,
-            p.productPicture,
-            p.productName,
-            p.productPrice,
-            p.productDesc,
-            c.categoryId,
-            c.categoryName,
-            sc.subcategoryId,
-            sc.subcategoryName,
-            pr.producerId,
-            pr.producerDesc
+        SELECT p.productId, p.productName, p.productPrice, p.productDesc, c.categoryName, sc.subcategoryName, pr.producerId, pr.producerDesc
         FROM product p
         LEFT JOIN category c ON p.categoryId = c.categoryId
         LEFT JOIN subcategory sc ON p.subcategoryId = sc.subcategoryId
@@ -63,12 +54,22 @@ const getProducts = async ({ page = 1, category, subcategory, producer, q, searc
     }
 
     // Request for the total count
-    const countQuery = `SELECT COUNT(*) FROM (${query}) AS total`
+    const countQuery = `
+    SELECT COUNT(*) 
+    FROM (${query}) 
+    AS total
+    `
+
     const countResult = await connexion.query(countQuery, params)
     const total = parseInt(countResult.rows[0].count)
 
     // Request paginated results
-    query += ` ORDER BY p.productId LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`
+    query += `
+    ORDER BY p.productId 
+    LIMIT $${paramIndex} 
+    OFFSET $${paramIndex + 1}
+    `
+    
     params.push(limit, offset)
 
     const result = await connexion.query(query, params)
@@ -84,26 +85,20 @@ const getProducts = async ({ page = 1, category, subcategory, producer, q, searc
     }
 }
 
+/**
+* @description get the information of the product productId
+* @param {int} id, the id of the product
+* @return {hash} the information collected from the database 
+*/
 const getProductById = async (id) => {
     const result = await connexion.query(`
-        SELECT 
-            p.productId,
-            p.productPicture,
-            p.productName,
-            p.productPrice,
-            p.productDesc,
-            c.categoryId,
-            c.categoryName,
-            sc.subcategoryId,
-            sc.subcategoryName,
-            pr.producerId,
-            pr.producerDesc
+        SELECT p.productId, p.productName, p.productPrice, p.productDesc, c.categoryName, sc.subcategoryName, pr.producerId, pr.producerDesc
         FROM product p
         LEFT JOIN category c ON p.categoryId = c.categoryId
         LEFT JOIN subcategory sc ON p.subcategoryId = sc.subcategoryId
         LEFT JOIN producer pr ON p.producerId = pr.producerId
         WHERE p.productId = $1
-    `, [id])
+    `,  [id])
 
     if (result.rows.length === 0) {
         throw new Error('PRODUCT_NOT_FOUND')
@@ -112,13 +107,19 @@ const getProductById = async (id) => {
     return result.rows[0]
 }
 
+/**
+* @description create a new product
+* @param {sting} userEmail, the email of the producer of the new product
+* @param {hash} (productName, productPrice, categoryId, subcategoryId, productDesc, productImage)
+* @return {hash} the information of the added product
+*/
 const createProduct = async (userEmail, { productName, productPrice, categoryId, subcategoryId, productDesc, productImage }) => {
-    const producerResult = await connexion.query(
-        `SELECT pr.producerId
-         FROM user_producer up
-         JOIN producer pr ON up.producerId = pr.producerId
-         WHERE up.usersId = $1`,
-        [userEmail]
+    const producerResult = await connexion.query(`
+        SELECT pr.producerId
+        FROM user_producer up
+        JOIN producer pr ON up.producerId = pr.producerId
+        WHERE up.usersId = $1
+    `,  [userEmail]
     )
 
     if (producerResult.rows.length === 0) {
@@ -127,24 +128,30 @@ const createProduct = async (userEmail, { productName, productPrice, categoryId,
 
     const producerId = producerResult.rows[0].producerid
 
-    const result = await connexion.query(
-        `INSERT INTO product 
-            (producerId, categoryId, subcategoryId, productName, productPrice, productDesc, productStatus, productPicture)
-         VALUES ($1, $2, $3, $4, $5, $6, 'active', $7)
-         RETURNING *`,
-        [producerId, categoryId, subcategoryId || null, productName.trim(), productPrice, productDesc || null, productImage || null]
+    const result = await connexion.query(`
+        INSERT INTO product (producerId, categoryId, subcategoryId, productName, productPrice, productDesc, productStatus, productPicture)
+        VALUES ($1, $2, $3, $4, $5, $6, 'active', $7)
+        RETURNING *
+    `,  [producerId, categoryId, subcategoryId || null, productName.trim(), productPrice, productDesc || null, productImage || null]
     )
 
     return result.rows[0]
 }
 
-const updateProduct = async (userEmail, productId, fields) => {
+/**
+* @description update the product productId
+* @param {string} userEmail, the email of the producer of the product
+* @param {int} productId, the id of the product
+* @param {hash} fields, the informations to update
+* @return {hash} the information of the updated product
+*/
+const modifyProduct = async (userEmail, productId, fields) => {
     const check = await connexion.query(`
         SELECT p.productId
         FROM product p
         JOIN user_producer up ON p.producerId = up.producerId
         WHERE p.productId = $1 AND up.usersId = $2
-    `, [productId, userEmail])
+    `,  [productId, userEmail])
 
     if (check.rows.length === 0) {
         throw new Error('PRODUCT_NOT_FOUND_OR_UNAUTHORIZED')
@@ -174,29 +181,40 @@ const updateProduct = async (userEmail, productId, fields) => {
 
     values.push(productId)
 
-    const result = await connexion.query(
-        `UPDATE product SET ${updates.join(', ')} WHERE productId = $${index} RETURNING *`,
-        values
+    const result = await connexion.query(`
+        UPDATE product 
+        SET ${updates.join(', ')} 
+        WHERE productId = $${index} 
+        RETURNING *
+    `,  values
     )
 
     return result.rows[0]
 }
 
+/**
+* @description delete the product productId
+* @param {string} userEmail,
+* @param {int} productId,
+* @param {hash} (productName, productPrice, categoryId, subcategoryId, productDesc, productImage)
+* @return 
+*/
 const deleteProduct = async (userEmail, productId) => {
     const check = await connexion.query(`
         SELECT p.productId
         FROM product p
         JOIN user_producer up ON p.producerId = up.producerId
         WHERE p.productId = $1 AND up.usersId = $2
-    `, [productId, userEmail])
+    `,  [productId, userEmail])
 
     if (check.rows.length === 0) {
         throw new Error('PRODUCT_NOT_FOUND_OR_UNAUTHORIZED')
     }
 
-    await connexion.query('DELETE FROM product WHERE productId = $1', [productId])
-
-    return { message: 'Produit supprimé avec succès' }
+    await connexion.query(`
+        DELETE FROM product 
+        WHERE productId = $1
+    `,  [productId])
 }
 
-module.exports = { getProducts, getProductById, createProduct, updateProduct, deleteProduct }
+module.exports = { getProducts, getProductById, createProduct, modifyProduct, deleteProduct }

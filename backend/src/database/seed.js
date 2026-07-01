@@ -1,13 +1,18 @@
 // require
-
 const {connexion} = require('./database.js')
-const {admin, association, usersAssociation, user1, producer1, user2, producer2, event1, event2, event3, product1, product2, product3, product4, category1, category2, category3, subcategory1, subcategory2, subcategory3, subcategory4, subcategory5, subcategory6} = require('./const-seed.js')
+const {ADMIN, ASSOCIATION, USERS_ASSOCIATION, USER_1, PRODUCER_1, USER_2, PRODUCER_2, EVENT_1, EVENT_2, EVENT_3, PRODUCT_1, PRODUCT_2, PRODUCT_3, PRODUCT_4, CATEGORY_1, CATEGORY_2, CATEGORY_3, SUBCATEGORY_1, SUBCATEGORY_2, SUBCATEGORY_3, SUBCATEGORY_4, SUBCATEGORY_5, SUBCATEGORY_6} = require('./const-seed.js')
 const { hashPassword } = require('../security/crypto.js')
 
+// function
 
-// function gestion
+// handle
 
-function gestionErr(error) {
+/**
+* @description handle the error when doing a query
+* @param {hash} error, the error
+* @return {int} 1 if there is no error and -1 if there is an error 
+*/
+function handleErr(error) {
     if (!error){
         return 1
     }else{
@@ -16,7 +21,12 @@ function gestionErr(error) {
     }
 }
 
-function gestionFind(error, result) {
+/**
+* @description return if the information exist (when doing a finding query)
+* @param {hash} error, the error
+* @return {int} 1 if the information exist, 0 if not, -1 if there is an error 
+*/
+function handleFind(error, result) {
     let var_return = 0
     if (!error, result){
         if (result.rows.length == 1){
@@ -29,64 +39,101 @@ function gestionFind(error, result) {
     return var_return
 }
 
-function dispatch(keyWord, values) {
+/**
+* @description execute the right finding and insert function for the KeyWord
+* @param {string} keyWord, the error
+* @param {hash} value, the values of the new entitie to insert
+* @return 
+*/
+function dispatch(keyWord, value) {
     switch (keyWord) {
         case "users":
-            findUsers(values)
+            findUser(value)
             break
         case "producer":
-            findProducer(values)
+            findProducer(value)
             break
         case "userProducer":
-            findUserProducer(values[0], values[1])
+            findUserProducer(value[0], value[1])
             break
         case "events":
-            findEvents(values)
+            findEvent(value)
             break
         case "product":
-            findProduct(values)
+            findProduct(value)
             break
         case "category":
-            findCategory(values)
+            findCategory(value)
             break
         case "subcategory":
-            findSubcategory(values)
+            findSubcategory(value)
             break
         case "association":
-            findAssociation(values)
+            findAssociation(value)
             break
         case "userAssociation":
-            findUserAssociation(values)
+            findUserAssociation(value)
             break
     }
     connexion.end
 }
 
-// function find
+// find
 
-function findUsers(values) {
-    connexion.query('Select * from users where usersemail = $1', [values["usersEmail"]], (err,res)=>{
-        if (gestionFind(err, res) == 0) {
+/**
+* @description find if the user with the values value already exist, if not it will be insert in the database
+* @param {hash} value, the values of the new entitie to insert
+* @return
+*/
+function findUser(value) {
+    connexion.query(`
+        SELECT * 
+        FROM users 
+        WHERE usersemail = $1
+    `,  [value["usersEmail"]], (err,res)=>{
+
+        if (handleFind(err, res) == 0) {
             connexion.end
-            insertUsers(values)
+            insertUser(value)
         }
         connexion.end
     })
 }
 
-function findProducer(values) {
-    connexion.query('Select * from producer where producerid = $1', [values["producerId"]], (err,res)=>{
-        if (gestionFind(err, res) == 0) {
+/**
+* @description find if the producer with the values value already exist, if not it will be insert in the database
+* @param {hash} value, the values of the new entitie to insert
+* @return
+*/
+function findProducer(value) {
+    connexion.query(`
+        SELECT * 
+        FROM producer 
+        WHERE producerid = $1
+    `,  [value["producerId"]], (err,res)=>{
+
+        if (handleFind(err, res) == 0) {
             connexion.end
-            insertProducer(values)
+            insertProducer(value)
         }
         connexion.end
     })
 }
 
+/**
+* @description find if the link beetween user and producer with the values value already exist, if not it will be insert in the database
+* @param {hash} value, the values of the new entitie to insert
+* @return
+*/
 function findUserProducer(usersId, producerId) {
-    connexion.query('Select * from user_producer where usersid = $1 and producerid = $2', [usersId, producerId], (err,res)=>{
-        if (gestionFind(err, res) == 0) {
+    connexion.query(`
+        SELECT * 
+        FROM user_producer 
+        WHERE usersid = $1 
+        AND producerid = $2
+    `,  [usersId, producerId], (err,res)=>{
+
+        if (handleFind(err, res) == 0) {
             connexion.end
             insertUserProducer(usersId, producerId)
         }
@@ -94,163 +141,309 @@ function findUserProducer(usersId, producerId) {
     })
 }
 
-function findEvents(values) {
-    connexion.query('Select * from events where eventsid = $1', [values["eventsId"]], (err,res)=>{
-        if (gestionFind(err, res) == 0) {
+/**
+* @description find if the event with the values value already exist, if not it will be insert in the database
+* @param {hash} value, the values of the new entitie to insert
+* @return
+*/
+function findEvent(value) {
+    connexion.query(`
+        SELECT * 
+        FROM events 
+        WHERE eventsid = $1
+    `,  [value["eventsId"]], (err,res)=>{
+
+        if (handleFind(err, res) == 0) {
             connexion.end
-            insertEvents(values)
+            insertEvent(value)
         }
         connexion.end
     })
 }
 
-function findProduct(values) {
-    connexion.query('Select * from product where productid = $1', [values["productId"]], (err,res)=>{
-        if (gestionFind(err, res) == 0) {
+/**
+* @description find if the product with the values value already exist, if not it will be insert in the database
+* @param {hash} value, the values of the new entitie to insert
+* @return
+*/
+function findProduct(value) {
+    connexion.query(`
+        SELECT * 
+        FROM product 
+        WHERE productid = $1
+    `,  [value["productId"]], (err,res)=>{
+
+        if (handleFind(err, res) == 0) {
             connexion.end
-            insertProduct(values)
+            insertProduct(value)
         }
         connexion.end
     })
 }
 
-function findCategory(values) {
-    connexion.query('Select * from category where categoryid = $1', [values["categoryId"]], (err,res)=>{
-        if (gestionFind(err, res) == 0) {
+/**
+* @description find if the category with the values value already exist, if not it will be insert in the database
+* @param {hash} value, the values of the new entitie to insert
+* @return
+*/
+function findCategory(value) {
+    connexion.query(`
+        SELECT * 
+        FROM category 
+        WHERE categoryid = $1
+    `,  [value["categoryId"]], (err,res)=>{
+
+        if (handleFind(err, res) == 0) {
             connexion.end
-            insertCategory(values)
+            insertCategory(value)
         }
         connexion.end
     })
 }
 
-function findSubcategory(values) {
-    connexion.query('Select * from subcategory where subcategoryid = $1', [values["subcategoryId"]], (err,res)=>{
-        if (gestionFind(err, res) == 0) {
+/**
+* @description find if the subcategory with the values value already exist, if not it will be insert in the database
+* @param {hash} value, the values of the new entitie to insert
+* @return
+*/
+function findSubcategory(value) {
+    connexion.query(`
+        SELECT * 
+        FROM subcategory 
+        WHERE subcategoryid = $1
+    `,  [value["subcategoryId"]], (err,res)=>{
+
+        if (handleFind(err, res) == 0) {
             connexion.end
-            insertSubcategory(values)
+            insertSubcategory(value)
         }
         connexion.end
     })
 }
 
-function findAssociation(values) {
-    connexion.query('Select * from association where associationId = $1', [values["associationId"]], (err,res)=>{
-        if (gestionFind(err, res) == 0) {
+/**
+* @description find if the association with the values value already exist, if not it will be insert in the database
+* @param {hash} value, the values of the new entitie to insert
+* @return
+*/
+function findAssociation(value) {
+    connexion.query(`
+        SELECT * 
+        FROM association 
+        WHERE associationId = $1
+    `,  [value["associationId"]], (err,res)=>{
+
+        if (handleFind(err, res) == 0) {
             connexion.end
-            insertAssociation(values)
+            insertAssociation(value)
         }
         connexion.end
     })
 }
 
-function findUsersAssociation(usersId, associationId) {
-    connexion.query('Select * from users_association where usersId = $1, associationId = $2', [usersId, associationId], (err,res)=>{
-        if (gestionFind(err, res) == 0) {
+/**
+* @description find if the user managing the association with the values value already exist, if not it will be insert in the database
+* @param {hash} value, the values of the new entitie to insert
+* @return
+*/
+function findUserAssociation(usersId, associationId) {
+    connexion.query(`
+        SELECT * 
+        FROM users_association 
+        WHERE usersId = $1, associationId = $2
+    `,  [usersId, associationId], (err,res)=>{
+
+        if (handleFind(err, res) == 0) {
             connexion.end
-            insertUsersAssociation(associationId[usersId], associationId[associationId])
+            insertUserAssociation(associationId[usersId], associationId[associationId])
         }
         connexion.end
     })
 }
 
-// function insert
+// insert
 
-async function insertUsers(values) {
-    const hashedPassword = await hashPassword(values["usersPassword"])
-    connexion.query('Insert into users values ($1, $2, $3, $4, $5, date($6), date($7), $8, $9, $10)', [values["usersEmail"], hashedPassword, values["usersGender"], values["usersLastName"], values["usersFirstName"], values["usersCreationDate"], values["usersLastConnexion"], values["usersRole"], values["usersStatus"], values["usersProfilePicture"]], (err,res)=>{
+/**
+* @description insert in the database the user with the values value
+* @param {hash} value, the values of the new entitie to insert
+* @return
+*/
+async function insertUser(value) {
+    const hashedPassword = await hashPassword(value["usersPassword"])
+    connexion.query(`
+        INSERT INTO users 
+        VALUES ($1, $2, $3, $4, $5, date($6), date($7), $8, $9, $10)
+    `,  [value["usersEmail"], hashedPassword, value["usersGender"], value["usersLastName"], value["usersFirstName"], value["usersCreationDate"], value["usersLastConnexion"], value["usersRole"], value["usersStatus"], value["usersProfilePicture"]], (err,res)=>{
+
         connexion.end
-        return gestionErr(err)
+        return handleErr(err)
     })
 }
 
-function insertProducer(values) {
-    connexion.query('Insert into producer values ($1, $2, $3, $4, $5)', [values["producerId"], values["producerDesc"], values["producerLocalisation"], values["producerSiretNum"], values["producerStatus"]], (err,res)=>{
+/**
+* @description insert in the database the producer with the values value
+* @param {hash} value, the values of the new entitie to insert
+* @return
+*/
+function insertProducer(value) {
+    connexion.query(`
+        INSERT INTO producer 
+        VALUES ($1, $2, $3, $4, $5)
+    `,  [value["producerId"], value["producerDesc"], value["producerLocalisation"], value["producerSiretNum"], value["producerStatus"]], (err,res)=>{
+        
         connexion.end
-        return gestionErr(err)
+        return handleErr(err)
     })
 }
 
+/**
+* @description insert in the database the link beetween user and producer with the values value
+* @param {hash} value, the values of the new entitie to insert
+* @return
+*/
 function insertUserProducer(usersId, producerId) {
-    connexion.query('Insert into user_producer values ($1, $2)', [usersId, producerId], (err,res)=>{
+    connexion.query(`
+        INSERT INTO user_producer 
+        VALUES ($1, $2)
+    `,  [usersId, producerId], (err,res)=>{
+
         connexion.end
-        return gestionErr(err)
+        return handleErr(err)
     })
 }
 
-function insertEvents(values) { 
-    connexion.query('Insert into events values ($1, $2, $3, $4, $5)', [values["eventsId"], values["eventsLocation"], values["eventsDate"], values["eventsName"], values["eventsDesc"]], (err,res)=>{
+/**
+* @description insert in the database the event with the values value
+* @param {hash} value, the values of the new entitie to insert
+* @return
+*/
+function insertEvent(value) { 
+    connexion.query(`
+        INSERT INTO events 
+        VALUES ($1, $2, $3, $4, $5, $6)
+    `,  [value["eventsId"], value["eventsLocation"], value["eventsDate"], value["eventsName"], value["eventsDesc"], value["eventsStatus"]], (err,res)=>{
+        
         connexion.end
-        return gestionErr(err)
+        return handleErr(err)
     })
 }
 
-function insertProduct(values) { 
-    connexion.query('Insert into product values ($1, $2, $3, $4, $5, $6, $7, $8)', [values["productId"], values["producerId"], values["categoryId"], values["subcategoryId"], values["productName"], values["productPrice"], values["productDesc"], values["productStatus"]], (err,res)=>{
+
+/**
+* @description insert in the database the product with the values value
+* @param {hash} value, the values of the new entitie to insert
+* @return
+*/
+function insertProduct(value) { 
+    connexion.query(`
+        INSERT INTO product 
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    `,  [value["productId"], value["producerId"], value["categoryId"], value["subcategoryId"], value["productName"], value["productPrice"], value["productDesc"], value["productStatus"]], (err,res)=>{
+        
         connexion.end
-        return gestionErr(err)
+        return handleErr(err)
     })
 }
 
-function insertCategory(values) { 
-    connexion.query('Insert into category values ($1, $2)', [values["categoryId"], values["categoryName"]], (err,res)=>{
+
+/**
+* @description insert in the database the category with the values value
+* @param {hash} value, the values of the new entitie to insert
+* @return
+*/
+function insertCategory(value) { 
+    connexion.query(`
+        INSERT INTO category 
+        VALUES ($1, $2)
+    `,  [value["categoryId"], value["categoryName"]], (err,res)=>{
+
         connexion.end
-        return gestionErr(err)
+        return handleErr(err)
     })
 }
 
-function insertSubcategory(values) { 
-    connexion.query('Insert into subcategory values ($1, $2, $3)', [values["subcategoryId"], values["categoryId"], values["subcategoryName"]], (err,res)=>{
+
+/**
+* @description insert in the database the subcategory with the values value
+* @param {hash} value, the values of the new entitie to insert
+* @return
+*/
+function insertSubcategory(value) { 
+    connexion.query(`
+        INSERT INTO subcategory 
+        VALUES ($1, $2, $3)
+    `,  [value["subcategoryId"], value["categoryId"], value["subcategoryName"]], (err,res)=>{
+        
         connexion.end
-        return gestionErr(err)
+        return handleErr(err)
     })
 }
 
-function insertAssociation(values) { 
-    connexion.query('Insert into association values ($1, $2, $3, $4, $5, $6, $7, $8)', [values["associationId"], values["associationLocalisation"], values["associationValues"], values["associationTestimony"], values["associationDescHome"], values["associationDescAbout"], values["associationEmail"], values["associationNum"]], (err,res)=>{
+
+/**
+* @description insert in the database the association with the values value
+* @param {hash} value, the values of the new entitie to insert
+* @return
+*/
+function insertAssociation(value) { 
+    connexion.query(`
+        INSERT INTO association 
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    `,  [value["associationId"], value["associationLocalisation"], value["associationValues"], value["associationTestimony"], value["associationDescHome"], value["associationDescAbout"], value["associationEmail"], value["associationNum"]], (err,res)=>{
+        
         connexion.end
-        return gestionErr(err)
+        return handleErr(err)
     })
 }
 
-function insertUsersAssociation(values) { 
-    connexion.query('Insert into user_association values ($1, $2)', [values["userId"], values["associationId"]], (err,res)=>{
+
+/**
+* @description insert in the database the user managing the association with the values value
+* @param {hash} value, the values of the new entitie to insert
+* @return
+*/
+function insertUserAssociation(value) { 
+    connexion.query(`
+        INSERT INTO user_association 
+        VALUES ($1, $2)
+    `,  [value["userId"], value["associationId"]], (err,res)=>{
+
         connexion.end
-        return gestionErr(err)
+        return handleErr(err)
     })
 }
 
-// call of the functions
+// call
 
-dispatch("users", admin)
-dispatch("users", user1)
-dispatch("users", user2)
+dispatch("users", ADMIN)
+dispatch("users", USER_1)
+dispatch("users", USER_2)
 
-dispatch("association", association)
-dispatch("usersAssociation", usersAssociation)
+dispatch("association", ASSOCIATION)
+dispatch("usersAssociation", USERS_ASSOCIATION)
 
-dispatch("producer", producer1)
-dispatch("producer", producer2)
+dispatch("producer", PRODUCER_1)
+dispatch("producer", PRODUCER_2)
 
-dispatch("userProducer", [user1["usersEmail"], producer1["producerId"]])
-dispatch("userProducer", [user2["usersEmail"], producer2["producerId"]])
+dispatch("userProducer", [USER_1["usersEmail"], PRODUCER_1["producerId"]])
+dispatch("userProducer", [USER_2["usersEmail"], PRODUCER_2["producerId"]])
 
-dispatch("events", event1)
-dispatch("events", event2)
-dispatch("events", event3)
+dispatch("events", EVENT_1)
+dispatch("events", EVENT_2)
+dispatch("events", EVENT_3)
 
-dispatch("product", product1)
-dispatch("product", product2)
-dispatch("product", product3)
-dispatch("product", product4)
+dispatch("product", PRODUCT_1)
+dispatch("product", PRODUCT_2)
+dispatch("product", PRODUCT_3)
+dispatch("product", PRODUCT_4)
 
-dispatch("category", category1)
-dispatch("category", category2)
-dispatch("category", category3)
+dispatch("category", CATEGORY_1)
+dispatch("category", CATEGORY_2)
+dispatch("category", CATEGORY_3)
 
-dispatch("subcategory", subcategory1)
-dispatch("subcategory", subcategory2)
-dispatch("subcategory", subcategory3)
-dispatch("subcategory", subcategory4)
-dispatch("subcategory", subcategory5)
-dispatch("subcategory", subcategory6)
+dispatch("subcategory", SUBCATEGORY_1)
+dispatch("subcategory", SUBCATEGORY_2)
+dispatch("subcategory", SUBCATEGORY_3)
+dispatch("subcategory", SUBCATEGORY_4)
+dispatch("subcategory", SUBCATEGORY_5)
+dispatch("subcategory", SUBCATEGORY_6)

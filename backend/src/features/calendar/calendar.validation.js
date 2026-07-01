@@ -9,7 +9,7 @@
 */
 const validationEvent = (req, res, next) => {
     if (isNaN(parseInt(req.body.events))) {
-        return res.status(400).json({ message: "L'Id de l'événement doit être un nombre" });
+        return res.status(400).json({ error: "L'Id de l'évènement doit être un nombre" });
     }
     next();
 }

@@ -1,7 +1,13 @@
-// Validate and sanitize user input before it reaches the controller for auth
+// function
 
-// Validate a registration by checking if all required fields are present, the email is a valid format,and the password is strong
-exports.validateRegister = (req, res, next) => {
+/**
+* @description validate a registration by checking if all required fields are filled, the email has a valid format, and the password is strong
+* @param {hash} req, the request
+* @param {hash} res, the response of the request
+* @param {Function: next} next, the next function
+* @return {Function: next} or {Error} the next function or an error if the id is not valid
+*/
+const validateRegister = (req, res, next) => {
     const { email, password, gender, lastName, firstName } = req.body;
     
     const emailRegex = /^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*)@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
@@ -26,8 +32,14 @@ exports.validateRegister = (req, res, next) => {
     next();
 }
 
-// Validate a login by checking the email and password fields are present and not empty
-exports.validateLogin = (req, res, next) => {
+/**
+* @description validate a login by checking the email and the password fields are present and not empty
+* @param {hash} req, the request
+* @param {hash} res, the response of the request
+* @param {Function: next} next, the next function
+* @return {Function: next} or {Error} the next function or an error if the id is not valid
+*/
+const validateLogin = (req, res, next) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -36,3 +48,6 @@ exports.validateLogin = (req, res, next) => {
 
     next();
 }
+
+// export
+module.exports = { validateRegister, validateLogin }

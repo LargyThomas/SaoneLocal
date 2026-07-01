@@ -1,7 +1,7 @@
 // const
 
-const hashUpdate = {"usersPassword": 64, "usersGender": 1, "usersLastname": 50, "usersFirstname": 50,"usersProfilPicture": 500,"producerDesc": 1500,"producerLocalisation": 100,"producerSiretNum": 14}
-const hashGender = {"M": "ok", "F": "ok", "A": "ok"}
+const HASH_UPDATE = {"usersPassword": 64, "usersGender": 1, "usersLastname": 50, "usersFirstname": 50,"usersProfilPicture": 500,"producerDesc": 1500,"producerLocalisation": 100,"producerSiretNum": 14}
+const HASH_GENDER = {"M": "ok", "F": "ok", "A": "ok"}
 
 //function
 
@@ -30,7 +30,7 @@ const verifyKey = (req, res) => {
     if (req.body.key == null || req.body.value == null) {
         throw new Error('MISSING_INFORMATION')
     }
-    if (hashUpdate[req.body.key] == null) {
+    if (HASH_UPDATE[req.body.key] == null) {
         throw new Error('NO_PERMISSION')
     }
 }
@@ -47,13 +47,13 @@ const verifyValue = (req, res) => {
         throw new Error('NUMBER_GIVEN')
     }
 
-    if (req.body.value.length > hashUpdate[req.body.key]) {
-        throw new Error('TO_MANY_CHARACTER')
+    if (req.body.value.length > HASH_UPDATE[req.body.key]) {
+        throw new Error('TOO_MANY_CHARACTER')
     }
 
-    if (req.body.key == "usersGender" && hashGender[req.body.value] == null) {
-        throw new Error('INVALIDE_INFORMATION')
-    }
+    if (req.body.key == "usersGender" && HASH_GENDER[req.body.value] == null) {
+        throw new Error('INVALID_INFORMATION')
+     }
 
     if (req.body.key == "usersPassword") {
         const hasUpperCase = /[A-Z]/.test(req.body.value);
@@ -62,7 +62,7 @@ const verifyValue = (req, res) => {
         const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(req.body.value);
 
         if (req.body.value.length < 8 || !hasUpperCase || !hasLowerCase || !hasNumber || !hasSpecialChar) {
-            throw new Error('INVALIDE_PASSWORD')
+            throw new Error('INVALID_PASSWORD')
         }
     }
 }
@@ -83,7 +83,7 @@ const validationInformationToUpdate = (req, res, next) => {
         if (error.message == 'NUMBER_GIVEN') {
             return res.status(400).json({ message: "La valeur doit être une chaîne de caractères" });
         }
-        if (error.message == 'INVALIDE_INFORMATION') {
+        if (error.message == 'INVALID_INFORMATION') {
             return res.status(400).json({ message: "Information invalide" });
         }
         if (error.message == 'MISSING_INFORMATION') {
@@ -92,7 +92,7 @@ const validationInformationToUpdate = (req, res, next) => {
         if (error.message == 'NO_PERMISSION') {
             return res.status(423).json({ message: "Vous n'avez pas la permission de modifier ce champ" });
         }
-        if (error.message == 'TO_MANY_CHARACTER') {
+        if (error.message == 'TOO_MANY_CHARACTER') {
             return res.status(400).json({ message: "Le champ contient un trop grand nombre de caractères" });
         }
         if (error.message == 'INVALIDE_PASSWORD') {
