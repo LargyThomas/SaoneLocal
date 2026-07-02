@@ -9,11 +9,13 @@ import Input from "../../ui/input.jsx";
 import { clearGuestCart, getGuestCartItems } from "../../utils/guest-cart.js";
 
 function getRedirectPath(user) {
-  if (user?.role === 1) {
+  const role = Number(user?.role);
+
+  if (role === 1) {
     return "/profil";
   }
 
-  if (user?.role === 2) {
+  if (role === 2) {
     return "/producteur";
   }
 
@@ -41,13 +43,18 @@ export function LoginPage() {
 
     try {
       const result = await loginUser(form);
+      console.log("[login-page] résultat login", result);
+
       localStorage.setItem("saonelocal-token", result.token);
       localStorage.setItem("saonelocal-user", JSON.stringify(result.user));
+
+      console.log("[login-page] token stocké", Boolean(localStorage.getItem("saonelocal-token")));
+      console.log("[login-page] user stocké", localStorage.getItem("saonelocal-user"));
 
       const guestItems = getGuestCartItems();
       let successMessage = "Connexion réussie.";
 
-      if (guestItems.length > 0 && result.user?.role === 1) {
+      if (guestItems.length > 0 && Number(result.user?.role) === 1) {
         try {
           for (const item of guestItems) {
             await addBasketItem(item.productid, item.quantity || 1);
@@ -60,9 +67,13 @@ export function LoginPage() {
         }
       }
 
+      const redirectPath = getRedirectPath(result.user);
+      console.log("[login-page] route de redirection", redirectPath);
+
       sessionStorage.setItem("saonelocal-login-message", successMessage);
-      window.location.assign(getRedirectPath(result.user));
+      window.location.assign(redirectPath);
     } catch (requestError) {
+      console.log("[login-page] erreur login", requestError);
       setError(requestError.message);
     } finally {
       setIsLoading(false);
