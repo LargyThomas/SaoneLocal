@@ -127,7 +127,7 @@ const findProductProducerIdPage = async (req, res, number) => {
 * @return {array of hash} or {Error} the information collected from the database or an error if the id is not valid
 */
 const findEventProducerIdPage = async (req, res) => {
-    result = await connexion.query(`
+    const result = await connexion.query(`
         SELECT events.eventsLocation, events.eventsDate, events.eventsName 
         FROM events 
         JOIN go_to_events ON events.eventsId = go_to_events.eventsId 

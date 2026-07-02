@@ -27,14 +27,12 @@ const findEvent = async (req, res) => {
 */
 const findProducerGoEvent = async (req, res) => {
     const result = await connexion.query(`
-        SELECT events.eventsName, events.eventsDate, users.usersEmail, users.usersFirstname, users.usersLastname 
-        FROM go_to_events 
-        JOIN events ON go_to_events.eventsId = events.eventsId 
-        JOIN producer ON go_to_events.producerId = producer.producerId 
-        JOIN user_producer ON producer.producerId = user_producer.producerId 
+        SELECT events.eventsName, events.eventsDate, users.usersEmail, users.usersFirstname, users.usersLastname
+        FROM go_to_events
+        JOIN events ON go_to_events.eventsId = events.eventsId
+        JOIN user_producer ON go_to_events.producerId = user_producer.producerId
         JOIN users ON user_producer.usersId = users.usersEmail
     `)
-
     return result.rows
 }
 
@@ -55,27 +53,31 @@ const insertGoToEvent = async (req, res) => {
         throw new Error('EVENT_DOES_NOT_EXIST')
     }
 
-    const resultProducerId = await connexion.query(`
-        SELECT user_producer.producerId 
-        FROM user_producer 
-        WHERE user_producer.usersId = $1
+    result = await connexion.query(`
+        SELECT producerId
+        FROM user_producer
+        WHERE usersId = $1
     `,  [req.user.email])
+    if (result.rows.length == 0) {
+        throw new Error('PRODUCER_DOES_NOT_EXIST')
+    }
 
-    result = await connexion.query(
-        `SELECT * 
-        FROM go_to_events 
-        WHERE go_to_events.producerId = $1 
+    const producerId = result.rows[0]["producerid"]
+
+    result = await connexion.query(`
+        SELECT *
+        FROM go_to_events
+        WHERE go_to_events.producerId = $1
         AND go_to_events.eventsId = $2
-    `,  [resultProducerId.rows[0]["producerid"], req.body.events])
-    
+    `,  [producerId, req.body.events])
     if (result.rows.length != 0) {
         throw new Error('ALLREADY_GO_TO_EVENT')
     }
     
     await connexion.query(`
-        INSERT INTO go_to_events(producerId, eventsId) 
+        INSERT INTO go_to_events(producerId, eventsId)
         VALUES ($1, $2)
-    `,  [resultProducerId.rows[0]["producerid"], req.body.events])
+    `,  [producerId, req.body.events])
 }
 
 /**
@@ -85,28 +87,32 @@ const insertGoToEvent = async (req, res) => {
 * @return {Error} the error
 */
 const deleteGoToEvent = async (req, res) => {
-    const resultProducerId = await connexion.query(`
-        SELECT user_producer.producerId 
-        FROM user_producer 
-        WHERE user_producer.usersId = $1
+    let result = await connexion.query(`
+        SELECT producerId
+        FROM user_producer
+        WHERE usersId = $1
     `,  [req.user.email])
+    if (result.rows.length == 0) {
+        throw new Error('PRODUCER_DOES_NOT_EXIST')
+    }
 
-    const result = await connexion.query(`
-        SELECT * 
-        FROM go_to_events 
-        WHERE go_to_events.producerId = $1 
+    const producerId = result.rows[0]["producerid"]
+
+    result = await connexion.query(`
+        SELECT *
+        FROM go_to_events
+        WHERE go_to_events.producerId = $1
         AND go_to_events.eventsId = $2
-    `,  [resultProducerId.rows[0]["producerid"], req.body.events])
-
+    `,  [producerId, req.body.events])
     if (result.rows.length == 0) {
         throw new Error('DOES_NOT_GO_TO_EVENT')
     }
     
     await connexion.query(`
-        DELETE FROM go_to_events 
-        WHERE go_to_events.producerId = $1 
+        DELETE FROM go_to_events
+        WHERE go_to_events.producerId = $1
         AND go_to_events.eventsId = $2
-    `,  [resultProducerId.rows[0]["producerid"], req.body.events])
+    `,  [producerId, req.body.events])
 }
 
 // export
