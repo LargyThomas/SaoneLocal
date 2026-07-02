@@ -10,44 +10,6 @@ const { hashPassword } = require('../../security/crypto.js')
 * @return {hash} 
 */
 const createProducer = async ({ email, password, gender, lastName, firstName, producerDesc, producerLocalisation, producerSiretNum, userStatus = 'active', producerStatus = 'active' }) => {
-    const existingUser = await connexion.query(`
-        SELECT usersEmail 
-        FROM users 
-        WHERE usersEmail = $1
-    `,  [email])
-
-    if (existingUser.rows.length > 0) {
-        throw new Error('EMAIL_EXISTE_DEJA')
-    }
-
-    const existingProducer = await connexion.query(`
-        SELECT producerId 
-        FROM producer 
-        WHERE producerSiretNum = $1
-    `,  [producerSiretNum])
-
-    if (existingProducer.rows.length > 0) {
-        throw new Error('SIRET_EXISTE_DEJA')
-    }
-
-    const hashedPassword = await hashPassword(password)
-    const user = await connexion.query(`
-        INSERT INTO users (usersEmail, usersPassword, usersGender, usersLastname, usersFirstname, usersCreationDate, usersLastConnexion, usersRole, usersStatus) 
-        VALUES ($1, $2, $3, $4, $5, NOW(), NOW(), $6, $7) 
-        RETURNING usersEmail, usersGender, usersLastname, usersFirstname, usersRole, usersStatus, usersCreationDate
-    `,  [email, hashedPassword, gender, lastName, firstName, 2, userStatus])
-    
-    const producer = await connexion.query(`
-        INSERT INTO producer (producerDesc, producerLocalisation, producerSiretNum, producerStatus) 
-        VALUES ($1, $2, $3, $4) 
-        RETURNING *
-    `,  [producerDesc || null, producerLocalisation || null, producerSiretNum, producerStatus])
-
-    await connexion.query(`
-        INSERT INTO user_producer (usersId, producerId) 
-        VALUES ($1, $2)
-    `,  [email, producer.rows[0].producerid])
-
     try {
         const existingUser = await connexion.query(`
             SELECT usersEmail 

@@ -6,10 +6,10 @@ const { connexion } = require('../../database/database.js')
 * @param {hash} (page, category)  
 * @return {array of hash} the information collected from the database
 */
-const getProducts = async ({ page = 1, category, subcategory, producer }) => {
+const getProducts = async ({ page = 1, category, subcategory, producer, search }) => {
     const limit = 10
     const offset = (parseInt(page) - 1) * limit
-    const searchTerm = q || search
+    const searchTerm = search
 
     let query = `
         SELECT p.productId, p.productName, p.productPrice, p.productDesc, c.categoryName, sc.subcategoryName, pr.producerId, pr.producerDesc
