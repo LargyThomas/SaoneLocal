@@ -11,46 +11,77 @@ permissions:
 jobs:
   frontend-test:
     runs-on: ubuntu-latest
+
     defaults:
       run:
         working-directory: frontend
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Install dependencies
+
+      - name: Install frontend dependencies
         run: npm install
-      - name: Build
+
+      - name: Build frontend
         run: npm run build
 
   backend-test:
     runs-on: ubuntu-latest
+
     defaults:
       run:
         working-directory: backend
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Install dependencies
+
+      - name: Install backend dependencies
         run: npm install
 
   deploy:
     runs-on: ubuntu-latest
     needs: [frontend-test, backend-test]
     environment: production
+
     steps:
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            set -e
+
             export PATH=$PATH:/usr/bin:/usr/local/bin
+
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
             cd ~/SaoneLocal
-            git pull origin main
-            cd backend && npm install
+
+            git fetch origin main
+            git reset --hard origin/main
+
+            cd backend
+            npm install
             pm2 restart backend || pm2 start src/server.js --name backend
+            pm2 save
+
+            cd ../frontend
+            npm install
+            npm run build
+
+            sudo systemctl reload nginx
