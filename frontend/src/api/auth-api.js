@@ -1,8 +1,8 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || "";
 
-export async function loginUser({ email, password, adminCheckbox }) {
+export async function loginUser({ email, password, adminCheckbox = false, producerCheckbox = false }) {
   const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
-    body: JSON.stringify({ email: email.trim(), password, adminCheckbox }),
+    body: JSON.stringify({ email: email.trim(), password, adminCheckbox, producerCheckbox }),
     headers: {
       "Content-Type": "application/json",
     },
@@ -12,7 +12,7 @@ export async function loginUser({ email, password, adminCheckbox }) {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || "Impossible de se connecter.");
+    throw new Error(data.message || data.error || "Impossible de se connecter.");
   }
 
   return data;
@@ -30,7 +30,7 @@ export async function registerUser({ firstName, lastName, email, password, gende
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || "Impossible de créer le compte.");
+    throw new Error(data.message || data.error || "Impossible de créer le compte.");
   }
 
   return data;

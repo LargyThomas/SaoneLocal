@@ -49,7 +49,7 @@ const registerService = async ({ email, password, gender, lastName, firstName })
 * @param {hash} (email, password, adminCheckbox) 
 * @return {hash} (token, user)
 */
-const loginService = async ({ email, password, adminCheckbox }) => {
+const loginService = async ({ email, password, adminCheckbox, producerCheckbox }) => {
     const result = await connexion.query(`
         SELECT * 
         FROM users 
@@ -72,6 +72,10 @@ const loginService = async ({ email, password, adminCheckbox }) => {
 
     if (user.usersrole === ROLES.admin && !isCheckboxChecked(adminCheckbox)) {
         throw new Error('ADMIN_CHECKBOX_REQUIRED')
+    }
+
+    if (user.usersrole === ROLES.producteur && !isCheckboxChecked(producerCheckbox)) {
+        throw new Error('PRODUCER_CHECKBOX_REQUIRED')
     }
 
     await connexion.query(`

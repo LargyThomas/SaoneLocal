@@ -42,6 +42,9 @@ const login = async (req, res) => {
         if (error.message === 'ADMIN_CHECKBOX_REQUIRED') {
             return res.status(400).json({ error: "Vous devez confirmer la connexion administrateur." });
         }
+        if (error.message === 'PRODUCER_CHECKBOX_REQUIRED') {
+            return res.status(400).json({ error: "Vous devez confirmer la connexion à l'espace producteur." });
+        }
         console.error(error);
         res.status(500).json({ error: "Erreur serveur. Veuillez réessayer plus tard." });
     }

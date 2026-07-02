@@ -14,14 +14,14 @@ function getRedirectPath(user) {
   }
 
   if (user?.role === 2) {
-    return "/producteurs";
+    return "/producteur";
   }
 
   return "/";
 }
 
 export function LoginPage() {
-  const [form, setForm] = useState({ email: "", password: "", adminCheckbox: false });
+  const [form, setForm] = useState({ email: "", password: "", producerCheckbox: false });
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -47,7 +47,7 @@ export function LoginPage() {
       const guestItems = getGuestCartItems();
       let successMessage = "Connexion réussie.";
 
-      if (guestItems.length > 0) {
+      if (guestItems.length > 0 && result.user?.role === 1) {
         try {
           for (const item of guestItems) {
             await addBasketItem(item.productid, item.quantity || 1);
@@ -74,12 +74,12 @@ export function LoginPage() {
       <Container className="pt-4">
         <section className="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(320px,420px)] lg:items-center">
           <div className="rounded-card border border-coffee-beans/10 bg-[#fffdf7] p-5 shadow-[0_18px_48px_rgba(36,17,5,0.07)] sm:p-7">
-            <Badge>Espace client</Badge>
+            <Badge>Espace connecté</Badge>
             <h1 className="mt-5 break-words font-display text-3xl leading-tight text-coffee-beans sm:text-5xl">
               Me connecter
             </h1>
             <p className="mt-4 max-w-xl text-lg leading-8 text-coffee-beans/75">
-              Connectez-vous pour retrouver votre panier, vos commandes et vos producteurs favoris.
+              Connectez-vous pour retrouver votre panier, vos commandes ou votre espace producteur.
             </p>
           </div>
 
@@ -113,12 +113,12 @@ export function LoginPage() {
                 </a>
                 <label className="flex items-center gap-2">
                   <input
-                    checked={form.adminCheckbox}
+                    checked={form.producerCheckbox}
                     className="h-4 w-4 accent-green"
-                    onChange={(event) => updateField("adminCheckbox", event.target.checked)}
+                    onChange={(event) => updateField("producerCheckbox", event.target.checked)}
                     type="checkbox"
                   />
-                  Espace administrateur
+                  Espace producteur : Oui
                 </label>
               </div>
 
