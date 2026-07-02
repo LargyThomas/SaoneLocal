@@ -43,17 +43,21 @@ const verifyKey = (req, res) => {
 * @return {Function: next} or {Error} the next function or an error if the id is not valid
 */
 const verifyValue = (req, res) => {
-    if (!isNaN(parseInt(req.body.value))) {
-        throw new Error('NUMBER_GIVEN')
-    }
-
     if (req.body.value.length > HASH_UPDATE[req.body.key]) {
         throw new Error('TOO_MANY_CHARACTER')
     }
 
+    if (req.body.key == "producerSiretNum" ) {
+        return;
+    }
+
+    if (!isNaN(parseInt(req.body.value))) {
+        throw new Error('NUMBER_GIVEN')
+    }
+
     if (req.body.key == "usersGender" && HASH_GENDER[req.body.value] == null) {
         throw new Error('INVALID_INFORMATION')
-     }
+    }
 
     if (req.body.key == "usersPassword") {
         const hasUpperCase = /[A-Z]/.test(req.body.value);

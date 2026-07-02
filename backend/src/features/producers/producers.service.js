@@ -332,7 +332,7 @@ const updateProducerInformation = async (req, res) => {
             `,  [req.user.email])
             
             await connexion.query(`
-                UPDATE users 
+                UPDATE producer 
                 SET producerDesc=$1 
                 WHERE producerId=$2
             `,  [req.body.value, resultProducerId.rows[0]["producerid"]])
@@ -345,7 +345,7 @@ const updateProducerInformation = async (req, res) => {
             `,  [req.user.email])
             
             await connexion.query(`
-                UPDATE users 
+                UPDATE producer 
                 SET producerLocalisation=$1 
                 WHERE producerId=$2
             `,  [req.body.value, resultProducerId.rows[0]["producerid"]])
@@ -358,7 +358,7 @@ const updateProducerInformation = async (req, res) => {
             `,  [req.user.email])
             
             await connexion.query(`
-                UPDATE users 
+                UPDATE producer 
                 SET producerSiretNum=$1 
                 WHERE producerId=$2
             `,  [req.body.value, resultProducerId.rows[0]["producerid"]])
