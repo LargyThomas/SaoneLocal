@@ -12,6 +12,7 @@ Concevoir et développer la marketplace des producteurs locaux du bassin chalonn
 
 ## 🎨 Maquettes & Design
 
+- **Site en ligne** : [https://saonelocal.ddns.net/](https://saonelocal.ddns.net/)
 - **Figma (UI / UX)** : [Voir les maquettes](https://www.figma.com/design/YWrSEreuXZ1XBNhgbk8dyK/Final-Saonelocal?node-id=0-1&p=f&t=zTXzQXHXLhKipTTg-0)
 - **Design System** : [Voir le Design System](https://github.com/LargyThomas/SaoneLocal/blob/main/docs/charte-graphique/design-system-sa%C3%B4nelocal.pdf)
 
@@ -21,196 +22,232 @@ Concevoir et développer la marketplace des producteurs locaux du bassin chalonn
 
 ## 📁 Structure du projet
 
-```
+```txt
 SaoneLocal
 │
-├─ frontend/
-│  └─ src/
-│     ├─ ui/				                // composants UI génériques réutilisables (design system)
-│     │  ├─ button.jsx
-│     │  ├─ input.jsx
-│     │  ├─ product-card.jsx
-│     │  ├─ producer-card.jsx
-│     │  ├─ navbar.jsx
-│     │  ├─ footer.jsx
-│     │  ├─ modal.jsx
-│     │  ├─ badge.jsx
-│     │  └─ search-bar.jsx
-│     │
-│     ├─ features/			            // organisation par fonctionnalité métier
-│     │  ├─ public/			            // pages accessibles sans connexion
-│     │  ├─ auth/				            // authentification (login, register, reset)
-│     │  ├─ client/			            // espace utilisateur (achat, profil, commandes)
-│     │  ├─ producer/			          // espace producteur (gestion produits & commandes)
-│     │  └─ admin/			            // administration globale
-│     │
-│     ├─ hooks/				              // logique réutilisable
-│     │  ├─ use-fetch.js
-│     │  ├─ use-auth.js
-│     │  └─ use-pagination.js
-│     │
-│     ├─ api/				                // couche d’abstraction des appels HTTP vers le backend
-│     │  ├─ api.js			            // config global
-│     │  ├─ auth.api.js
-│     │  ├─ catalog.api.js
-│     │  ├─ orders.api.js
-│     │  ├─ producers.api.js
-│     │  ├─ basket.api.js
-│     │  ├─ favorites.api.js
-│     │  └─ users.api.js
-│     │
-│     ├─ utils/				              // fonctions utilitaires transverses
-│     │  ├─ format.js
-│     │  ├─ validators.js
-│     │  └─ storage.js
-│     │
-│     ├─ app.jsx				            // composant racine
-│     ├─ main.jsx			              // point d’entrée React (montage de l’app)
-│     ├─ routes.jsx			            // définition des routes (routing)
-│     ├─ tailwind.config.js
-│     ├─ vite.config.js
-│     └─ .env.example
+├── frontend/
+│  └── src/
+│     ├── ui/                         // composants UI génériques réutilisables
+│     ├── features/                   // organisation par fonctionnalité métier
+│     │  ├── public/                  // pages accessibles sans connexion
+│     │  ├── auth/                    // authentification
+│     │  ├── client/                  // espace utilisateur
+│     │  └── producer/                // espace producteur
+│     ├── hooks/                      // logique réutilisable
+│     ├── api/                        // appels HTTP vers le backend
+│     ├── utils/                      // fonctions utilitaires
+│     ├── app.jsx
+│     ├── main.jsx
+│     └── routes.jsx
 │
-├─backend/
-│  └─ src/
-│     ├─ features/			            // architecture modulaire par domaine métier
-│     │  ├─ catalog/			          // gestion des produits
-│     │  ├─ orders/			            // gestion des commandes
-│     │  ├─ basket/			            // panier utilisateur
-│     │  ├─ favorites/			        // gestion des favoris
-│     │  ├─ calendar/			          // événements
-│     │  ├─ public/			            // accessibles sans auth
-│     │  ├─ auth/				            // authentification
-│     │  ├─ client/			            // logique spécifique côté client
-│     │  ├─ producers/			        // gestion des producteurs
-│     │  └─ admin/			            // administration
-│     │
-│     ├─ security/			            // gestion sécurité
-│     │  ├─ crypto.js			          // hash des mots de passe
-│     │  ├─ jwt.js				          // création & vérification des tokens
-│     │  └─ middleware/
-│     │      ├─ auth.middleware.js	// vérifie l’authentification (JWT)
-│     │      ├─ roles.middleware.js	// contrôle des permissions (RBAC)
-│     │      ├─ error-message.middleware.js	// messages d’erreur
-│     │      └─ injection.middleware.js	// protection XSS / injections
-│     │
-│     ├─ database/			            // gestion base de données
-│     │  ├─ schema.sql
-│     │  ├─ seed.js
-│     │  └─ database.js
-│     │
-│     ├─ utils/				              // helpers backend réutilisables
-│     │  └─ pagination.js
-│     │
-│     ├─ app.js         			      // configuration Express
-│     ├─ server.js     			        // lancement du serveur Node.js
-│     └─ .env.example
+├── backend/
+│  └── src/
+│     ├── features/                   // architecture modulaire par domaine
+│     │  ├── admin/
+│     │  ├── auth/
+│     │  ├── basket/
+│     │  ├── calendar/
+│     │  ├── catalog/
+│     │  ├── client/
+│     │  ├── favorites/
+│     │  ├── orders/
+│     │  ├── producers/
+│     │  └── upload/
+│     ├── security/                   // sécurité, JWT, middlewares
+│     ├── database/                   // schéma, seed, connexion BDD
+│     ├── app.js
+│     └── server.js
 │
-├─ .github/
-│  └─ workflow/
-│     └─ ci.yml				              // pipeline CI/CD
+├── docs/
+│  ├── weekly/
+│  └── charte-graphique/
 │
-├─ docker/
-│  ├─ Dockerfile			              // définition de l’image de l’app
-│  └─ docker-compose.yml		        // orchestration des services
+├── docker/
+│  ├── docker-compose.yml
+│  └── Dockerfile
 │
-├─ docs/
-│  ├─ weekly/				                // suivi de l’avancement du projet
-│  ├─ data-model/			              // modélisation de la base de données
-│  └─ ...				                    // documentation complémentaire Market
+├── scripts/
 │
-└─ Readme.md				                // documentation principale du projet
+├── .github/
+│  └── workflows/
+│     └── ci.yml
+│
+└── README.md
 ```
+
+---
 
 ## 📑 Explication de l'architecture
 
 L'architecture frontend repose sur une combinaison du pattern **Feature-Based** et d'une version simplifiée de l'**Atomic Design**.
 
-### Atomic Design (simplifié)
+### Atomic Design simplifié
 
-- Les composants UI sont fractionnés en composants **modulaires** et **réutilisables**
-- Regroupés dans un dossier `ui/` et `features/` à la place de l'architecture classique `atoms` `moleculs` `organisms` `templates`
-- L'arborescence complète aurait alourdi inutilement la structure du projet
+- Les composants UI sont fractionnés en composants modulaires et réutilisables.
+- Les composants communs sont regroupés dans `ui/`.
+- Les composants spécifiques à une page ou un contexte métier sont placés dans `features/`.
 
 ### Feature-Based
 
-- Constitue le cœur du **frontend** : chaque grande structure de SaôneLocal = une feature
-- Chaque feature est **indépendante** : une feature ne va pas être dépendante d'une autre
-- La distinction entre les dossiers `ui/` et `features/` repose sur la vocation des composants :
-  - `ui/` → composants **réutilisables**
-  - `features/` → composants **spécifiques** à un contexte fonctionnel
-- La même logique est appliquée au **backend** pour structurer les différentes parties de l'application
+- Chaque grande partie de SaôneLocal correspond à une feature.
+- Les pages publiques, l'authentification, l'espace client et l'espace producteur sont séparés.
+- La même logique est appliquée au backend avec une organisation par domaine métier.
 
-### Sécurité & gestion des accès (Backend)
+### Sécurité & gestion des accès
 
-La sécurité est traitée comme un **domaine à part entière**, isolé dans `src/security/`, et non dispersée dans les features. Elle s'articule autour de deux axes :
+La sécurité est regroupée dans `src/security/`.
 
-**Authentification & tokens**
-- `crypto.js` : hash des mots de passe
-- `jwt.js` : création & vérification des tokens
+- `crypto.js` : hash des mots de passe.
+- `jwt.js` : création et vérification des tokens.
+- `auth.middleware.js` : vérification de l'authentification.
+- `roles.middleware.js` : contrôle des rôles.
+- `injection.middleware.js` : protection contre certaines injections.
 
-**Middlewares**
-- `auth.middleware.js` : vérifie l'authentification (JWT)
-- `roles.middleware.js` : contrôle des permissions (RBAC)
-- `injection.middleware.js` : protection XSS / injections
-- `error-message.middleware.js` : messages d'erreur
+### Organisation backend
 
-### Séparation des priorités (Backend)
-
-Le backend distingue trois niveaux dans l'organisation du code :
-
-| Couche | Rôle | Emplacement |
-|---|---|---|
-| **Métier** | Logique applicative par domaine | `src/features/` |
-| **Sécurité** | Authentification, autorisations, protection | `src/security/` |
-| **Infrastructure** | Connexion BDD, schéma, seed | `src/database/` |
-
-Au sein de chaque feature, le code est lui-même structuré en **4 couches distinctes** :
+Chaque feature backend suit une logique simple :
 
 | Fichier | Rôle |
 |---|---|
-| `*.router.js` | Définit les routes et branche les middlewares |
-| `*.controller.js` | Reçoit la requête, appelle le service, renvoie la réponse |
-| `*.service.js` | Contient la logique métier et les interactions avec la BDD |
-| `*.validation.js` | Valide et sanitize les données entrantes avant traitement |
+| `*.routes.js` | Définit les routes |
+| `*.controller.js` | Gère la requête et la réponse |
+| `*.service.js` | Contient la logique métier |
+| `*.validation.js` | Valide les données reçues |
 
-> Le flux est toujours unidirectionnel : **Router → Validation → Controller → Service**. Chaque couche a une responsabilité unique.
+> Le flux principal est : **Route → Validation → Controller → Service**.
 
-### Hooks & Utils
-
-**Hooks** (`src/hooks/`) : logique réutilisable avec état, découplée des composants :
-- `use-fetch.js` : appels HTTP
-- `use-auth.js` : état d'authentification
-- `use-pagination.js` : logique de pagination
-
-**Utils** (`src/utils/`) : fonctions pures sans état, réutilisables partout :
-- `format.js` : formatage (dates, prix...)
-- `validators.js` : validation des inputs
-- `storage.js` : abstraction du `localStorage`
-- `pagination.js` *(backend)* : calcul des offsets
-
-### Convention de nommage
-
-Les conventions suivantes s'appliquent à **l'ensemble du projet** :
-
-- `camelCase` → variables et fonctions
-- `kebab-case` → noms de fichiers / slugs d'URL / attributs HTML
-- `UPPER_CASE` → constantes
-- `PascalCase` → classes
+---
 
 ## 🛠️ Stack technique
 
-> Section en cours de rédaction
+### Frontend
+
+- React.js
+- JavaScript
+- Tailwind CSS
+- Vite
+- Node.js
+
+### Backend
+
+- Node.js
+- Express.js
+- JavaScript
+- PostgreSQL
+- JWT
+- Bcrypt
+- Multer
+- AWS S3
+
+### Outils
+
+- Git / GitHub
+- GitHub Actions
+- PM2
+- Nginx
+- Figma
+
+---
 
 ## 🏁 Guide d'installation & d'utilisation
 
-> Section en cours de rédaction
+### Prérequis
+
+- Node.js
+- npm
+- PostgreSQL
+- Git
+
+### Lancer le backend
+
+```bash
+cd backend
+npm install
+```
+
+Créer un fichier `.env` dans le dossier `backend`.
+
+Exemple :
+
+```env
+PORT=3000
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=password
+DB_NAME=saonelocal
+JWT_SECRET=your_secret
+```
+
+Initialiser les données :
+
+```bash
+npm run seed
+```
+
+Lancer le backend :
+
+```bash
+npm run dev
+```
+
+Le backend tourne sur :
+
+```txt
+http://localhost:3000
+```
+
+### Lancer le frontend
+
+Dans un deuxième terminal :
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Le frontend tourne sur :
+
+```txt
+http://localhost:5173
+```
+
+### Build frontend
+
+```bash
+cd frontend
+npm run build
+```
+
+### Comptes de démonstration
+
+Les comptes de démonstration sont définis dans :
+
+```txt
+backend/src/database/const-seed.js
+```
+
+Exemples :
+
+```txt
+Client : sophie.client@saonelocal.fr
+Producteur : michel.durand@saonelocal.fr
+Admin : admin@saonelocal.fr
+Mot de passe : Password1!
+```
+
+Pour un compte producteur, cocher `Espace producteur : Oui`.
+
+Pour un compte administrateur, cocher `Espace admin : Oui`.
+
+---
 
 ## 👨🏻‍💻 Contributeurs
 
 **Marketing**
-- [tbourdiau-hue](#https://github.com/tbourdiau-hue)
+- [tbourdiau-hue](https://github.com/tbourdiau-hue) : maquettes, UX/UI, direction visuelle.
 
 **Développement**
-- [clemencechenevoix](#https://github.com/clemencechenevoix)
-- [Shino](#https://github.com/LargyThomas)
+- [clemencechenevoix](https://github.com/clemencechenevoix) : PostgreSQL, JavaScript, Express.js, Node.js, routes API, base de données.
+- [Shino](https://github.com/LargyThomas) : React.js, Tailwind CSS, JavaScript, Node.js, Express.js, intégration front/back, mise en place de l'instance.
