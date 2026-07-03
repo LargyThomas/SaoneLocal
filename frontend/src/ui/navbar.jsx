@@ -100,9 +100,12 @@ export default function NavbarPublic() {
     <header className="sticky top-0 z-40 bg-soft-linen/95 px-3 py-3 backdrop-blur">
       <div className="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-3 rounded-card border border-coffee-beans/10 bg-white px-4 shadow-sm">
         <a className="flex min-w-0 items-center gap-3" href="/" onClick={closeMenu}>
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-card bg-vanilla-custard text-sm font-extrabold text-forest-green">
-            SL
-          </span>
+          <img
+            src="../../../assets/icons/logo-saonelocal.png"
+            alt="Logo SaôneLocal"
+            className="h-10 w-10 shrink-0 rounded-card object-contain"
+          />
+
           <span className="truncate text-xl font-extrabold text-coffee-beans">
             Saône<span className="text-forest-green">Local</span>
           </span>

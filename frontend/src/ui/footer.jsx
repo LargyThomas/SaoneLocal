@@ -52,7 +52,7 @@ export default function Footer() {
           <section>
             <h2 className="text-sm font-extrabold uppercase tracking-wide text-coffee-beans">Paiement sécurisé</h2>
             <div className="mt-3 flex flex-wrap gap-2">
-              {["Visa", "Mastercard", "Pay"].map((item) => (
+              {["../../../assets/icons/logo-visa.png", "../../../assets/icons/logo-mastercard.png", "../../../assets/icons/logo-paypal.png"].map((item) => (
                 <span className="rounded-button bg-vanilla-custard px-3 py-2 text-xs font-extrabold text-coffee-beans" key={item}>
                   {item}
                 </span>
