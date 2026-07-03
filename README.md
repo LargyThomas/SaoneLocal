@@ -220,27 +220,6 @@ cd frontend
 npm run build
 ```
 
-### Comptes de démonstration
-
-Les comptes de démonstration sont définis dans :
-
-```txt
-backend/src/database/const-seed.js
-```
-
-Exemples :
-
-```txt
-Client : sophie.client@saonelocal.fr
-Producteur : michel.durand@saonelocal.fr
-Admin : admin@saonelocal.fr
-Mot de passe : Password1!
-```
-
-Pour un compte producteur, cocher `Espace producteur : Oui`.
-
-Pour un compte administrateur, cocher `Espace admin : Oui`.
-
 ---
 
 ## 👨🏻‍💻 Contributeurs
