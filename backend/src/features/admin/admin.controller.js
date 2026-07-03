@@ -27,8 +27,8 @@ const showDashboard = async (req, res) => {
 */
 const showAssociation = async(req, res) => {
     try {
-        const dashboard = await getAssociation()
-        return res.status(200).json({message: "Information correctement récupéré", dashboard })
+        const result = await getAssociation()
+        return res.status(200).json({message: "Information correctement récupéré", result })
     } catch (error) {
         console.error(error)
         return res.status(500).json({ error: "Erreur serveur. Veuillez réessayer plus tard." })
@@ -43,8 +43,8 @@ const showAssociation = async(req, res) => {
 */
 const updateAssociation = async(req, res) => {
     try {
-        const result = await modifyAssociation(req.user.email, req.body.key, req.body.value)
-        return res.status(200).json({message: "Information correctement modifié", result })
+        await modifyAssociation(req.user.email, req.body.key, req.body.value)
+        return res.status(200).json({message: "Information correctement modifié" })
     } catch (error) {
         console.error(error)
         return res.status(500).json({ error: "Erreur serveur. Veuillez réessayer plus tard." })

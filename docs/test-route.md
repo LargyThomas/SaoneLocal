@@ -1189,6 +1189,88 @@ ___
 
 ___
 
+### <span style="color:GreenYellow">GET</span> /api/admin/association
+
+**Body :** none
+
+**Headers :**
+| Key | Value |
+|---|---|
+| Authorization | Bearer `TOKEN GIVEN BY THE LOGIN` |  
+
+**Return :**
+```
+ if success > status 200
+{
+    "message": "Information correctement récupéré",
+    "result": [
+        {
+            "associationid": ___ ,
+            "associationlocationoffice": ___ ,
+            "associationvalues": ___ ,
+            "associationtestimony": ___ ,
+            "associationdeschome": ___ ,
+            "associationdescabout": ___ ,
+            "associationemail": ___ ,
+            "associationnum": ___ 
+        }
+    ]
+}
+
+ if error > status entre 400 et 500
+{
+    "error": ___
+}
+```
+
+<u>last test :</u> 03/07/2026 23:34
+
+___
+
+### <SPAN STYLE="COLOR:LightSkyBlue">PUT</SPAN> /api/admin/association
+
+**Body :** raw JSON v
+```
+{
+    "key": ___ ,
+    "value": ___
+}
+```
+
+**Headers :**
+| Key | Value |
+|---|---|
+| Authorization | Bearer `TOKEN GIVEN BY THE LOGIN` |  
+
+**Return :**
+```
+ if success > status 200
+{
+    "message": "Information correctement modifié",
+
+    "user": {
+        "usersemail": ___ ,
+        "usersgender": ___ ,
+        "userslastname": ___ ,
+        "usersfirstname": ___ ,
+        "usersrole": ___ ,
+        "usersstatus": ___ ,
+        "usersprofilpicture": ___ ,
+        "userscreationdate": ___ ,
+        "userslastconnexion": ___
+    }
+}
+
+ if error > status entre 400 et 500
+{
+    "error": ___
+}
+```
+
+<u>last test :</u> 03/07/2026 23:41
+
+___
+
 ### <span style="color:GreenYellow">GET</span> /api/admin/producers
 
 **Body :** none
@@ -1473,7 +1555,7 @@ ___
 }
 ```
 
-<u>last test :</u> 00/00/0000 00:00
+<u>last test :</u> 03/07/2026 23:41
 
 ___
 
