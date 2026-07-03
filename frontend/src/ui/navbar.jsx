@@ -19,6 +19,16 @@ const mobileClientLinks = [
   { label: "À propos", href: "/a-propos" },
 ];
 
+const mobileProducerLinks = [
+  { label: "Mon dashboard", href: "/producteur" },
+  { label: "Mon catalogue", href: "/producteur/catalogue" },
+  { label: "Mes commandes", href: "/producteur/commandes" },
+  { label: "Synthèse", href: "/producteur/statistiques" },
+  { label: "Catalogue produits", href: "/catalogue" },
+  { label: "Calendrier", href: "/calendrier" },
+  { label: "À propos", href: "/a-propos" },
+];
+
 function Icon({ type, className = "h-5 w-5" }) {
   const paths = {
     bell: "M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 0 0-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0a3 3 0 0 1-6 0",
@@ -50,19 +60,13 @@ function NavLink({ href, children, onClick }) {
   );
 }
 
-function MobileClientLink({ item, onClick, onLogout }) {
-  const className = "flex min-h-10 w-full items-center rounded-button px-3 py-2 text-left text-base font-extrabold text-coffee-beans transition hover:bg-vanilla-custard focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-golden-glow";
-
-  if (item.action === "logout") {
-    return (
-      <button className={className} onClick={onLogout} type="button">
-        {item.label}
-      </button>
-    );
-  }
-
+function MobileLink({ item, onClick }) {
   return (
-    <a className={className} href={item.href} onClick={onClick}>
+    <a
+      className="flex min-h-10 w-full items-center rounded-button px-3 py-2 text-left text-base font-extrabold text-coffee-beans transition hover:bg-vanilla-custard focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-golden-glow"
+      href={item.href}
+      onClick={onClick}
+    >
       {item.label}
     </a>
   );
@@ -71,21 +75,9 @@ function MobileClientLink({ item, onClick, onLogout }) {
 function MenuToggleIcon({ isOpen }) {
   return (
     <span aria-hidden="true" className="relative flex h-5 w-5 items-center justify-center">
-      <span
-        className={`absolute h-0.5 w-5 rounded-full bg-coffee-beans transition duration-200 ${
-          isOpen ? "rotate-45" : "-translate-y-1.5"
-        }`}
-      />
-      <span
-        className={`absolute h-0.5 w-5 rounded-full bg-coffee-beans transition duration-200 ${
-          isOpen ? "opacity-0" : "opacity-100"
-        }`}
-      />
-      <span
-        className={`absolute h-0.5 w-5 rounded-full bg-coffee-beans transition duration-200 ${
-          isOpen ? "-rotate-45" : "translate-y-1.5"
-        }`}
-      />
+      <span className={`absolute h-0.5 w-5 rounded-full bg-coffee-beans transition duration-200 ${isOpen ? "rotate-45" : "-translate-y-1.5"}`} />
+      <span className={`absolute h-0.5 w-5 rounded-full bg-coffee-beans transition duration-200 ${isOpen ? "opacity-0" : "opacity-100"}`} />
+      <span className={`absolute h-0.5 w-5 rounded-full bg-coffee-beans transition duration-200 ${isOpen ? "-rotate-45" : "translate-y-1.5"}`} />
     </span>
   );
 }
@@ -94,6 +86,9 @@ export default function NavbarPublic() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isAuthenticated = Boolean(getAuthToken());
   const user = getStoredUser();
+  const isProducer = user?.role === 2;
+  const accountPath = isProducer ? "/producteur" : "/profil";
+  const mobileAccountLinks = isProducer ? mobileProducerLinks : mobileClientLinks;
   const closeMenu = () => setIsMenuOpen(false);
 
   const handleLogout = () => {
@@ -120,7 +115,7 @@ export default function NavbarPublic() {
             </NavLink>
           ))}
           {isAuthenticated ? (
-            <NavLink href="/profil">{user?.role === 1 ? "Espace client" : "Mon compte"}</NavLink>
+            <NavLink href={accountPath}>{isProducer ? "Espace producteur" : "Espace client"}</NavLink>
           ) : null}
         </nav>
 
@@ -129,14 +124,14 @@ export default function NavbarPublic() {
             <Icon type="search" />
           </Button>
           {isAuthenticated ? (
-            <Button aria-label="Notifications" as="a" href="/profil" size="sm" variant="ghost">
+            <Button aria-label="Notifications" as="a" href={accountPath} size="sm" variant="ghost">
               <Icon type="bell" />
             </Button>
           ) : null}
           <Button aria-label="Panier" as="a" href="/panier" size="sm" variant="ghost">
             <Icon type="cart" />
           </Button>
-          <Button aria-label={isAuthenticated ? "Profil" : "Connexion"} as="a" href={isAuthenticated ? "/profil" : "/connexion"} size="sm" variant="ghost">
+          <Button aria-label={isAuthenticated ? "Profil" : "Connexion"} as="a" href={isAuthenticated ? accountPath : "/connexion"} size="sm" variant="ghost">
             <Icon type="user" />
           </Button>
           {isAuthenticated ? (
@@ -177,8 +172,8 @@ export default function NavbarPublic() {
                 Me déconnecter
               </button>
               <div className="grid gap-4 px-3 pb-4">
-                {mobileClientLinks.map((item) => (
-                  <MobileClientLink item={item} key={item.label} onClick={closeMenu} onLogout={handleLogout} />
+                {mobileAccountLinks.map((item) => (
+                  <MobileLink item={item} key={item.label} onClick={closeMenu} />
                 ))}
               </div>
             </>
