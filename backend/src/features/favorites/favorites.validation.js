@@ -8,15 +8,16 @@
 * @return {Function: next} or {Error} the next function or an error if the id is not valid
 */
 const validationId = (req, res, next) => {
-    const productId = req.body["productId"];
-    if (productId === undefined || productId === null) {
+    const string_id = req.body["id"];
+
+    if (string_id === undefined || string_id === null) {
         return res.status(400).json({ error: 'Id manquant.' });
     }
-    const id = parseInt(productId, 10);
-    if (Number.isNaN(id) || id <= 0) {
+    const int_id = parseInt(string_id, 10);
+    if (Number.isNaN(int_id) || int_id <= 0) {
         return res.status(400).json({ error: "L'Id doit être un nombre." });
     }
-    req.body.productId = id;
+    req.body["id"] = int_id;
     next();
 }
 
