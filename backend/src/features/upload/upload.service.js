@@ -66,4 +66,8 @@ async function uploadProfilePicture(userEmail, file) {
     return result.rows[0].usersprofilpicture
 }
 
-module.exports = { uploadToS3, uploadProfilePicture }
+async function uploadProductPicture(file) {
+    return uploadToS3(file, 'products', 'catalog')
+}
+
+module.exports = { uploadToS3, uploadProfilePicture, uploadProductPicture }

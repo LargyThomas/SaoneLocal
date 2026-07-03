@@ -6,13 +6,13 @@ const { connexion } = require('../../database/database.js')
 * @param {hash} (page, category)  
 * @return {array of hash} the information collected from the database
 */
-const getProducts = async ({ page = 1, category, subcategory, producer, search }) => {
+const getProducts = async ({ page = 1, category, subcategory, producer, q, search }) => {
     const limit = 10
     const offset = (parseInt(page) - 1) * limit
-    const searchTerm = search
+    const searchTerm = q || search
 
     let query = `
-        SELECT p.productId, p.productName, p.productPrice, p.productDesc, c.categoryName, sc.subcategoryName, pr.producerId, pr.producerDesc
+        SELECT p.productId, p.productPicture, p.productName, p.productPrice, p.productDesc, p.productStatus, c.categoryId, c.categoryName, sc.subcategoryId, sc.subcategoryName, pr.producerId, pr.producerDesc
         FROM product p
         LEFT JOIN category c ON p.categoryId = c.categoryId
         LEFT JOIN subcategory sc ON p.subcategoryId = sc.subcategoryId
@@ -92,7 +92,7 @@ const getProducts = async ({ page = 1, category, subcategory, producer, search }
 */
 const getProductById = async (id) => {
     const result = await connexion.query(`
-        SELECT p.productId, p.productName, p.productPrice, p.productDesc, c.categoryName, sc.subcategoryName, pr.producerId, pr.producerDesc
+        SELECT p.productId, p.productPicture, p.productName, p.productPrice, p.productDesc, p.productStatus, c.categoryId, c.categoryName, sc.subcategoryId, sc.subcategoryName, pr.producerId, pr.producerDesc
         FROM product p
         LEFT JOIN category c ON p.categoryId = c.categoryId
         LEFT JOIN subcategory sc ON p.subcategoryId = sc.subcategoryId
@@ -127,6 +127,13 @@ const createProduct = async (userEmail, { productName, productPrice, categoryId,
     }
 
     const producerId = producerResult.rows[0].producerid
+
+    await connexion.query(`
+        SELECT setval(
+            pg_get_serial_sequence('product', 'productid'),
+            COALESCE((SELECT MAX(productId) FROM product), 1)
+        )
+    `)
 
     const result = await connexion.query(`
         INSERT INTO product (producerId, categoryId, subcategoryId, productName, productPrice, productDesc, productStatus, productPicture)

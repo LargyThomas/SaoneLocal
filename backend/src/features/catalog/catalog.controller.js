@@ -11,7 +11,7 @@ const { getProducts, getProductById, createProduct, modifyProduct, deleteProduct
 */
 const ShowProduct = async (req, res) => {
     try {
-        const result = await getProducts(req.body)
+        const result = await getProducts(req.query)
         res.status(200).json({ message: "Information correctement récupéré", result: result })
     } catch (err) {
         console.error(err)

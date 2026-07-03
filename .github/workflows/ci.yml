@@ -84,4 +84,6 @@ jobs:
             npm install
             npm run build
 
+            sudo rsync -a --delete dist/ /var/www/saonelocal/
+
             sudo systemctl reload nginx

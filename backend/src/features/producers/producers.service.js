@@ -12,8 +12,12 @@ function removeDuplicate(array, key) {
     let index = 0
     let length = array.length
     
-    if (length <= 1) {
-        return array
+    if (length === 0) {
+        return []
+    }
+
+    if (length === 1) {
+        return [array[0][key]]
     }
 
     let returnArray = [array[0][key]]
@@ -199,9 +203,10 @@ const findProfilProduct = async (req, res) => {
     `,  [req.user.email])
 
     const result = await connexion.query(`
-        SELECT productId, productName, productPicture 
+        SELECT productId, productName, productPicture, productPrice, productDesc, productStatus, categoryId, subcategoryId
         FROM product 
         WHERE producerId = $1
+        ORDER BY productId ASC
     `,  [resultProducerId.rows[0]["producerid"]])
 
     return result.rows
@@ -237,7 +242,7 @@ const findProfilOrder = async (req, res) => {
     let index = 0
     while (index < orderArray.length) {
         result = await connexion.query(`
-            SELECT users.usersFirstname, users.usersLastname, orders.ordersId, orders.ordersStatus, orders.ordersTotalCost 
+            SELECT users.usersFirstname, users.usersLastname, orders.ordersId, orders.ordersStatus, orders.ordersTotalCost, orders.ordersDate
             FROM orders 
             JOIN users ON orders.usersId = users.usersEmail
             WHERE orders.ordersId = $1

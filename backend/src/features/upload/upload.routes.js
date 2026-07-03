@@ -1,8 +1,9 @@
 const express = require('express')
 const multer = require('multer')
 const authMiddleware = require('../../security/middleware/auth.middleware')
+const rolesMiddleware = require('../../security/middleware/roles.middleware')
 const upload = require('../../security/middleware/multer.config')
-const { uploadUserProfilePicture } = require('./upload.controller')
+const { uploadUserProfilePicture, uploadCatalogProductPicture } = require('./upload.controller')
 
 const router = express.Router()
 
@@ -26,5 +27,6 @@ const handleProfilePictureUpload = (req, res, next) => {
 }
 
 router.post('/profile-picture', authMiddleware, handleProfilePictureUpload, uploadUserProfilePicture)
+router.post('/product-picture', authMiddleware, rolesMiddleware(['producteur']), handleProfilePictureUpload, uploadCatalogProductPicture)
 
 module.exports = router

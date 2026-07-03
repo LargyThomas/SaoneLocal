@@ -101,24 +101,22 @@ const createOrder = async (req, res) => {
 */
 const changeStatus = async (req, res) => {
     let result = await connexion.query(`
-        SELECT product.producerId 
-        FROM orders_items 
-        JOIN product ON orders_items.productId = product.productId 
-        WHERE orders_items.ordersId = $1
-    `,  [req.params.id])
-
-    if (result.rows.length == 0) {
-        throw new Error('THIS_ID_DOES_NOT_EXIST')
-    }
-
-    const producerIdOrder = result.rows[0]["producerid"]
-    result = await connexion.query(`
         SELECT user_producer.producerId 
         FROM user_producer 
         WHERE user_producer.usersId = $1
     `,  [req.user.email])
 
-    if (producerIdOrder != result.rows[0]["producerid"]) {
+    const producerId = result.rows[0]?.producerid
+
+    result = await connexion.query(`
+        SELECT orders_items.ordersId
+        FROM orders_items 
+        JOIN product ON orders_items.productId = product.productId 
+        WHERE orders_items.ordersId = $1
+        AND product.producerId = $2
+    `,  [req.params.id, producerId])
+
+    if (result.rows.length == 0) {
         throw new Error('YOU_CANNOT_ACCESS_THIS_ORDER')
     }
 
@@ -181,7 +179,7 @@ const findOrdersProducer = async (req, res) => {
     `,  [req.user.email])
 
     const result = await connexion.query(`
-        SELECT users.usersFirstname, users.usersLastname, orders.ordersId, orders.ordersStatus, orders.ordersTotalCost, orders_items.ordersItemsQuantity, orders_items.ordersItemsTotalCost, product.productName 
+        SELECT users.usersFirstname, users.usersLastname, orders.ordersId, orders.ordersStatus, orders.ordersTotalCost, orders.ordersDate, orders_items.ordersItemsQuantity, orders_items.ordersItemsTotalCost, product.productName 
         FROM orders_items JOIN orders ON orders_items.ordersId = orders.ordersId 
         JOIN product ON orders_items.productId = product.productId 
         JOIN users ON orders.usersId = users.usersEmail 
