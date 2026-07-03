@@ -7,7 +7,6 @@ import Card from "../../ui/card.jsx";
 import Container from "../../ui/container.jsx";
 import Input from "../../ui/input.jsx";
 import { clearGuestCart, getGuestCartItems } from "../../utils/guest-cart.js";
-import { admin } from "../../../../backend/src/database/const-seed.js";
 
 function getRedirectPath(user) {
   const role = Number(user?.role);
