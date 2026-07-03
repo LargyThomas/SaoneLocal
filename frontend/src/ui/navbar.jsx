@@ -101,7 +101,7 @@ export default function NavbarPublic() {
       <div className="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-3 rounded-card border border-coffee-beans/10 bg-white px-4 shadow-sm">
         <a className="flex min-w-0 items-center gap-3" href="/" onClick={closeMenu}>
           <img
-            src="../../../assets/icons/logo-saonelocal.png"
+            src="../../../assets/icons/logo-saônelocal.png"
             alt="Logo SaôneLocal"
             className="h-10 w-10 shrink-0 rounded-card object-contain"
           />
