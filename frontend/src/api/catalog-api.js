@@ -1,6 +1,6 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || "";
+import { apiRequest, API_BASE_URL } from "./api.js";
 
-export async function fetchCatalog({ page = 1, category = "", subcategory = "", q = "" } = {}) {
+export async function fetchCatalog({ page = 1, category = "", subcategory = "", producer = "", q = "" } = {}) {
   const params = new URLSearchParams();
 
   params.set("page", String(page));
@@ -11,6 +11,10 @@ export async function fetchCatalog({ page = 1, category = "", subcategory = "", 
 
   if (subcategory) {
     params.set("subcategory", subcategory);
+  }
+
+  if (producer) {
+    params.set("producer", producer);
   }
 
   if (q.trim()) {
@@ -34,4 +38,27 @@ export async function fetchProduct(productId) {
   }
 
   return response.json();
+}
+
+export async function createProduct(payload) {
+  return apiRequest("/api/catalog", {
+    auth: true,
+    body: payload,
+    method: "POST",
+  });
+}
+
+export async function updateProduct(productId, payload) {
+  return apiRequest(`/api/catalog/${productId}`, {
+    auth: true,
+    body: payload,
+    method: "PATCH",
+  });
+}
+
+export async function deleteProduct(productId) {
+  return apiRequest(`/api/catalog/${productId}`, {
+    auth: true,
+    method: "DELETE",
+  });
 }

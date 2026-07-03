@@ -10,3 +10,11 @@ export async function createOrder() {
     method: "POST",
   });
 }
+
+export async function updateOrderStatus(orderId, ordersStatus) {
+  return apiRequest(`/api/orders/${orderId}/status`, {
+    auth: true,
+    body: { ordersStatus },
+    method: "PATCH",
+  });
+}

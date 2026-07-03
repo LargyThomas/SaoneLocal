@@ -15,6 +15,10 @@ import { CheckoutPage } from "./features/client/checkout-page.jsx";
 import { ClientProfilePage } from "./features/client/client-profile-page.jsx";
 import { FavoritesPage } from "./features/client/favorites-page.jsx";
 import { HistoryPage } from "./features/client/history-page.jsx";
+import { DashboardPage } from "./features/producer/dashboard-page.jsx";
+import { CatalogManagerPage } from "./features/producer/catalog-manager-page.jsx";
+import { OrdersManagerPage } from "./features/producer/orders-manager-page.jsx";
+import { SalesStatsPage } from "./features/producer/sales-stats-page.jsx";
 
 export const routes = [
   {
@@ -93,6 +97,26 @@ export const routes = [
     path: "/profil",
     label: "Profil",
     component: ClientProfilePage,
+  },
+  {
+    path: "/producteur",
+    label: "Espace producteur",
+    component: DashboardPage,
+  },
+  {
+    path: "/producteur/catalogue",
+    label: "Catalogue producteur",
+    component: CatalogManagerPage,
+  },
+  {
+    path: "/producteur/commandes",
+    label: "Commandes producteur",
+    component: OrdersManagerPage,
+  },
+  {
+    path: "/producteur/statistiques",
+    label: "Statistiques producteur",
+    component: SalesStatsPage,
   },
   {
     path: "/mot-de-passe-oublie",
