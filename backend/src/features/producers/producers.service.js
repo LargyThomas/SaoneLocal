@@ -295,6 +295,7 @@ const updateProducerInformation = async (req, res) => {
     let resultProducerId = {}
     switch (req.body.key) {
         case "usersPassword":
+            req.body.value = await hashPassword(req.body.value)
             await connexion.query(`
                 UPDATE users 
                 SET usersPassword=$1 
