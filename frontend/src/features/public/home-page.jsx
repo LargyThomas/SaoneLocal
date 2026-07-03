@@ -8,6 +8,7 @@ import Container from "../../ui/container.jsx";
 import ProducerCard from "../../ui/producer-card.jsx";
 import ProductCard from "../../ui/product-card.jsx";
 import SectionTitle from "../../ui/section-title.jsx";
+import { useSeo } from "../../hooks/use-seo.js";
 
 const advantages = [
   {
@@ -68,6 +69,11 @@ function ApiMessage({ children, variant = "empty" }) {
 }
 
 export function HomePage() {
+  useSeo({
+    title: "SaôneLocal - Marché local en ligne",
+    description: "Découvrez les produits frais, producteurs locaux et événements de Saône-et-Loire avec SaôneLocal.",
+  });
+
   const [productsOfMoment, setProductsOfMoment] = useState([]);
   const [producers, setProducers] = useState([]);
   const [productsError, setProductsError] = useState("");

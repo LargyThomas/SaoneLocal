@@ -7,6 +7,7 @@ import Card from "../../ui/card.jsx";
 import Container from "../../ui/container.jsx";
 import Input from "../../ui/input.jsx";
 import { clearGuestCart, getGuestCartItems } from "../../utils/guest-cart.js";
+import { useSeo } from "../../hooks/use-seo.js";
 
 function getRedirectPath(user) {
   const role = Number(user?.role);
@@ -19,11 +20,20 @@ function getRedirectPath(user) {
     return "/producteur";
   }
 
+  if (role === 3) {
+    return "/admin";
+  }
+
   return "/";
 }
 
 export function LoginPage() {
-  const [form, setForm] = useState({ email: "", password: "", producerCheckbox: false, adminCheckbox: false });
+  useSeo({
+    title: "Connexion",
+    description: "Connectez-vous à votre compte SaôneLocal pour accéder à votre panier, vos commandes ou votre espace producteur.",
+  });
+
+  const [form, setForm] = useState({ adminCheckbox: false, email: "", password: "", producerCheckbox: false });
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -131,14 +141,14 @@ export function LoginPage() {
                   />
                   Espace producteur : Oui
                 </label>
-                <label className="flex items-center gap-2">
+                <label className="flex items-center gap-2 sm:col-start-2">
                   <input
                     checked={form.adminCheckbox}
                     className="h-4 w-4 accent-green"
                     onChange={(event) => updateField("adminCheckbox", event.target.checked)}
                     type="checkbox"
                   />
-                  Espace administrateur : Oui
+                  Espace admin : Oui
                 </label>
               </div>
 

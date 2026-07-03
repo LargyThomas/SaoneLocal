@@ -5,8 +5,14 @@ import Button from "../../ui/button.jsx";
 import Card from "../../ui/card.jsx";
 import Container from "../../ui/container.jsx";
 import Input from "../../ui/input.jsx";
+import { useSeo } from "../../hooks/use-seo.js";
 
 export function RegisterPage() {
+  useSeo({
+    title: "Inscription",
+    description: "Créez votre compte SaôneLocal pour commander des produits locaux et suivre vos producteurs favoris.",
+  });
+
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",

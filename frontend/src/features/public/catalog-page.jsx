@@ -4,6 +4,7 @@ import Badge from "../../ui/badge.jsx";
 import Button from "../../ui/button.jsx";
 import ProductCard from "../../ui/product-card.jsx";
 import { SearchBar } from "../../ui/search-bar.jsx";
+import { useSeo } from "../../hooks/use-seo.js";
 
 const categories = [
   { id: "", label: "Tout" },
@@ -26,6 +27,11 @@ const subcategories = [
 ];
 
 export function CatalogPage() {
+  useSeo({
+    title: "Catalogue des produits locaux",
+    description: "Recherchez et filtrez les produits locaux disponibles sur SaôneLocal : vins, pains, viandes et légumes de saison.",
+  });
+
   const [products, setProducts] = useState([]);
   const [pagination, setPagination] = useState({ total: 0, page: 1, totalPages: 1, limit: 10 });
   const [filters, setFilters] = useState({ q: "", category: "", subcategory: "", page: 1 });

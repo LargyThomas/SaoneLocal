@@ -4,8 +4,14 @@ import Container from "../../ui/container.jsx";
 import ProducerCard from "../../ui/producer-card.jsx";
 import Badge from "../../ui/badge.jsx";
 import { fetchProducers } from "../../api/producers-api.js";
+import { useSeo } from "../../hooks/use-seo.js";
 
 export function ProducerPage() {
+  useSeo({
+    title: "Producteurs locaux",
+    description: "Rencontrez les producteurs et artisans locaux référencés sur SaôneLocal.",
+  });
+
   const [producers, setProducers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");

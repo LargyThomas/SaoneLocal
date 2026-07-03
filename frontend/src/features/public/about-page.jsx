@@ -2,6 +2,7 @@ import Container from "../../ui/container.jsx";
 import SectionTitle from "../../ui/section-title.jsx";
 import Badge from "../../ui/badge.jsx";
 import Button from "../../ui/button.jsx";
+import { useSeo } from "../../hooks/use-seo.js";
 
 const values = [
   {
@@ -47,6 +48,11 @@ function ValueCard({ title, text, icon }) {
 }
 
 export function AboutPage() {
+  useSeo({
+    title: "À propos de SaôneLocal",
+    description: "Découvrez l'histoire, les valeurs et l'engagement local de SaôneLocal auprès des producteurs du bassin chalonnais.",
+  });
+
   return (
     <div className="bg-soft-linen pb-12">
       <Container className="pt-4">

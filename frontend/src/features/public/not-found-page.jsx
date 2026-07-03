@@ -1,6 +1,12 @@
 import Button from "../../ui/button.jsx";
+import { useSeo } from "../../hooks/use-seo.js";
 
 export function NotFoundPage() {
+  useSeo({
+    title: "Page introuvable",
+    description: "La page demandée n'existe pas ou n'est plus disponible sur SaôneLocal.",
+  });
+
   return (
     <main className="relative isolate flex min-h-[calc(100vh-140px)] overflow-hidden bg-soft-linen px-4 py-12">
       <div

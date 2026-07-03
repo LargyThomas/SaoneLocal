@@ -1,4 +1,11 @@
+import { useSeo } from "../../hooks/use-seo.js";
+
 export function PlaceholderPage({ title }) {
+  useSeo({
+    title: title || "Page prévue",
+    description: `${title || "Cette page"} sera complétée prochainement sur SaôneLocal.`,
+  });
+
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-16">
       <p className="mb-4 inline-flex w-fit rounded-card bg-golden-glow px-3 py-1 font-display text-sm text-coffee-beans">

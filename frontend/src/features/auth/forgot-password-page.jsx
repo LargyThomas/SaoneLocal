@@ -2,8 +2,14 @@ import Badge from "../../ui/badge.jsx";
 import Button from "../../ui/button.jsx";
 import Card from "../../ui/card.jsx";
 import Container from "../../ui/container.jsx";
+import { useSeo } from "../../hooks/use-seo.js";
 
 export function ForgotPasswordPage() {
+  useSeo({
+    title: "Mot de passe oublié",
+    description: "Retrouvez les informations utiles pour récupérer l'accès à votre compte SaôneLocal.",
+  });
+
   return (
     <div className="bg-soft-linen pb-12">
       <Container className="pt-4">

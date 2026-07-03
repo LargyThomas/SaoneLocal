@@ -6,6 +6,7 @@ import Card from "../../ui/card.jsx";
 import Container from "../../ui/container.jsx";
 import ProductCard from "../../ui/product-card.jsx";
 import SectionTitle from "../../ui/section-title.jsx";
+import { useSeo } from "../../hooks/use-seo.js";
 
 function getProducerName(producer) {
   return `${producer?.usersfirstname || ""} ${producer?.userslastname || ""}`.trim() || producer?.usersemail || "Producteur local";
@@ -65,6 +66,13 @@ export function ProducerDetailPage({ params = {} }) {
   }, [producerId]);
 
   const producerName = getProducerName(producer);
+
+  useSeo({
+    title: `${producerName} - Fiche producteur`,
+    description: producer?.producerdesc
+      ? `${producer.producerdesc.slice(0, 150)}`
+      : `Découvrez la fiche de ${producerName}, producteur local référencé sur SaôneLocal.`,
+  });
 
   return (
     <div className="bg-soft-linen pb-12">

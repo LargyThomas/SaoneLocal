@@ -10,6 +10,7 @@ import Container from "../../ui/container.jsx";
 import ProductCard from "../../ui/product-card.jsx";
 import { formatPrice } from "../../utils/format.js";
 import { addGuestCartItem } from "../../utils/guest-cart.js";
+import { useSeo } from "../../hooks/use-seo.js";
 
 function getTaxExcludedPrice(value) {
   const price = Number(value);
@@ -136,6 +137,13 @@ export function ProductPage({ params = {} }) {
   const formattedTaxExcludedPrice = getTaxExcludedPrice(product?.productprice);
   const producerLabel = product?.producername || product?.producerdesc || `Producteur ${product?.producerid || "local"}`;
   const isWineProduct = product?.categoryname?.toLowerCase().includes("vin");
+
+  useSeo({
+    title: `${productName} - Fiche produit`,
+    description: product?.productdesc
+      ? `${product.productdesc.slice(0, 150)}`
+      : `Découvrez ${productName}, un produit local disponible sur SaôneLocal.`,
+  });
 
   return (
     <div className="bg-soft-linen pb-12">
