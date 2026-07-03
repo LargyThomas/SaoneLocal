@@ -99,6 +99,7 @@ findProfilFavoritesProducer = async (req, res) => {
 updateClientInformation = async (req, res) => {
     switch (req.body.key) {
     case "usersPassword":
+        req.body.value = await hashPassword(req.body.value)
         await connexion.query(`
             UPDATE users 
             SET usersPassword=$1 
