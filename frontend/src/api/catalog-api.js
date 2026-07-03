@@ -27,7 +27,8 @@ export async function fetchCatalog({ page = 1, category = "", subcategory = "", 
     throw new Error("Impossible de charger le catalogue.");
   }
 
-  return response.json();
+  const data = await response.json();
+  return data.result || data;
 }
 
 export async function fetchProduct(productId) {
@@ -37,7 +38,8 @@ export async function fetchProduct(productId) {
     throw new Error("Impossible de charger le produit.");
   }
 
-  return response.json();
+  const data = await response.json();
+  return data.result || data;
 }
 
 export async function createProduct(payload) {

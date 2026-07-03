@@ -4,6 +4,7 @@ import Badge from "../../ui/badge.jsx";
 import Button from "../../ui/button.jsx";
 import Card from "../../ui/card.jsx";
 import Container from "../../ui/container.jsx";
+import { useSeo } from "../../hooks/use-seo.js";
 
 function startOfToday() {
   const now = new Date();
@@ -129,6 +130,11 @@ function ProducerEventCard({ producer }) {
 }
 
 export function CalendarPage() {
+  useSeo({
+    title: "Calendrier des événements locaux",
+    description: "Consultez les prochains marchés, rendez-vous locaux et événements de producteurs avec SaôneLocal.",
+  });
+
   const [events, setEvents] = useState([]);
   const [producers, setProducers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -141,8 +147,8 @@ export function CalendarPage() {
 
       try {
         const result = await fetchCalendar();
-        setEvents(result.resultevent || []);
-        setProducers(result.resultproducer || []);
+        setEvents(result.resultEvent || result.resultevent || []);
+        setProducers(result.resultProducer || result.resultproducer || []);
       } catch (requestError) {
         setEvents([]);
         setProducers([]);
