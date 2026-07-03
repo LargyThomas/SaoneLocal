@@ -2,6 +2,8 @@ import { HomePage } from "./features/public/home-page.jsx";
 import { CatalogPage } from "./features/public/catalog-page.jsx";
 import { NotFoundPage } from "./features/public/not-found-page.jsx";
 import { PlaceholderPage } from "./features/public/placeholder-page.jsx";
+import { LegalPage } from "./features/public/legal-page.jsx";
+import { PrivacyPage } from "./features/public/privacy-page.jsx";
 import { ProducerPage } from "./features/public/producer-page.jsx";
 import { ProducerDetailPage } from "./features/public/producer-detail-page.jsx";
 import { CalendarPage } from "./features/public/calendar-page.jsx";
@@ -126,12 +128,17 @@ export const routes = [
   {
     path: "/mentions-legales",
     label: "Mentions légales",
-    component: () => <PlaceholderPage title="Mentions légales" />,
+    component: LegalPage,
   },
   {
     path: "/confidentialite",
     label: "Confidentialité",
-    component: () => <PlaceholderPage title="Confidentialité" />,
+    component: PrivacyPage,
+  },
+  {
+    path: "/admin",
+    label: "Espace admin",
+    component: () => <PlaceholderPage title="Espace admin" />,
   },
   {
     path: "*",

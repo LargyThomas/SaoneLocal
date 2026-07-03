@@ -29,6 +29,14 @@ const mobileProducerLinks = [
   { label: "À propos", href: "/a-propos" },
 ];
 
+const mobileAdminLinks = [
+  { label: "Espace admin", href: "/admin" },
+  { label: "Catalogue produits", href: "/catalogue" },
+  { label: "Fiches producteurs", href: "/producteurs" },
+  { label: "Calendrier", href: "/calendrier" },
+  { label: "À propos", href: "/a-propos" },
+];
+
 function Icon({ type, className = "h-5 w-5" }) {
   const paths = {
     bell: "M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 0 0-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0a3 3 0 0 1-6 0",
@@ -87,8 +95,9 @@ export default function NavbarPublic() {
   const isAuthenticated = Boolean(getAuthToken());
   const user = getStoredUser();
   const isProducer = user?.role === 2;
-  const accountPath = isProducer ? "/producteur" : "/profil";
-  const mobileAccountLinks = isProducer ? mobileProducerLinks : mobileClientLinks;
+  const isAdmin = user?.role === 3;
+  const accountPath = isAdmin ? "/admin" : isProducer ? "/producteur" : "/profil";
+  const mobileAccountLinks = isAdmin ? mobileAdminLinks : isProducer ? mobileProducerLinks : mobileClientLinks;
   const closeMenu = () => setIsMenuOpen(false);
 
   const handleLogout = () => {
@@ -118,7 +127,7 @@ export default function NavbarPublic() {
             </NavLink>
           ))}
           {isAuthenticated ? (
-            <NavLink href={accountPath}>{isProducer ? "Espace producteur" : "Espace client"}</NavLink>
+            <NavLink href={accountPath}>{isAdmin ? "Espace admin" : isProducer ? "Espace producteur" : "Espace client"}</NavLink>
           ) : null}
         </nav>
 
