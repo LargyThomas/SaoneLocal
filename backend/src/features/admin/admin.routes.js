@@ -4,8 +4,8 @@ const router = express.Router()
 
 const authMiddleware = require('../../security/middleware/auth.middleware')
 const rolesMiddleware = require('../../security/middleware/roles.middleware')
-const { showDashboard, showProducer, addProducer, removeProducer, enableProducer, showUser, showUserByEmail, updateUser, showOrder, showOrderById, updateOrderStatus, cancelOrder, showProducts, showProductById, disableProduct, enableProduct, removeProduct, showEvent, showEventById, addEvent, updateEvent, disableEvent, enableEvent, removeEvent, showLogs } = require('./admin.controller')
-const { validateProducer, validateProducerId, validateUserEmail, validateUserUpdate, validateOrderId, validateOrderStatus, validateProductId, validateEventId, validateEvent } = require('./admin.validation')
+const { showDashboard, showAssociation, updateAssociation, showProducer, addProducer, removeProducer, enableProducer, showUser, showUserByEmail, updateUser, showOrder, showOrderById, updateOrderStatus, cancelOrder, showProducts, showProductById, disableProduct, enableProduct, removeProduct, showEvent, showEventById, addEvent, updateEvent, disableEvent, enableEvent, removeEvent, showLogs } = require('./admin.controller')
+const { validateProducer, validateProducerId, validateUserEmail, validateUserUpdate, validateOrderId, validateOrderStatus, validateProductId, validateEventId, validateEvent, validationInformationToUpdate } = require('./admin.validation')
 
 // implementation of the routes logic for the admin
 
@@ -13,6 +13,14 @@ const { validateProducer, validateProducerId, validateUserEmail, validateUserUpd
 
 // return the Dashboard
 router.get('/dashboard', authMiddleware, rolesMiddleware(['admin']), showDashboard)
+
+// association
+
+// return the information of the association
+router.get('/association', authMiddleware, rolesMiddleware(['admin']), showAssociation)
+
+// update the information of the association
+router.put('/association', authMiddleware, rolesMiddleware(['admin']), validationInformationToUpdate, updateAssociation)
 
 // Producers
 

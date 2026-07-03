@@ -1,5 +1,5 @@
 // require
-const { getDashboard, getProducer, createProducer, deleteProducer, activateProducer, getUser, getUserByEmail, modifyUser, getOrder, getOrderById, modifyOrderStatus, annulOrder, getProduct, getProductById, deactivateProduct, activateProduct, deleteProduct, getEvent, getEventById, createEvent, modifyEvent, deactivateEvent, activateEvent, deleteEvent, getLogs } = require('./admin.service')
+const { getDashboard, getAssociation, modifyAssociation, getProducer, createProducer, deleteProducer, activateProducer, getUser, getUserByEmail, modifyUser, getOrder, getOrderById, modifyOrderStatus, annulOrder, getProduct, getProductById, deactivateProduct, activateProduct, deleteProduct, getEvent, getEventById, createEvent, modifyEvent, deactivateEvent, activateEvent, deleteEvent, getLogs } = require('./admin.service')
 
 // function
 
@@ -13,6 +13,38 @@ const showDashboard = async (req, res) => {
     try {
         const dashboard = await getDashboard()
         return res.status(200).json({message: "Information correctement récupéré", dashboard })
+    } catch (error) {
+        console.error(error)
+        return res.status(500).json({ error: "Erreur serveur. Veuillez réessayer plus tard." })
+    }
+}
+
+/**
+* @description controller of the route GET /api/admin/association , show the informations of the association
+* @param {hash} req, the request
+* @param {hash} res, the response of the request
+* @return {status} and {json} a message for the status and the information collected from the database if there is no error 
+*/
+const showAssociation = async(req, res) => {
+    try {
+        const dashboard = await getAssociation()
+        return res.status(200).json({message: "Information correctement récupéré", dashboard })
+    } catch (error) {
+        console.error(error)
+        return res.status(500).json({ error: "Erreur serveur. Veuillez réessayer plus tard." })
+    }
+}
+
+/**
+* @description controller of the route PUT /api/admin/association , update the informations of the association
+* @param {hash} req, the request
+* @param {hash} res, the response of the request
+* @return {status} and {json} a message for the status and the information collected from the database if there is no error 
+*/
+const updateAssociation = async(req, res) => {
+    try {
+        const result = await modifyAssociation(req.user.email, req.body.key, req.body.value)
+        return res.status(200).json({message: "Information correctement modifié", result })
     } catch (error) {
         console.error(error)
         return res.status(500).json({ error: "Erreur serveur. Veuillez réessayer plus tard." })
@@ -486,4 +518,4 @@ const showLogs = async (req, res) => {
 }
 
 // export
-module.exports = { showDashboard, showProducer, addProducer, removeProducer, enableProducer, showUser, showUserByEmail, updateUser, showOrder, showOrderById, updateOrderStatus, cancelOrder, showProducts, showProductById, disableProduct, enableProduct, removeProduct, showEvent, showEventById, addEvent, updateEvent, disableEvent, enableEvent, removeEvent, showLogs }
+module.exports = { showDashboard, showAssociation, updateAssociation, showProducer, addProducer, removeProducer, enableProducer, showUser, showUserByEmail, updateUser, showOrder, showOrderById, updateOrderStatus, cancelOrder, showProducts, showProductById, disableProduct, enableProduct, removeProduct, showEvent, showEventById, addEvent, updateEvent, disableEvent, enableEvent, removeEvent, showLogs }

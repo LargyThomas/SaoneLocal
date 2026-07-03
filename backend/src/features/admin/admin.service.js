@@ -217,6 +217,119 @@ const getDashboard = async () => {
 }
 
 /**
+* @description get the dashboard information
+* @param 
+* @return {array of hash}  
+*/
+const getAssociation = async () => {
+    const result = await connexion.query(`
+        SELECT * 
+        FROM association 
+        WHERE associationId = 1
+    `)
+
+    return result.rows
+}
+
+/**
+* @description update the association information
+* @param {string} email, the email of the admin
+* @param {string} key, the key to update
+* @param {string} value, the new value of the key to update
+* @return {array of hash}  
+*/
+const modifyAssociation = async (email, key, value ) => {
+    console.log(email)
+    switch (key) {
+    case "usersPassword":
+        value = await hashPassword(value)
+        await connexion.query(`
+            UPDATE users 
+            SET usersPassword=$1 
+            WHERE usersEmail=$2
+        `,  [value, email])
+        break
+    case "usersGender":
+        await connexion.query(`
+            UPDATE users 
+            SET usersGender=$1 
+            WHERE usersEmail=$2
+        `,  [value, email])
+        break
+    case "usersLastname":
+        await connexion.query(`
+            UPDATE users 
+            SET usersLastname=$1 
+            WHERE usersEmail=$2
+        `,  [value, email])
+        break
+    case "usersFirstname":
+        await connexion.query(`
+            UPDATE users 
+            SET usersFirstname=$1 
+            WHERE usersEmail=$2
+        `,  [value, email])
+        break
+    case "usersProfilPicture":
+        await connexion.query(`
+            UPDATE users 
+            SET usersProfilPicture=$1 
+            WHERE usersEmail=$2
+        `,  [value, email])
+        break
+    case "associationLocationOffice":
+        await connexion.query(`
+            UPDATE association 
+            SET associationLocationOffice=$1 
+            WHERE associationId=1
+        `,  [value])
+        break
+    case "associationValues":
+        await connexion.query(`
+            UPDATE association 
+            SET associationValues=$1 
+            WHERE associationId=1
+        `,  [value])
+        break
+    case "associationTestimony":
+        await connexion.query(`
+            UPDATE association 
+            SET associationTestimony=$1 
+            WHERE associationId=1
+        `,  [value])
+        break
+    case "associationDescHome":
+        await connexion.query(`
+            UPDATE association 
+            SET associationDescHome=$1 
+            WHERE associationId=1
+        `,  [value])
+        break
+    case "associationDescAbout":
+        await connexion.query(`
+            UPDATE association 
+            SET associationDescAbout=$1 
+            WHERE associationId=1
+        `,  [value])
+        break
+    case "associationEmail":
+        await connexion.query(`
+            UPDATE association 
+            SET associationEmail=$1 
+            WHERE associationId=1
+        `,  [value])
+        break
+    case "associationNum":
+        await connexion.query(`
+            UPDATE association 
+            SET associationNum=$1 
+            WHERE associationId=1
+        `,  [value])
+        break
+    }
+}
+
+/**
 * @description get all the users information
 * @param 
 * @return {array of hash}  
@@ -676,4 +789,4 @@ const getLogs = async () => {
 }
 
 // export
-module.exports = { getDashboard, getProducer, createProducer, deleteProducer, activateProducer, getUser, getUserByEmail, modifyUser, getOrder, getOrderById, modifyOrderStatus, annulOrder, getProduct, getProductById, deactivateProduct, activateProduct, deleteProduct, getEvent, getEventById, createEvent, modifyEvent, deactivateEvent, activateEvent, deleteEvent, getLogs }
+module.exports = { getDashboard, getAssociation, modifyAssociation, getProducer, createProducer, deleteProducer, activateProducer, getUser, getUserByEmail, modifyUser, getOrder, getOrderById, modifyOrderStatus, annulOrder, getProduct, getProductById, deactivateProduct, activateProduct, deleteProduct, getEvent, getEventById, createEvent, modifyEvent, deactivateEvent, activateEvent, deleteEvent, getLogs }
