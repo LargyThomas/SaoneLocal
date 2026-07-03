@@ -131,6 +131,15 @@ export function LoginPage() {
                   />
                   Espace producteur : Oui
                 </label>
+                <label className="flex items-center gap-2">
+                  <input
+                    checked={form.producerCheckbox}
+                    className="h-4 w-4 accent-green"
+                    onChange={(event) => updateField("producerCheckbox", event.target.checked)}
+                    type="checkbox"
+                  />
+                  Espace administrateur : Oui
+                </label>
               </div>
 
               {error ? <p className="rounded-card bg-white px-3 py-2 text-sm font-bold text-inferno">{error}</p> : null}
