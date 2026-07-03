@@ -1,5 +1,5 @@
 // require
-const { getProducts, getProductById, createProduct, modifyProduct, deleteProduct } = require('./catalog.service.js')
+const { getProduct, getProductById, createProduct, modifyProduct, deleteProduct } = require('./catalog.service.js')
 
 // function
 
@@ -11,7 +11,7 @@ const { getProducts, getProductById, createProduct, modifyProduct, deleteProduct
 */
 const ShowProduct = async (req, res) => {
     try {
-        const result = await getProducts(req.query)
+        const result = await getProduct(req.body)
         res.status(200).json({ message: "Information correctement récupéré", result: result })
     } catch (err) {
         console.error(err)

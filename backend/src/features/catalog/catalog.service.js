@@ -6,7 +6,7 @@ const { connexion } = require('../../database/database.js')
 * @param {hash} (page, category)  
 * @return {array of hash} the information collected from the database
 */
-const getProducts = async ({ page = 1, category, subcategory, producer, q, search }) => {
+const getProduct = async ({ page = 1, category, subcategory, q, search }) => {
     const limit = 10
     const offset = (parseInt(page) - 1) * limit
     const searchTerm = q || search
@@ -17,6 +17,8 @@ const getProducts = async ({ page = 1, category, subcategory, producer, q, searc
         LEFT JOIN category c ON p.categoryId = c.categoryId
         LEFT JOIN subcategory sc ON p.subcategoryId = sc.subcategoryId
         LEFT JOIN producer pr ON p.producerId = pr.producerId
+        LEFT JOIN user_producer up ON up.producerId = pr.producerId
+        LEFT JOIN users u ON u.usersEmail = up.usersId
         WHERE 1=1
     `
 
@@ -35,12 +37,6 @@ const getProducts = async ({ page = 1, category, subcategory, producer, q, searc
         paramIndex++
     }
 
-    if (producer) {
-        query += ` AND pr.producerId = $${paramIndex}`
-        params.push(parseInt(producer))
-        paramIndex++
-    }
-
     if (searchTerm) {
         query += ` AND (
             p.productName ILIKE $${paramIndex}
@@ -48,6 +44,8 @@ const getProducts = async ({ page = 1, category, subcategory, producer, q, searc
             OR c.categoryName ILIKE $${paramIndex}
             OR sc.subcategoryName ILIKE $${paramIndex}
             OR pr.producerDesc ILIKE $${paramIndex}
+            OR u.usersFirstname ILIKE $${paramIndex}
+            OR u.usersLastname ILIKE $${paramIndex}
         )`
         params.push(`%${searchTerm.trim()}%`)
         paramIndex++
@@ -224,4 +222,4 @@ const deleteProduct = async (userEmail, productId) => {
     `,  [productId])
 }
 
-module.exports = { getProducts, getProductById, createProduct, modifyProduct, deleteProduct }
+module.exports = { getProduct, getProductById, createProduct, modifyProduct, deleteProduct }
