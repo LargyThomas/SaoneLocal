@@ -106,6 +106,9 @@ function findUser(value) {
         if (handleFind(err, res) == 0) {
             connexion.end
             insertUser(value)
+        } else if (handleFind(err, res) == 1) {
+            connexion.end
+            updateSeedUser(value)
         }
         connexion.end
     })
@@ -307,6 +310,30 @@ async function insertUser(value) {
         INSERT INTO users(usersEmail, usersPassword, usersGender, usersLastname, usersFirstname, usersCreationDate, usersLastConnexion, usersRole, usersStatus, usersProfilPicture)
         VALUES ($1, $2, $3, $4, $5, date($6), date($7), $8, $9, $10)
     `,  [value["usersEmail"], hashedPassword, value["usersGender"], value["usersLastName"], value["usersFirstName"], value["usersCreationDate"], value["usersLastConnexion"], value["usersRole"], value["usersStatus"], value["usersProfilePicture"] || null], (err,res)=>{
+
+        connexion.end
+        return handleErr(err)
+    })
+}
+
+/**
+* @description keep demo seed users aligned when they already exist in the database
+* @param {hash} value, the values of the demo user to update
+* @return
+*/
+async function updateSeedUser(value) {
+    const hashedPassword = await hashPassword(value["usersPassword"])
+    connexion.query(`
+        UPDATE users
+        SET usersPassword = $2,
+            usersGender = $3,
+            usersLastname = $4,
+            usersFirstname = $5,
+            usersRole = $6,
+            usersStatus = $7,
+            usersProfilPicture = $8
+        WHERE usersEmail = $1
+    `,  [value["usersEmail"], hashedPassword, value["usersGender"], value["usersLastName"], value["usersFirstName"], value["usersRole"], value["usersStatus"], value["usersProfilePicture"] || null], (err,res)=>{
 
         connexion.end
         return handleErr(err)
