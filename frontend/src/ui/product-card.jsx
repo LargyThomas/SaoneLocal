@@ -30,7 +30,6 @@ export default function ProductCard({
         <div className="space-y-2">
           <Badge className="bg-golden-glow/90">{category}</Badge>
           <h3 className="break-words text-lg font-extrabold leading-tight text-coffee-beans">{name}</h3>
-          {description ? <p className="line-clamp-2 text-sm leading-6 text-coffee-beans/65">{description}</p> : null}
         </div>
 
         <div className="mt-auto space-y-4">
