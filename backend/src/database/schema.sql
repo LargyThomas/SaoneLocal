@@ -20,7 +20,9 @@ IF NOT EXISTS
         producerDesc VARCHAR(1500),
         producerLocalisation VARCHAR(100),
         producerSiretNum VARCHAR(14) NOT NULL,
-        producerStatus VARCHAR(10) NOT NULL
+        producerStatus VARCHAR(10) NOT NULL,
+        producerCreationDate DATE NOT NULL DEFAULT CURRENT_DATE,
+        producerLastConnexion DATE NOT NULL DEFAULT CURRENT_DATE
     );
 
 CREATE TABLE 

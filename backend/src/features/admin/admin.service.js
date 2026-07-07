@@ -31,6 +31,8 @@ const createProducer = async ({ email, password, gender, lastName, firstName, pr
             throw new Error('SIRET_EXISTE_DEJA')
         }
 
+        const hashedPassword = await hashPassword(password)
+
         const user = await connexion.query(`
             INSERT INTO users (usersEmail, usersPassword, usersGender, usersLastname, usersFirstname, usersCreationDate, usersLastConnexion, usersRole, usersStatus) 
             VALUES ($1, $2, $3, $4, $5, NOW(), NOW(), $6, $7) 
@@ -38,8 +40,8 @@ const createProducer = async ({ email, password, gender, lastName, firstName, pr
         `,  [email, hashedPassword, gender, lastName, firstName, 2, userStatus])
         
         const producer = await connexion.query(`
-            INSERT INTO producer (producerDesc, producerLocalisation, producerSiretNum, producerStatus) 
-            VALUES ($1, $2, $3, $4) 
+            INSERT INTO producer (producerDesc, producerLocalisation, producerSiretNum, producerStatus, producerCreationDate, producerLastConnexion) 
+            VALUES ($1, $2, $3, $4, NOW(), NOW()) 
             RETURNING *
         `,  [producerDesc || null, producerLocalisation || null, producerSiretNum, producerStatus])
 

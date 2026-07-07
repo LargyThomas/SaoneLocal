@@ -11,8 +11,8 @@ const { getProduct, getProductById, createProduct, modifyProduct, deleteProduct 
 */
 const ShowProduct = async (req, res) => {
     try {
-        const result = await getProduct(req.body)
-        res.status(200).json({ message: "Information correctement récupéré", result: result })
+        const result = await getProduct(req.query)
+        res.status(200).json({ message: "Information correctement récupérées", result: result })
     } catch (err) {
         console.error(err)
         res.status(500).json({ error: 'Erreur serveur' })

@@ -178,7 +178,7 @@ const findAllProductProducerId = async (req, res) => {
 */
 const findProfilUser = async (req, res) => {
     const result = await connexion.query(`
-        SELECT producer.producerDesc, producer.producerLocalisation, producer.producerSiretNum, users.usersFirstname, users.usersLastname, users.usersGender, users.usersCreationDate, users.usersProfilPicture 
+        SELECT producer.producerDesc, producer.producerLocalisation, producer.producerSiretNum, producer.producerCreationDate, producer.producerLastConnexion, users.usersFirstname, users.usersLastname, users.usersGender, users.usersCreationDate, users.usersProfilPicture 
         FROM user_producer 
         JOIN users ON user_producer.usersId = users.usersEmail 
         JOIN producer ON user_producer.producerId = producer.producerId 

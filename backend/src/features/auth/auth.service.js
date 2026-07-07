@@ -84,6 +84,18 @@ const loginService = async ({ email, password, adminCheckbox, producerCheckbox }
         WHERE usersEmail = $1
     `,  [email])
 
+    if (user.usersrole === ROLES.producteur) {
+        await connexion.query(`
+            UPDATE producer 
+            SET producerLastConnexion = CURRENT_DATE
+            WHERE producerId IN (
+                SELECT producerId 
+                FROM user_producer 
+                WHERE usersId = $1
+            )
+        `,  [email])
+    }
+
     const token = signToken({ email: user.usersemail, role: user.usersrole })
 
     return {

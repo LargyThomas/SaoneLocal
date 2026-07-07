@@ -67,6 +67,21 @@ export function DashboardPage() {
             </Card>
           ) : null}
 
+          {!isLoading && profile ? (
+            <Card className="mt-5 bg-white p-5">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <p className="text-sm font-extrabold uppercase text-coffee-beans/60">Date d'inscription</p>
+                  <p className="mt-1 text-lg font-bold text-coffee-beans">{formatDate(profile.producercreationdate)}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-extrabold uppercase text-coffee-beans/60">Dernière connexion</p>
+                  <p className="mt-1 text-lg font-bold text-coffee-beans">{formatDate(profile.producerlastconnexion)}</p>
+                </div>
+              </div>
+            </Card>
+          ) : null}
+
           {isLoading ? (
             <div className="mt-6 grid gap-4 md:grid-cols-3">
               {Array.from({ length: 3 }).map((_, index) => (
