@@ -30,12 +30,12 @@ export default function ProductCard({
         <div className="space-y-2">
           <Badge className="bg-golden-glow/90">{category}</Badge>
           <h3 className="break-words text-lg font-extrabold leading-tight text-coffee-beans">{name}</h3>
+          {description ? <p className="line-clamp-2 text-sm leading-6 text-coffee-beans/65">{description}</p> : null}
         </div>
 
         <div className="mt-auto space-y-4">
           <div>
             {formattedPrice ? <p className="text-xl font-extrabold text-green">{formattedPrice}</p> : null}
-            <p className="mt-1 text-sm font-semibold text-brown-bark">{producerLabel}</p>
           </div>
 
           <div className="grid gap-2">
