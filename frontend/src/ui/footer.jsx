@@ -51,11 +51,9 @@ export default function Footer() {
 
           <section>
             <h2 className="text-sm font-extrabold uppercase tracking-wide text-coffee-beans">Paiement sécurisé</h2>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {["../../../assets/icons/logo-visa.png", "../../../assets/icons/logo-mastercard.png", "../../../assets/icons/logo-paypal.png"].map((item) => (
-                <span className="rounded-button bg-vanilla-custard px-3 py-2 text-xs font-extrabold text-coffee-beans" key={item}>
-                  {item}
-                </span>
+            <div className="mt-3 flex flex-wrap items-center gap-3">
+              {[{ src: "../../assets/icons/logo-visa.png", alt: "Visa" }, { src: "../../assets/icons/logo-mastercard.png", alt: "Mastercard" }, { src: "../../assets/icons/logo-paypal.png", alt: "PayPal" }].map((item) => (
+                <img key={item.src} src={item.src} alt={item.alt} className="h-6 w-auto object-contain" />
               ))}
             </div>
             <p className="mt-3 text-sm leading-6 text-coffee-beans/65">Retrait local ou livraison selon les producteurs.</p>
