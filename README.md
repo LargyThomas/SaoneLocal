@@ -146,6 +146,7 @@ Chaque feature backend suit une logique simple :
 - PM2
 - Nginx
 - Figma
+- Postman
 
 ---
 
