@@ -1,3 +1,7 @@
+import logoVisa from "../../assets/icons/logo-visa.png";
+import logoMastercard from "../../assets/icons/logo-mastercard.png";
+import logoPaypal from "../../assets/icons/logo-paypal.png";
+
 const footerLinks = [
   {
     title: "Liens utiles",
@@ -52,9 +56,9 @@ export default function Footer() {
           <section>
             <h2 className="text-sm font-extrabold uppercase tracking-wide text-coffee-beans">Paiement sécurisé</h2>
             <div className="mt-3 flex flex-wrap items-center gap-3">
-              {[{ src: "../../assets/icons/logo-visa.png", alt: "Visa" }, { src: "../../assets/icons/logo-mastercard.png", alt: "Mastercard" }, { src: "../../assets/icons/logo-paypal.png", alt: "PayPal" }].map((item) => (
-                <img key={item.src} src={item.src} alt={item.alt} className="h-6 w-auto object-contain" />
-              ))}
+              <img src={logoVisa} alt="Visa" className="h-6 w-auto object-contain" />
+              <img src={logoMastercard} alt="Mastercard" className="h-6 w-auto object-contain" />
+              <img src={logoPaypal} alt="PayPal" className="h-6 w-auto object-contain" />
             </div>
             <p className="mt-3 text-sm leading-6 text-coffee-beans/65">Retrait local ou livraison selon les producteurs.</p>
           </section>

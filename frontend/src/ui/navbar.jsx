@@ -1,4 +1,5 @@
 import { useState } from "react";
+import logoSaone from "../../assets/icons/logo-saônelocal.png";
 import { clearAuthStorage, getAuthToken, getStoredUser } from "../api/api.js";
 import Button from "./button.jsx";
 
@@ -109,11 +110,7 @@ export default function NavbarPublic() {
     <header className="sticky top-0 z-40 bg-soft-linen/95 px-3 py-3 backdrop-blur">
       <div className="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-3 rounded-card border border-coffee-beans/10 bg-white px-4 shadow-sm">
         <a className="flex min-w-0 items-center gap-3" href="/" onClick={closeMenu}>
-          <img
-            src="../../assets/icons/logo-saônelocal.png"
-            alt="Logo SaôneLocal"
-            className="h-10 w-10 shrink-0 object-contain"
-          />
+          <img src={logoSaone} alt="Logo SaôneLocal" className="h-10 w-10 shrink-0 object-contain" />
 
           <span className="truncate text-xl font-extrabold text-coffee-beans">
             Saône<span className="text-forest-green">Local</span>
